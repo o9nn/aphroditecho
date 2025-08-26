@@ -118,3 +118,13 @@ monitoring:
     cpu_high: 90
     memory_high: 85
     network_latency: 1000
+azure_integration:
+  enabled: true
+  zonecog_bridge:
+    host: 127.0.0.1
+    port: 7807
+    protocol: http
+    capabilities:
+      - schema_ingest
+      - table_ingest
+      - reasoning

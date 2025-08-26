@@ -11,12 +11,16 @@ from .orchestration.core_orchestrator import AARCoreOrchestrator
 from .agents.agent_manager import AgentManager
 from .arena.simulation_engine import SimulationEngine  
 from .relations.relation_graph import RelationGraph
+from .embodied import VirtualBody, EmbodiedAgent, ProprioceptiveSystem
 
 __all__ = [
     'AARCoreOrchestrator',
     'AgentManager',
     'SimulationEngine', 
-    'RelationGraph'
+    'RelationGraph',
+    'VirtualBody',
+    'EmbodiedAgent',
+    'ProprioceptiveSystem'
 ]
 
 # Configuration defaults

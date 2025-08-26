@@ -175,6 +175,295 @@ class EchoSelfEvolutionEngine:
         
         return stats
     
+    async def evolve_agents_in_arena(self, agent_population_size: int = 10) -> Dict[str, Any]:
+        """Evolve agents through arena-based evaluation and selection."""
+        if not self.aar_orchestrator:
+            raise RuntimeError("AAR orchestrator integration required for agent evolution")
+        
+        logger.info(f"Starting agent evolution cycle with {agent_population_size} agents")
+        
+        # Create initial agent population
+        agent_population = await self._create_agent_population(agent_population_size)
+        
+        # Evaluate agents in arena environments
+        evaluation_results = []
+        for agent_config in agent_population:
+            result = await self.aar_orchestrator.run_agent_evaluation(agent_config)
+            evaluation_results.append(result)
+        
+        # Select best performing agents
+        sorted_results = sorted(evaluation_results, 
+                              key=lambda x: x.get('fitness_score', 0.0), 
+                              reverse=True)
+        
+        # Create evolved agents from best performers
+        elite_size = max(1, agent_population_size // 4)  # Top 25%
+        elite_agents = sorted_results[:elite_size]
+        
+        # Generate offspring through mutation and crossover
+        offspring = await self._evolve_agent_offspring(elite_agents, agent_population_size - elite_size)
+        
+        # Update agent configurations in AAR system
+        evolved_configs = []
+        for agent_result in elite_agents:
+            evolved_configs.append({
+                'id': agent_result.get('agent_id'),
+                'generation': self.generation,
+                'fitness': agent_result.get('fitness_score'),
+                'capabilities': self._extract_successful_capabilities(agent_result),
+                'temporary_agent': False  # Keep elite agents
+            })
+        
+        for offspring_config in offspring:
+            evolved_configs.append(offspring_config)
+        
+        # Clean up old agents first to make room
+        await self._cleanup_old_agents()
+        
+        # Apply evolved configurations
+        await self.aar_orchestrator.update_agent_configurations(evolved_configs)
+        
+        # Calculate evolution statistics
+        best_fitness = max([r.get('fitness_score', 0.0) for r in evaluation_results])
+        avg_fitness = sum([r.get('fitness_score', 0.0) for r in evaluation_results]) / len(evaluation_results)
+        
+        evolution_stats = {
+            'generation': self.generation,
+            'population_size': agent_population_size,
+            'elite_count': len(elite_agents),
+            'offspring_count': len(offspring),
+            'best_fitness': best_fitness,
+            'average_fitness': avg_fitness,
+            'improvement_rate': self._calculate_improvement_rate(evaluation_results),
+            'evaluation_results': evaluation_results[:3]  # Top 3 for logging
+        }
+        
+        self.evolution_history.append(evolution_stats)
+        logger.info(f"Agent evolution cycle completed: Best={best_fitness:.4f}, Avg={avg_fitness:.4f}")
+        
+        return evolution_stats
+    
+    async def _create_agent_population(self, population_size: int) -> List[Dict[str, Any]]:
+        """Create initial population of agent configurations."""
+        population = []
+        
+        for i in range(population_size):
+            agent_config = {
+                'id': f'evolved_agent_{self.generation}_{i}',
+                'generation': self.generation,
+                'reasoning': True,
+                'multimodal': i % 3 == 0,  # Vary multimodal capability
+                'memory_enabled': True,
+                'learning_enabled': True,
+                'collaboration': i % 2 == 0,  # Vary collaboration capability
+                'capabilities': {
+                    'reasoning': True,
+                    'multimodal': i % 3 == 0,
+                    'memory_enabled': True,
+                    'learning_enabled': True,
+                    'collaboration': i % 2 == 0,
+                    'domains': self._generate_random_domains(),
+                    'context_length': 4096 + (i * 512),  # Vary context length
+                    'processing_power': 0.8 + (i * 0.02)  # Vary processing power
+                },
+                'temporary_agent': True  # Mark for cleanup after evaluation
+            }
+            population.append(agent_config)
+        
+        return population
+    
+    def _generate_random_domains(self) -> List[str]:
+        """Generate random specialized domains for agent."""
+        import random
+        available_domains = ['mathematics', 'science', 'language', 'reasoning', 'creativity', 'analysis']
+        num_domains = random.randint(1, 3)
+        return random.sample(available_domains, num_domains)
+    
+    async def _evolve_agent_offspring(self, elite_agents: List[Dict[str, Any]], offspring_count: int) -> List[Dict[str, Any]]:
+        """Create offspring agents through mutation and crossover."""
+        import random
+        offspring = []
+        
+        for i in range(offspring_count):
+            # Select parents from elite
+            parent1 = random.choice(elite_agents)
+            parent2 = random.choice(elite_agents)
+            
+            # Create offspring through crossover and mutation
+            offspring_config = {
+                'id': f'evolved_offspring_{self.generation}_{i}',
+                'generation': self.generation + 1,
+                'parent_ids': [parent1.get('agent_id'), parent2.get('agent_id')],
+                'capabilities': self._crossover_capabilities(parent1, parent2),
+                'temporary_agent': False  # Keep evolved offspring
+            }
+            
+            # Apply mutation
+            offspring_config['capabilities'] = self._mutate_capabilities(offspring_config['capabilities'])
+            
+            offspring.append(offspring_config)
+        
+        return offspring
+    
+    def _crossover_capabilities(self, parent1: Dict[str, Any], parent2: Dict[str, Any]) -> Dict[str, Any]:
+        """Perform crossover between two parent agents' capabilities."""
+        import random
+        
+        # Extract parent capabilities from evaluation results
+        p1_tasks = parent1.get('task_results', [])
+        p2_tasks = parent2.get('task_results', [])
+        
+        # Determine best capabilities from each parent
+        p1_reasoning = any(task.get('task_type') == 'reasoning' and task.get('performance_score', 0) > 0.6 
+                          for task in p1_tasks)
+        p2_reasoning = any(task.get('task_type') == 'reasoning' and task.get('performance_score', 0) > 0.6 
+                          for task in p2_tasks)
+        
+        p1_problem_solving = any(task.get('task_type') == 'problem_solving' and task.get('performance_score', 0) > 0.6 
+                                for task in p1_tasks)
+        p2_problem_solving = any(task.get('task_type') == 'problem_solving' and task.get('performance_score', 0) > 0.6 
+                                for task in p2_tasks)
+        
+        # Combine best traits
+        return {
+            'reasoning': p1_reasoning or p2_reasoning,
+            'multimodal': random.choice([True, False]),
+            'memory_enabled': True,
+            'learning_enabled': True,
+            'collaboration': random.choice([True, False]),
+            'domains': self._combine_domains(p1_tasks, p2_tasks),
+            'context_length': random.choice([4096, 6144, 8192]),
+            'processing_power': random.uniform(0.8, 1.2)
+        }
+    
+    def _combine_domains(self, p1_tasks: List[Dict], p2_tasks: List[Dict]) -> List[str]:
+        """Combine successful domains from both parents."""
+        domains = set()
+        
+        # Add domains from high-performing tasks
+        for task in p1_tasks + p2_tasks:
+            if task.get('performance_score', 0) > 0.6:
+                task_type = task.get('task_type', '')
+                if task_type == 'reasoning':
+                    domains.add('reasoning')
+                elif task_type == 'problem_solving':
+                    domains.add('analysis')
+        
+        # Ensure at least one domain
+        if not domains:
+            domains = {'general'}
+        
+        return list(domains)
+    
+    def _mutate_capabilities(self, capabilities: Dict[str, Any]) -> Dict[str, Any]:
+        """Apply random mutations to agent capabilities."""
+        import random
+        
+        mutation_rate = self.config.mutation_rate
+        
+        # Mutate boolean capabilities
+        if random.random() < mutation_rate:
+            capabilities['multimodal'] = not capabilities['multimodal']
+        
+        if random.random() < mutation_rate:
+            capabilities['collaboration'] = not capabilities['collaboration']
+        
+        # Mutate numerical parameters
+        if random.random() < mutation_rate:
+            capabilities['context_length'] = max(2048, 
+                capabilities['context_length'] + random.randint(-1024, 1024))
+        
+        if random.random() < mutation_rate:
+            capabilities['processing_power'] = max(0.5, min(2.0, 
+                capabilities['processing_power'] + random.uniform(-0.1, 0.1)))
+        
+        # Mutate domains
+        if random.random() < mutation_rate:
+            new_domains = self._generate_random_domains()
+            capabilities['domains'] = list(set(capabilities['domains'] + new_domains))
+        
+        return capabilities
+    
+    def _extract_successful_capabilities(self, agent_result: Dict[str, Any]) -> Dict[str, Any]:
+        """Extract successful capability patterns from agent evaluation."""
+        task_results = agent_result.get('task_results', [])
+        
+        # Determine which capabilities led to success
+        successful_caps = {
+            'reasoning': any(t.get('task_type') == 'reasoning' and t.get('performance_score', 0) > 0.7 
+                           for t in task_results),
+            'problem_solving': any(t.get('task_type') == 'problem_solving' and t.get('performance_score', 0) > 0.7 
+                                 for t in task_results),
+            'adaptation': any(t.get('task_type') == 'adaptation' and t.get('performance_score', 0) > 0.7 
+                            for t in task_results),
+        }
+        
+        return {
+            'reasoning': successful_caps['reasoning'],
+            'multimodal': False,  # Conservative default
+            'memory_enabled': True,
+            'learning_enabled': True,
+            'collaboration': True,
+            'domains': ['reasoning', 'problem_solving'] if successful_caps['reasoning'] else ['general'],
+            'context_length': 4096,
+            'processing_power': min(1.5, 1.0 + (agent_result.get('fitness_score', 0.5) * 0.5))
+        }
+    
+    def _calculate_improvement_rate(self, evaluation_results: List[Dict[str, Any]]) -> float:
+        """Calculate the rate of improvement in agent performance."""
+        if len(self.evolution_history) < 2:
+            return 0.0
+        
+        current_avg = sum([r.get('fitness_score', 0.0) for r in evaluation_results]) / len(evaluation_results)
+        
+        # Find most recent agent evolution result
+        previous_avg = None
+        for hist in reversed(self.evolution_history[:-1]):
+            if 'average_fitness' in hist:
+                previous_avg = hist['average_fitness']
+                break
+        
+        if previous_avg is None:
+            return 0.0
+        
+        return (current_avg - previous_avg) / max(previous_avg, 0.001)
+    
+    async def _cleanup_old_agents(self) -> None:
+        """Clean up old agents to make room for evolved ones."""
+        if not self.aar_orchestrator:
+            return
+        
+        try:
+            # Get current agent statistics
+            stats = await self.aar_orchestrator.get_orchestration_stats()
+            agent_stats = stats.get('component_stats', {}).get('agents', {})
+            agent_counts = agent_stats.get('agent_counts', {})
+            
+            total_agents = agent_counts.get('total', 0)
+            max_agents = stats.get('config').max_concurrent_agents
+            
+            # If we're at or near capacity, clean up some agents
+            if total_agents > max_agents * 0.7:  # Clean up when at 70% capacity
+                logger.info(f"Cleaning up old agents: {total_agents}/{max_agents} capacity")
+                
+                # Get list of agent IDs (this is a simplified cleanup - in practice you'd 
+                # want more sophisticated logic to preserve important agents)
+                agent_manager = self.aar_orchestrator.agent_manager
+                agent_ids = list(agent_manager.agents.keys())
+                
+                # Remove oldest 25% of agents
+                cleanup_count = max(1, len(agent_ids) // 4)
+                for agent_id in agent_ids[:cleanup_count]:
+                    try:
+                        await agent_manager.terminate_agent(agent_id)
+                        logger.debug(f"Cleaned up agent {agent_id}")
+                    except Exception as e:
+                        logger.warning(f"Failed to cleanup agent {agent_id}: {e}")
+                        
+                logger.info(f"Cleaned up {cleanup_count} old agents")
+        except Exception as e:
+            logger.warning(f"Agent cleanup failed: {e}")
+    
     async def _evaluate_population(self) -> List[float]:
         """Evaluate fitness for entire population."""
         fitness_scores = []
@@ -232,12 +521,30 @@ class EchoSelfEvolutionEngine:
     
     async def _get_aar_context(self) -> Dict:
         """Get current AAR orchestrator context."""
-        # Placeholder for AAR integration
-        return {
-            'active_agents': 0,
-            'arena_utilization': 0.0,
-            'relation_graph_density': 0.0
-        }
+        if not self.aar_orchestrator:
+            return {
+                'active_agents': 0,
+                'arena_utilization': 0.0,
+                'relation_graph_density': 0.0
+            }
+        
+        # Get real AAR orchestration stats
+        try:
+            stats = await self.aar_orchestrator.get_orchestration_stats()
+            return {
+                'active_agents': stats.get('active_agents_count', 0),
+                'arena_utilization': stats.get('component_stats', {}).get('simulation', {}).get('utilization', 0.0),
+                'relation_graph_density': stats.get('component_stats', {}).get('relations', {}).get('graph_density', 0.0),
+                'system_health': stats.get('system_health', {}).get('overall_score', 1.0),
+                'integration_status': stats.get('integration_status', {})
+            }
+        except Exception as e:
+            logger.warning(f"Failed to get AAR context: {e}")
+            return {
+                'active_agents': 0,
+                'arena_utilization': 0.0,
+                'relation_graph_density': 0.0
+            }
     
     async def _create_next_generation(self) -> List[Individual]:
         """Create next generation through selection and reproduction."""

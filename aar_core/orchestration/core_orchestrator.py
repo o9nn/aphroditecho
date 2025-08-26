@@ -10,7 +10,7 @@ import asyncio
 import logging
 from dataclasses import dataclass
 
-from ..agents.agent_manager import AgentManager, AgentCapabilities
+from ..agents.agent_manager import AgentManager, AgentCapabilities, AgentStatus
 from ..arena.simulation_engine import SimulationEngine, ArenaType
 from ..relations.relation_graph import RelationGraph, RelationType
 
@@ -267,9 +267,15 @@ class AARCoreOrchestrator:
         simulation_stats = self.simulation_engine.get_system_stats() if self.simulation_engine else {}
         relation_stats = self.relation_graph.get_graph_stats() if self.relation_graph else {}
         
+        # Extract active agents count for top-level access
+        active_agents_count = 0
+        if agent_stats and 'agent_counts' in agent_stats:
+            active_agents_count = agent_stats['agent_counts'].get('active', 0)
+        
         return {
             'performance_stats': self.performance_stats,
             'config': self.config,
+            'active_agents_count': active_agents_count,  # Add for test compatibility
             'integration_status': {
                 'aphrodite_engine': self.aphrodite_engine is not None,
                 'dtesn_kernel': self.dtesn_kernel is not None,
@@ -306,6 +312,216 @@ class AARCoreOrchestrator:
             'error_rate': error_rate,
             'status': 'healthy' if health_score > 0.8 else 'degraded' if health_score > 0.5 else 'critical'
         }
+    
+    async def run_agent_evaluation(self, agent_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Run agent evaluation in virtual arena for evolution engine."""
+        try:
+            # Spawn agent for evaluation if not already active
+            agent_id = agent_data.get('id')
+            if not agent_id or agent_id not in self.agent_manager.agents:
+                # Create temporary agent for evaluation
+                capabilities = AgentCapabilities(
+                    reasoning=agent_data.get('reasoning', True),
+                    multimodal=agent_data.get('multimodal', False),
+                    memory_enabled=agent_data.get('memory_enabled', True),
+                    learning_enabled=agent_data.get('learning_enabled', True),
+                    collaboration=agent_data.get('collaboration', True)
+                )
+                agent_id = await self.agent_manager.spawn_agent(capabilities, context={'evaluation': True})
+            
+            # Create evaluation arena
+            arena_id = None
+            if self.simulation_engine:
+                arena_context = {
+                    'evaluation_mode': True,
+                    'agent_count': 1,
+                    'arena_type': 'evaluation'
+                }
+                arena_id = await self._get_arena(arena_context)
+            
+            # Run evaluation tasks
+            evaluation_tasks = [
+                {'type': 'reasoning', 'complexity': 'medium'},
+                {'type': 'problem_solving', 'complexity': 'high'},
+                {'type': 'adaptation', 'complexity': 'variable'}
+            ]
+            
+            results = []
+            for task in evaluation_tasks:
+                task_result = await self._evaluate_agent_task(agent_id, task, arena_id)
+                results.append(task_result)
+            
+            # Calculate overall fitness score
+            fitness_score = self._calculate_agent_fitness(results)
+            
+            # Clean up temporary agent if created for evaluation
+            if agent_data.get('temporary_agent', False):
+                await self.agent_manager.terminate_agent(agent_id)
+            
+            return {
+                'agent_id': agent_id,
+                'arena_id': arena_id,
+                'fitness_score': fitness_score,
+                'task_results': results,
+                'evaluation_timestamp': asyncio.get_event_loop().time()
+            }
+            
+        except Exception as e:
+            logger.error(f"Error during agent evaluation: {e}")
+            return {
+                'agent_id': agent_data.get('id'),
+                'fitness_score': 0.0,
+                'error': str(e),
+                'evaluation_timestamp': asyncio.get_event_loop().time()
+            }
+    
+    async def _evaluate_agent_task(self, agent_id: str, task: Dict[str, Any], arena_id: Optional[str] = None) -> Dict[str, Any]:
+        """Evaluate agent performance on a specific task."""
+        start_time = asyncio.get_event_loop().time()
+        
+        # Simulate task execution in arena
+        if arena_id and self.simulation_engine:
+            arena_result = await self._run_arena_task(agent_id, task, arena_id)
+        else:
+            # Basic task execution without arena
+            arena_result = await self._run_basic_task(agent_id, task)
+        
+        end_time = asyncio.get_event_loop().time()
+        execution_time = end_time - start_time
+        
+        return {
+            'task_type': task['type'],
+            'complexity': task['complexity'],
+            'execution_time': execution_time,
+            'success_rate': arena_result.get('success_rate', 0.5),
+            'performance_score': arena_result.get('performance_score', 0.5),
+            'arena_interactions': arena_result.get('interactions', [])
+        }
+    
+    async def _run_arena_task(self, agent_id: str, task: Dict[str, Any], arena_id: str) -> Dict[str, Any]:
+        """Run task in virtual arena environment."""
+        # Simulate arena-based task execution
+        await asyncio.sleep(0.01)  # Simulate processing time
+        
+        # Mock arena interaction results based on task complexity
+        base_performance = 0.6
+        complexity_factor = {'low': 1.2, 'medium': 1.0, 'high': 0.8, 'variable': 0.9}.get(task['complexity'], 1.0)
+        
+        performance_score = min(1.0, base_performance * complexity_factor)
+        success_rate = max(0.1, performance_score - 0.1)
+        
+        return {
+            'success_rate': success_rate,
+            'performance_score': performance_score,
+            'interactions': [
+                {'type': 'environment_analysis', 'score': performance_score},
+                {'type': 'task_execution', 'score': success_rate},
+                {'type': 'adaptation', 'score': min(1.0, performance_score + 0.1)}
+            ]
+        }
+    
+    async def _run_basic_task(self, agent_id: str, task: Dict[str, Any]) -> Dict[str, Any]:
+        """Run basic task without arena simulation."""
+        await asyncio.sleep(0.005)  # Simulate processing time
+        
+        # Mock basic task results
+        base_performance = 0.5
+        complexity_factor = {'low': 1.1, 'medium': 1.0, 'high': 0.9, 'variable': 0.95}.get(task['complexity'], 1.0)
+        
+        performance_score = min(1.0, base_performance * complexity_factor)
+        
+        return {
+            'success_rate': performance_score,
+            'performance_score': performance_score,
+            'interactions': []
+        }
+    
+    def _calculate_agent_fitness(self, task_results: List[Dict[str, Any]]) -> float:
+        """Calculate overall agent fitness from task results."""
+        if not task_results:
+            return 0.0
+        
+        # Weighted fitness calculation
+        total_score = 0.0
+        total_weight = 0.0
+        
+        task_weights = {
+            'reasoning': 0.4,
+            'problem_solving': 0.4,
+            'adaptation': 0.2
+        }
+        
+        for result in task_results:
+            task_type = result['task_type']
+            weight = task_weights.get(task_type, 0.3)
+            performance = result['performance_score']
+            
+            # Adjust for execution efficiency
+            time_penalty = min(0.1, result['execution_time'] * 0.01)
+            adjusted_performance = max(0.0, performance - time_penalty)
+            
+            total_score += adjusted_performance * weight
+            total_weight += weight
+        
+        return total_score / total_weight if total_weight > 0 else 0.0
+    
+    async def update_agent_configurations(self, agent_configs: List[Dict[str, Any]]) -> None:
+        """Update agent configurations after evolution."""
+        # First, clean up old agents to make room for evolved ones
+        active_count = len([a for a in self.agent_manager.agents.values() 
+                           if a.status not in [AgentStatus.TERMINATED, AgentStatus.ERROR]])
+        
+        # Calculate available capacity
+        available_capacity = self.config.max_concurrent_agents - active_count
+        
+        # Limit the number of new agents to available capacity
+        max_new_agents = min(len(agent_configs), available_capacity)
+        
+        if max_new_agents < len(agent_configs):
+            logger.warning(f"Limited new agents to {max_new_agents} due to capacity constraints")
+            agent_configs = agent_configs[:max_new_agents]
+        
+        for config in agent_configs:
+            agent_id = config.get('id')
+            if agent_id and agent_id in self.agent_manager.agents:
+                # Update agent with evolved parameters
+                await self._apply_evolved_config(agent_id, config)
+            elif not config.get('temporary_agent', False):  # Only create permanent agents
+                # Spawn new evolved agent
+                capabilities = self._config_to_capabilities(config)
+                context = {'evolved': True, 'generation': config.get('generation', 0)}
+                try:
+                    new_agent_id = await self.agent_manager.spawn_agent(capabilities, context)
+                    logger.info(f"Spawned evolved agent {new_agent_id} from generation {config.get('generation', 0)}")
+                except Exception as e:
+                    logger.warning(f"Failed to spawn evolved agent: {e}")
+                    break  # Stop spawning if we hit capacity
+    
+    async def _apply_evolved_config(self, agent_id: str, config: Dict[str, Any]) -> None:
+        """Apply evolved configuration to existing agent."""
+        agent = self.agent_manager.agents.get(agent_id)
+        if agent:
+            # Update agent parameters
+            evolution_data = {
+                'new_capabilities': config.get('capabilities', {}),
+                'learning_parameters': config.get('learning_params', {}),
+                'performance_targets': config.get('targets', {})
+            }
+            await self.agent_manager.evolve_agent(agent_id, evolution_data)
+    
+    def _config_to_capabilities(self, config: Dict[str, Any]) -> AgentCapabilities:
+        """Convert evolution config to agent capabilities."""
+        cap_data = config.get('capabilities', {})
+        return AgentCapabilities(
+            reasoning=cap_data.get('reasoning', True),
+            multimodal=cap_data.get('multimodal', False),
+            memory_enabled=cap_data.get('memory_enabled', True),
+            learning_enabled=cap_data.get('learning_enabled', True),
+            collaboration=cap_data.get('collaboration', True),
+            specialized_domains=cap_data.get('domains', []),
+            max_context_length=cap_data.get('context_length', 4096),
+            processing_power=cap_data.get('processing_power', 1.0)
+        )
     
     async def shutdown(self) -> None:
         """Graceful shutdown of orchestration system."""

@@ -18,7 +18,9 @@ from .hardware_abstraction import (
     VirtualSensor, VirtualActuator,
     HardwareDevice, HardwareRegistry,
     SensorType, ActuatorType, HardwareType,
-    SensorReading, ActuatorCommand, HardwareEvent
+    SensorReading, ActuatorCommand, HardwareEvent,
+    VisionSensor, AuditorySensor, TactileSensor,
+    MultiModalSensorManager
 )
 from .hardware_integration import (
     EmbodiedHardwareManager,
@@ -39,6 +41,7 @@ __all__ = [
     'VirtualSensor', 'VirtualActuator', 'HardwareDevice', 'HardwareRegistry',
     'SensorType', 'ActuatorType', 'HardwareType',
     'SensorReading', 'ActuatorCommand', 'HardwareEvent',
+    'VisionSensor', 'AuditorySensor', 'TactileSensor', 'MultiModalSensorManager',
     
     # Hardware Integration Components (Phase 2.2.3)
     'EmbodiedHardwareManager', 'ProprioceptiveHardwareBridge', 'HardwareMapping'

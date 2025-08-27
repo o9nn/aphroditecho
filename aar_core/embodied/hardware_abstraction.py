@@ -42,6 +42,7 @@ class SensorType(Enum):
     IMU = "imu"
     LIDAR = "lidar"
     TOUCH = "touch"
+    AUDITORY = "auditory"
 
 
 class ActuatorType(Enum):
@@ -674,3 +675,413 @@ class EmbeddedHardwareSimulator:
         return (avg_latency_ms <= MAX_AVG_LATENCY_MS and
                 max_latency_ms <= MAX_LATENCY_MS and
                 rt_performance >= MIN_RT_PERFORMANCE)
+
+
+class VisionSensor(VirtualSensor):
+    """Vision sensor with configurable camera parameters for visual processing."""
+    
+    def __init__(self,
+                 sensor_id: str,
+                 position: Tuple[float, float, float] = (0.0, 0.0, 0.0),
+                 update_rate: float = 30.0,  # 30 FPS default
+                 resolution: Tuple[int, int] = (640, 480),
+                 field_of_view: float = 60.0,  # degrees
+                 depth_range: Tuple[float, float] = (0.1, 100.0)):  # min/max depth
+        super().__init__(sensor_id, SensorType.VISION, position, update_rate, 0.0, 255.0)
+        self.resolution = resolution
+        self.field_of_view = field_of_view
+        self.depth_range = depth_range
+        
+        # Vision-specific parameters
+        self.focal_length = self._calculate_focal_length()
+        self.intrinsic_matrix = self._calculate_intrinsic_matrix()
+        
+        # Processing parameters
+        self.exposure = 1.0
+        self.gain = 1.0
+        self.white_balance = (1.0, 1.0, 1.0)  # RGB multipliers
+        
+    def _calculate_focal_length(self) -> float:
+        """Calculate focal length from field of view and resolution."""
+        return (self.resolution[0] / 2.0) / np.tan(np.radians(self.field_of_view / 2.0))
+        
+    def _calculate_intrinsic_matrix(self) -> np.ndarray:
+        """Calculate camera intrinsic matrix."""
+        fx = fy = self.focal_length
+        cx, cy = self.resolution[0] / 2.0, self.resolution[1] / 2.0
+        return np.array([[fx, 0, cx],
+                        [0, fy, cy],
+                        [0, 0, 1]])
+    
+    def _simulate_sensor_value(self, environment_data: Optional[Dict[str, Any]]) -> np.ndarray:
+        """Simulate vision sensor reading (simplified image processing)."""
+        if environment_data is None:
+            environment_data = {}
+            
+        # Simulate basic image features (in real implementation would process actual image)
+        features = {}
+        
+        # Object detection simulation
+        objects = environment_data.get('objects', [])
+        features['object_count'] = len(objects)
+        
+        # Lighting simulation
+        ambient_light = environment_data.get('ambient_light', 0.5)
+        features['brightness'] = ambient_light * self.exposure * self.gain
+        
+        # Depth information
+        features['average_depth'] = np.random.uniform(self.depth_range[0], self.depth_range[1])
+        
+        # Motion detection
+        features['motion_detected'] = environment_data.get('motion_detected', False)
+        
+        # Color distribution (simplified)
+        features['dominant_color'] = environment_data.get('dominant_color', [0.5, 0.5, 0.5])
+        
+        # Convert features to array for processing
+        feature_array = np.array([
+            features['object_count'],
+            features['brightness'], 
+            features['average_depth'],
+            float(features['motion_detected']),
+            *features['dominant_color']
+        ])
+        
+        return feature_array
+        
+    def get_camera_parameters(self) -> Dict[str, Any]:
+        """Get camera parameters for 3D processing."""
+        return {
+            'resolution': self.resolution,
+            'field_of_view': self.field_of_view,
+            'focal_length': self.focal_length,
+            'intrinsic_matrix': self.intrinsic_matrix.tolist(),
+            'depth_range': self.depth_range,
+            'position': self.position.tolist()
+        }
+
+
+class AuditorySensor(VirtualSensor):
+    """Auditory sensor with spatial sound processing capabilities."""
+    
+    def __init__(self,
+                 sensor_id: str,
+                 position: Tuple[float, float, float] = (0.0, 0.0, 0.0),
+                 update_rate: float = 44.1,  # 44.1 kHz sample rate
+                 frequency_range: Tuple[float, float] = (20.0, 20000.0),  # Human hearing range
+                 spatial_resolution: int = 360):  # Degrees of spatial resolution
+        super().__init__(sensor_id, SensorType.AUDITORY, position, update_rate, -100.0, 100.0)
+        self.frequency_range = frequency_range
+        self.spatial_resolution = spatial_resolution
+        
+        # Spatial processing parameters
+        self.head_radius = 0.0875  # Average human head radius in meters
+        self.ear_separation = 0.175  # Average ear separation distance
+        
+        # Audio processing buffers
+        self.audio_buffer = []
+        self.buffer_size = int(update_rate * 0.1)  # 100ms buffer
+        
+        # Frequency analysis
+        self.num_frequency_bins = 256
+        self.frequency_bins = np.linspace(frequency_range[0], frequency_range[1], self.num_frequency_bins)
+        
+    def _simulate_sensor_value(self, environment_data: Optional[Dict[str, Any]]) -> np.ndarray:
+        """Simulate auditory sensor reading with spatial processing."""
+        if environment_data is None:
+            environment_data = {}
+            
+        # Get sound sources from environment
+        sound_sources = environment_data.get('sound_sources', [])
+        
+        # Initialize spatial audio features
+        spatial_features = np.zeros(self.spatial_resolution // 45)  # 8 directional sectors
+        frequency_features = np.zeros(self.num_frequency_bins // 32)  # 8 frequency bands
+        
+        for source in sound_sources:
+            source_pos = np.array(source.get('position', [0, 0, 0]))
+            source_volume = source.get('volume', 0.5)
+            source_frequency = source.get('frequency', 1000.0)
+            
+            # Calculate spatial direction
+            direction_vector = source_pos - self.position
+            if np.linalg.norm(direction_vector) > 0:
+                direction_vector = direction_vector / np.linalg.norm(direction_vector)
+                
+                # Convert to azimuth angle (0-360 degrees)
+                azimuth = np.degrees(np.arctan2(direction_vector[1], direction_vector[0]))
+                azimuth = (azimuth + 360) % 360
+                
+                # Map to spatial sector
+                sector = int(azimuth // 45)  # 8 sectors of 45 degrees each
+                spatial_features[sector] += source_volume
+                
+            # Map frequency to bin
+            freq_bin = int((source_frequency - self.frequency_range[0]) / 
+                          (self.frequency_range[1] - self.frequency_range[0]) * 
+                          len(frequency_features))
+            freq_bin = np.clip(freq_bin, 0, len(frequency_features) - 1)
+            frequency_features[freq_bin] += source_volume
+        
+        # Add ambient noise
+        ambient_noise = environment_data.get('ambient_noise', 0.1)
+        spatial_features += np.random.normal(0, ambient_noise, spatial_features.shape)
+        frequency_features += np.random.normal(0, ambient_noise, frequency_features.shape)
+        
+        # Combine spatial and frequency features
+        audio_features = np.concatenate([spatial_features, frequency_features])
+        
+        return audio_features
+        
+    def get_spatial_localization(self, audio_data: np.ndarray) -> Dict[str, Any]:
+        """Process audio data for spatial localization."""
+        # Simplified spatial localization (in real implementation would use HRTF, beamforming, etc.)
+        spatial_sectors = audio_data[:len(audio_data)//2]  # First half is spatial data
+        
+        # Find dominant direction
+        dominant_sector = np.argmax(spatial_sectors)
+        dominant_angle = dominant_sector * 45  # Convert sector to degrees
+        
+        # Calculate confidence based on energy concentration
+        total_energy = np.sum(spatial_sectors)
+        max_energy = np.max(spatial_sectors)
+        confidence = max_energy / total_energy if total_energy > 0 else 0
+        
+        return {
+            'dominant_direction_degrees': dominant_angle,
+            'confidence': confidence,
+            'energy_distribution': spatial_sectors.tolist()
+        }
+
+
+class TactileSensor(VirtualSensor):
+    """Tactile sensor for surface interaction with pressure and texture detection."""
+    
+    def __init__(self,
+                 sensor_id: str,
+                 position: Tuple[float, float, float] = (0.0, 0.0, 0.0),
+                 update_rate: float = 1000.0,  # 1 kHz for high-resolution tactile feedback
+                 sensing_area: Tuple[float, float] = (0.01, 0.01),  # 1cm x 1cm sensing area
+                 pressure_range: Tuple[float, float] = (0.0, 10.0)):  # 0-10 N/cm²
+        super().__init__(sensor_id, SensorType.TOUCH, position, update_rate, 
+                        pressure_range[0], pressure_range[1])
+        self.sensing_area = sensing_area
+        self.pressure_range = pressure_range
+        
+        # Tactile sensing parameters
+        self.spatial_resolution = (8, 8)  # 8x8 tactile array
+        self.temperature_sensitivity = True
+        self.texture_detection = True
+        
+        # Contact state
+        self.contact_detected = False
+        self.contact_force = 0.0
+        self.contact_area = 0.0
+        
+    def _simulate_sensor_value(self, environment_data: Optional[Dict[str, Any]]) -> np.ndarray:
+        """Simulate tactile sensor reading with pressure and texture information."""
+        if environment_data is None:
+            environment_data = {}
+            
+        # Get contact information from environment
+        contact_info = environment_data.get('contact_info', {})
+        
+        # Initialize tactile array
+        tactile_array = np.zeros(self.spatial_resolution)
+        
+        if contact_info.get('in_contact', False):
+            self.contact_detected = True
+            
+            # Simulate pressure distribution
+            contact_pressure = contact_info.get('pressure', 1.0)
+            contact_position = contact_info.get('contact_position', (0.5, 0.5))  # Normalized position
+            
+            # Create pressure distribution around contact point
+            for i in range(self.spatial_resolution[0]):
+                for j in range(self.spatial_resolution[1]):
+                    # Calculate distance from contact point
+                    center_x = contact_position[0] * self.spatial_resolution[0]
+                    center_y = contact_position[1] * self.spatial_resolution[1]
+                    distance = np.sqrt((i - center_x)**2 + (j - center_y)**2)
+                    
+                    # Apply pressure with falloff based on distance
+                    pressure_falloff = np.exp(-distance * 0.5)
+                    tactile_array[i, j] = contact_pressure * pressure_falloff
+            
+            # Add texture information
+            if self.texture_detection:
+                texture_roughness = contact_info.get('texture_roughness', 0.1)
+                texture_noise = np.random.normal(0, texture_roughness, tactile_array.shape)
+                tactile_array += texture_noise
+                
+            self.contact_force = contact_pressure
+            self.contact_area = np.sum(tactile_array > 0.1) / np.prod(self.spatial_resolution)
+            
+        else:
+            self.contact_detected = False
+            self.contact_force = 0.0
+            self.contact_area = 0.0
+        
+        # Add temperature information if enabled
+        if self.temperature_sensitivity:
+            surface_temperature = contact_info.get('surface_temperature', 25.0)  # Celsius
+            temperature_offset = (surface_temperature - 25.0) / 100.0  # Normalize
+            tactile_array += temperature_offset
+        
+        # Flatten array for sensor reading
+        tactile_features = tactile_array.flatten()
+        
+        # Add summary features
+        summary_features = np.array([
+            self.contact_force,
+            self.contact_area,
+            np.mean(tactile_array),
+            np.std(tactile_array)
+        ])
+        
+        return np.concatenate([tactile_features, summary_features])
+        
+    def get_contact_info(self) -> Dict[str, Any]:
+        """Get detailed contact information."""
+        return {
+            'contact_detected': self.contact_detected,
+            'contact_force': self.contact_force,
+            'contact_area': self.contact_area,
+            'sensing_area': self.sensing_area,
+            'spatial_resolution': self.spatial_resolution,
+            'position': self.position.tolist()
+        }
+
+
+class MultiModalSensorManager:
+    """Manager for coordinating multiple sensor modalities for multi-modal perception."""
+    
+    def __init__(self, sensor_fusion_enabled: bool = True):
+        self.sensors = {}
+        self.sensor_fusion_enabled = sensor_fusion_enabled
+        
+        # Sensor coordination
+        self.sync_tolerance = 0.01  # 10ms synchronization tolerance
+        self.fusion_buffer = {}
+        
+        # Multi-modal fusion parameters
+        self.modality_weights = {
+            SensorType.VISION: 0.4,
+            SensorType.AUDITORY: 0.3,
+            SensorType.TOUCH: 0.3
+        }
+        
+    def register_sensor(self, sensor: VirtualSensor) -> bool:
+        """Register a sensor for multi-modal coordination."""
+        if sensor.device_id in self.sensors:
+            return False
+            
+        self.sensors[sensor.device_id] = sensor
+        self.fusion_buffer[sensor.device_id] = []
+        return True
+        
+    def unregister_sensor(self, sensor_id: str) -> bool:
+        """Unregister a sensor."""
+        if sensor_id not in self.sensors:
+            return False
+            
+        del self.sensors[sensor_id]
+        del self.fusion_buffer[sensor_id]
+        return True
+        
+    def get_synchronized_readings(self, environment_data: Optional[Dict[str, Any]] = None) -> Dict[str, SensorReading]:
+        """Get synchronized readings from all registered sensors."""
+        current_time = time.time()
+        readings = {}
+        
+        for sensor_id, sensor in self.sensors.items():
+            reading = sensor.read_sensor(environment_data)
+            readings[sensor_id] = reading
+            
+            # Store in fusion buffer
+            self.fusion_buffer[sensor_id].append(reading)
+            
+            # Keep only recent readings (within sync tolerance)
+            self.fusion_buffer[sensor_id] = [
+                r for r in self.fusion_buffer[sensor_id] 
+                if current_time - r.timestamp < self.sync_tolerance * 10
+            ]
+            
+        return readings
+        
+    def fuse_sensor_data(self, readings: Dict[str, SensorReading]) -> Dict[str, Any]:
+        """Fuse multi-modal sensor data for enhanced perception."""
+        if not self.sensor_fusion_enabled or not readings:
+            return {}
+            
+        fused_data = {
+            'timestamp': time.time(),
+            'modalities': {},
+            'fused_features': {},
+            'confidence': 0.0
+        }
+        
+        total_weight = 0.0
+        weighted_confidence = 0.0
+        
+        # Process each modality
+        for sensor_id, reading in readings.items():
+            sensor = self.sensors[sensor_id]
+            modality = sensor.sensor_type
+            
+            fused_data['modalities'][modality.value] = {
+                'sensor_id': sensor_id,
+                'value': reading.value if isinstance(reading.value, (int, float)) else reading.value.tolist(),
+                'confidence': reading.confidence,
+                'timestamp': reading.timestamp
+            }
+            
+            # Weight confidence by modality importance
+            weight = self.modality_weights.get(modality, 1.0)
+            weighted_confidence += reading.confidence * weight
+            total_weight += weight
+            
+        # Calculate overall confidence
+        if total_weight > 0:
+            fused_data['confidence'] = weighted_confidence / total_weight
+            
+        # Cross-modal feature extraction (simplified)
+        if SensorType.VISION in [s.sensor_type for s in self.sensors.values()]:
+            if SensorType.AUDITORY in [s.sensor_type for s in self.sensors.values()]:
+                # Audio-visual correlation
+                fused_data['fused_features']['audiovisual_correlation'] = self._calculate_audiovisual_correlation(readings)
+                
+        if SensorType.VISION in [s.sensor_type for s in self.sensors.values()]:
+            if SensorType.TOUCH in [s.sensor_type for s in self.sensors.values()]:
+                # Visuo-tactile correlation
+                fused_data['fused_features']['visuotactile_correlation'] = self._calculate_visuotactile_correlation(readings)
+                
+        return fused_data
+        
+    def _calculate_audiovisual_correlation(self, readings: Dict[str, SensorReading]) -> float:
+        """Calculate correlation between audio and visual modalities."""
+        # Simplified correlation calculation
+        # In real implementation would use temporal synchrony, spatial correspondence, etc.
+        return np.random.uniform(0.5, 1.0)  # Placeholder
+        
+    def _calculate_visuotactile_correlation(self, readings: Dict[str, SensorReading]) -> float:
+        """Calculate correlation between visual and tactile modalities."""
+        # Simplified correlation calculation
+        return np.random.uniform(0.5, 1.0)  # Placeholder
+        
+    def get_system_status(self) -> Dict[str, Any]:
+        """Get multi-modal sensor system status."""
+        return {
+            'sensor_count': len(self.sensors),
+            'registered_sensors': {
+                sensor_id: {
+                    'type': sensor.sensor_type.value,
+                    'active': sensor.active,
+                    'position': sensor.position.tolist()
+                }
+                for sensor_id, sensor in self.sensors.items()
+            },
+            'fusion_enabled': self.sensor_fusion_enabled,
+            'modality_weights': {k.value: v for k, v in self.modality_weights.items()},
+            'sync_tolerance': self.sync_tolerance
+        }

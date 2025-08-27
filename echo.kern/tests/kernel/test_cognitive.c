@@ -55,6 +55,11 @@ static bool test_multimodal_fusion_early(void);
 static bool test_multimodal_fusion_adaptive(void);
 static bool test_oeis_compliance(void);
 static bool test_performance_targets(void);
+
+/* Phase 3.1.2 Sensor Fusion Framework Tests */
+static bool test_sensor_calibration_adaptation(void);
+static bool test_robust_noisy_perception(void);
+
 static bool test_error_handling(void);
 static bool test_concurrent_operations(void);
 
@@ -888,6 +893,189 @@ static bool test_oeis_compliance(void) {
 }
 
 /**
+ * Test sensor calibration and adaptation (Phase 3.1.2)
+ */
+static bool test_sensor_calibration_adaptation(void) {
+    uint64_t start_time = get_time_ns();
+    bool passed = true;
+    
+    printf("Testing sensor calibration and adaptation system...\n");
+    
+    dtesn_cognitive_init();
+    
+    /* Test sensor calibration creation */
+    dtesn_sensor_calibration_t *calibration = dtesn_sensor_calibration_create(0, DTESN_NOISE_ADAPTIVE);
+    passed = passed && (calibration != NULL);
+    
+    if (calibration) {
+        /* Create test modality data with noise */
+        dtesn_cognitive_modality_data_t test_modality;
+        test_modality.modality_id = 0;
+        strcpy(test_modality.name, "test_sensor");
+        test_modality.data_size = 50;
+        test_modality.data = malloc(test_modality.data_size * sizeof(float));
+        test_modality.confidence = 0.8f;
+        test_modality.timestamp_ns = get_time_ns();
+        test_modality.valid = true;
+        
+        /* Generate synthetic noisy signal */
+        for (uint32_t i = 0; i < test_modality.data_size; i++) {
+            float clean_signal = sinf(i * 0.2f);
+            float noise = ((float)rand() / RAND_MAX - 0.5f) * 0.3f;
+            test_modality.data[i] = clean_signal + noise;
+        }
+        
+        /* Test calibration */
+        int cal_result = dtesn_sensor_calibrate(calibration, &test_modality);
+        passed = passed && (cal_result == 0);
+        
+        if (cal_result == 0) {
+            printf("    Sensor calibration successful\n");
+            
+            /* Test noise filtering */
+            dtesn_cognitive_modality_data_t filtered_modality = {0};
+            int filter_result = dtesn_sensor_filter_noise(calibration, &test_modality, &filtered_modality);
+            passed = passed && (filter_result == 0);
+            
+            if (filter_result == 0) {
+                /* Verify filtered data exists and differs from input */
+                bool filter_effective = false;
+                for (uint32_t i = 0; i < test_modality.data_size; i++) {
+                    if (fabsf(filtered_modality.data[i] - test_modality.data[i]) > TEST_TOLERANCE) {
+                        filter_effective = true;
+                        break;
+                    }
+                }
+                passed = passed && filter_effective;
+                printf("    Noise filtering %s\n", filter_effective ? "effective" : "ineffective");
+                
+                /* Test calibration statistics */
+                char stats_buffer[1024];
+                int stats_result = dtesn_sensor_calibration_get_stats(calibration, stats_buffer, sizeof(stats_buffer));
+                passed = passed && (stats_result == 0);
+                
+                if (stats_result == 0) {
+                    printf("    Calibration stats retrieved successfully\n");
+                }
+                
+                free(filtered_modality.data);
+            }
+        }
+        
+        free(test_modality.data);
+        dtesn_sensor_calibration_destroy(calibration);
+    }
+    
+    dtesn_cognitive_cleanup();
+    
+    uint64_t test_time = get_time_ns() - start_time;
+    print_test_result("Sensor Calibration and Adaptation (Phase 3.1.2)", passed, test_time);
+    
+    return passed;
+}
+
+/**
+ * Test robust perception under noisy conditions (Phase 3.1.2)
+ */
+static bool test_robust_noisy_perception(void) {
+    uint64_t start_time = get_time_ns();
+    bool passed = true;
+    
+    printf("Testing robust perception under noisy conditions...\n");
+    
+    dtesn_cognitive_init();
+    
+    dtesn_esn_reservoir_t *reservoir = create_test_reservoir();
+    dtesn_cognitive_system_t *system = dtesn_cognitive_system_create("noisy_perception", reservoir);
+    
+    if (system) {
+        /* Test with increasing noise levels */
+        float noise_levels[] = {0.1f, 0.3f, 0.5f, 0.8f};
+        int robust_tests_passed = 0;
+        
+        for (size_t noise_idx = 0; noise_idx < sizeof(noise_levels)/sizeof(noise_levels[0]); noise_idx++) {
+            float noise_level = noise_levels[noise_idx];
+            
+            /* Create noisy modality data */
+            uint32_t num_modalities = 3;
+            dtesn_cognitive_modality_data_t modalities[3];
+            
+            for (uint32_t i = 0; i < num_modalities; i++) {
+                modalities[i].modality_id = i;
+                sprintf(modalities[i].name, "noisy_sensor_%u", i);
+                modalities[i].data_size = 30;
+                modalities[i].data = malloc(modalities[i].data_size * sizeof(float));
+                modalities[i].confidence = fmaxf(0.1f, 1.0f - noise_level);
+                modalities[i].timestamp_ns = get_time_ns() + i * 1000000;
+                modalities[i].valid = true;
+                
+                /* Generate clean signal with added noise */
+                for (uint32_t j = 0; j < modalities[i].data_size; j++) {
+                    float clean_signal = cosf(j * 0.1f * (i + 1));
+                    float noise = ((float)rand() / RAND_MAX - 0.5f) * 2.0f * noise_level;
+                    modalities[i].data[j] = clean_signal + noise;
+                }
+            }
+            
+            /* Test adaptive fusion under noise */
+            uint32_t output_size = 40;
+            float *fused_output = malloc(output_size * sizeof(float));
+            
+            int fusion_result = dtesn_multimodal_fuse(system, modalities, num_modalities,
+                                                    DTESN_COGNITIVE_FUSION_ADAPTIVE,
+                                                    fused_output, output_size);
+            
+            if (fusion_result == 0) {
+                /* Check if fusion output is reasonable despite noise */
+                float output_energy = 0.0f;
+                for (uint32_t i = 0; i < output_size; i++) {
+                    output_energy += fused_output[i] * fused_output[i];
+                }
+                output_energy = sqrtf(output_energy / output_size);
+                
+                /* Fusion should maintain reasonable energy levels even with noise */
+                bool robust_fusion = output_energy > 0.1f && output_energy < 10.0f;
+                if (robust_fusion) {
+                    robust_tests_passed++;
+                }
+                
+                printf("    Noise level %.1f: %s (energy: %.3f)\n", 
+                       noise_level, robust_fusion ? "Robust" : "Degraded", output_energy);
+            }
+            
+            /* Cleanup */
+            for (uint32_t i = 0; i < num_modalities; i++) {
+                free(modalities[i].data);
+            }
+            free(fused_output);
+        }
+        
+        /* System should be robust in at least 3/4 noise conditions */
+        bool overall_robust = robust_tests_passed >= 3;
+        passed = passed && overall_robust;
+        
+        printf("    Robust performance in %d/4 noise conditions\n", robust_tests_passed);
+        
+        dtesn_cognitive_system_destroy(system);
+    }
+    
+    if (reservoir) {
+        free(reservoir->x_current);
+        free(reservoir->x_previous);
+        free(reservoir->u_current);
+        free(reservoir->y_current);
+        free(reservoir);
+    }
+    
+    dtesn_cognitive_cleanup();
+    
+    uint64_t test_time = get_time_ns() - start_time;
+    print_test_result("Robust Noisy Perception (Phase 3.1.2)", passed, test_time);
+    
+    return passed;
+}
+
+/**
  * Test error handling
  */
 static bool test_error_handling(void) {
@@ -977,6 +1165,11 @@ int main(void) {
     test_multimodal_fusion_early();
     test_multimodal_fusion_adaptive();
     test_oeis_compliance();
+    
+    /* Phase 3.1.2 Sensor Fusion Framework Tests */
+    test_sensor_calibration_adaptation();
+    test_robust_noisy_perception();
+    
     test_error_handling();
     
     /* Print summary */

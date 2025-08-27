@@ -363,6 +363,82 @@ int dtesn_multimodal_fuse(dtesn_cognitive_system_t *system,
                          float *output,
                          uint32_t output_size);
 
+/* Sensor calibration and adaptation functions (Phase 3.1.2) */
+
+/* Forward declaration for sensor calibration structure */
+typedef struct dtesn_sensor_calibration dtesn_sensor_calibration_t;
+
+/* Enhanced noise model types */
+typedef enum {
+    DTESN_NOISE_GAUSSIAN = 0,       /* Gaussian noise model */
+    DTESN_NOISE_UNIFORM = 1,        /* Uniform noise model */
+    DTESN_NOISE_IMPULSE = 2,        /* Impulse/salt-and-pepper noise */
+    DTESN_NOISE_ADAPTIVE = 3        /* Adaptive noise model */
+} dtesn_noise_model_type_t;
+
+/**
+ * dtesn_sensor_calibration_create - Create sensor calibration system
+ * @sensor_id: Unique sensor identifier
+ * @noise_model: Noise model type to use
+ * 
+ * Creates a new sensor calibration system for adaptive noise filtering
+ * and sensor parameter adaptation.
+ * 
+ * Returns: Pointer to calibration system on success, NULL on failure
+ */
+dtesn_sensor_calibration_t *dtesn_sensor_calibration_create(uint32_t sensor_id,
+                                                          dtesn_noise_model_type_t noise_model);
+
+/**
+ * dtesn_sensor_calibration_destroy - Destroy sensor calibration system
+ * @calibration: Target calibration system
+ * 
+ * Destroys a sensor calibration system and frees all associated resources.
+ */
+void dtesn_sensor_calibration_destroy(dtesn_sensor_calibration_t *calibration);
+
+/**
+ * dtesn_sensor_calibrate - Calibrate sensor with current data
+ * @calibration: Target calibration system
+ * @modality: Current modality data for calibration
+ * 
+ * Performs sensor calibration using current modality data, updating
+ * noise parameters and adaptation settings.
+ * 
+ * Returns: 0 on success, negative error code on failure
+ */
+int dtesn_sensor_calibrate(dtesn_sensor_calibration_t *calibration,
+                          const dtesn_cognitive_modality_data_t *modality);
+
+/**
+ * dtesn_sensor_filter_noise - Apply noise filtering to sensor data
+ * @calibration: Target calibration system
+ * @input_modality: Input modality data
+ * @filtered_modality: Output filtered modality data
+ * 
+ * Applies adaptive noise filtering to sensor data based on calibration
+ * parameters and noise model.
+ * 
+ * Returns: 0 on success, negative error code on failure
+ */
+int dtesn_sensor_filter_noise(dtesn_sensor_calibration_t *calibration,
+                             const dtesn_cognitive_modality_data_t *input_modality,
+                             dtesn_cognitive_modality_data_t *filtered_modality);
+
+/**
+ * dtesn_sensor_calibration_get_stats - Get calibration statistics
+ * @calibration: Target calibration system
+ * @stats_buffer: Buffer to store statistics
+ * @buffer_size: Size of statistics buffer
+ * 
+ * Retrieves current calibration statistics including reliability scores,
+ * adaptation performance, and noise parameters.
+ * 
+ * Returns: 0 on success, negative error code on failure
+ */
+int dtesn_sensor_calibration_get_stats(const dtesn_sensor_calibration_t *calibration,
+                                     void *stats_buffer, size_t buffer_size);
+
 /* Distributed processing functions */
 
 /**

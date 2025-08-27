@@ -8,6 +8,12 @@ Task 2.2.3: Build Embedded Hardware Abstractions
 - Virtual sensor and actuator interfaces
 - Hardware simulation for embodied systems
 - Real-time system integration
+
+Task 3.2.1: Design Hierarchical Motor Control (Phase 3.2)
+- High-level goal planning
+- Mid-level trajectory generation
+- Low-level motor execution
+- Smooth and coordinated movement execution
 """
 
 from .virtual_body import VirtualBody, BodyJoint, BodySchema
@@ -25,6 +31,11 @@ from .hardware_integration import (
     ProprioceptiveHardwareBridge,
     HardwareMapping
 )
+# Task 3.2.1: Hierarchical Motor Control System
+from .hierarchical_motor_control import (
+    HierarchicalMotorController, HighLevelGoalPlanner, MidLevelTrajectoryGenerator,
+    LowLevelMotorExecutor, MotorGoal, MotorGoalType, Trajectory
+)
 
 __all__ = [
     # Virtual Body Components (Phase 2.1.1)
@@ -41,5 +52,9 @@ __all__ = [
     'SensorReading', 'ActuatorCommand', 'HardwareEvent',
     
     # Hardware Integration Components (Phase 2.2.3)
-    'EmbodiedHardwareManager', 'ProprioceptiveHardwareBridge', 'HardwareMapping'
+    'EmbodiedHardwareManager', 'ProprioceptiveHardwareBridge', 'HardwareMapping',
+    
+    # Hierarchical Motor Control Components (Phase 3.2.1)
+    'HierarchicalMotorController', 'HighLevelGoalPlanner', 'MidLevelTrajectoryGenerator',
+    'LowLevelMotorExecutor', 'MotorGoal', 'MotorGoalType', 'Trajectory'
 ]

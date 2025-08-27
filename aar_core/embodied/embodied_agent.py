@@ -61,7 +61,7 @@ class EmbodiedAgent:
         
         # Motor control system
         self.motor_commands = {}  # Joint torque commands
-        self.motor_controller_gains = {'kp': 10.0, 'kd': 1.0, 'ki': 0.1}
+        self.motor_controller_gains = {'kp': 20.0, 'kd': 3.0, 'ki': 0.5}  # Increased gains for better tracking
         self.motor_errors = {}  # PID error tracking
         
         # Sensory integration

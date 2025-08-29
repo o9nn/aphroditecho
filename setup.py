@@ -357,7 +357,7 @@ class cmake_build_ext(build_ext):
         import time
         import threading
         
-        def aggressive_cleanup():
+        def ultra_aggressive_cleanup():
             while True:
                 temp_patterns = [
                     os.path.join(self.build_temp, "**/*.fatbin.c"),
@@ -366,12 +366,14 @@ class cmake_build_ext(build_ext):
                     "/tmp/tmpxft_*",
                     "/tmp/*cudafe*",
                     "/tmp/*.fatbin.c",
+                    "/tmp/*.stub.c",
+                    "/tmp/cc*.s",
                 ]
                 
                 for pattern in temp_patterns:
                     for temp_file in glob.glob(pattern, recursive=True):
                         try:
-                            if os.path.getmtime(temp_file) < time.time() - 60:
+                            if os.path.getmtime(temp_file) < time.time() - 30:
                                 os.remove(temp_file)
                         except OSError:
                             pass
@@ -379,17 +381,25 @@ class cmake_build_ext(build_ext):
                 if os.path.exists(self.build_temp):
                     for root, dirs, files in os.walk(self.build_temp):
                         for file in files:
-                            if file.endswith(('.o', '.obj', '.tmp')):
+                            if file.endswith(('.o', '.obj', '.tmp', '.fatbin.c', '.stub.c')):
                                 try:
                                     file_path = os.path.join(root, file)
-                                    if os.path.getmtime(file_path) < time.time() - 60:
+                                    if os.path.getmtime(file_path) < time.time() - 30:
                                         os.remove(file_path)
                                 except OSError:
                                     pass
-                time.sleep(30)
+                
+                import gc
+                gc.collect()
+                time.sleep(15)
         
-        cleanup_thread = threading.Thread(target=aggressive_cleanup, daemon=True)
+        cleanup_thread = threading.Thread(target=ultra_aggressive_cleanup, daemon=True)
         cleanup_thread.start()
+        
+        os.environ['TMPDIR'] = '/dev/shm/tmp' if os.path.exists('/dev/shm') else '/tmp'
+        os.environ['MAX_JOBS'] = '1'
+        os.environ['NVCC_THREADS'] = '1'
+        os.environ['TORCH_CUDA_ARCH_LIST'] = '8.0'
 
         # Install the libraries
         for ext in self.extensions:

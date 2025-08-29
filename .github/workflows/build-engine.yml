@@ -554,9 +554,9 @@ jobs:
       - name: 💾 Cache Build Directory
         uses: actions/cache@v3
         if: github.event.inputs.skip_cache != 'true'
+        continue-on-error: true
         with:
           path: |
-            build/
             ~/.cache/pip
           key: build-cache-${{ matrix.target_device }}-${{ matrix.python-version }}-${{ hashFiles('setup.py', 'pyproject.toml', 'requirements/**') }}
           restore-keys: |

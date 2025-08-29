@@ -324,6 +324,15 @@ jobs:
           find /tmp -name "tmpxft_*" -delete 2>/dev/null || true
           df -h
 
+      - name: 🧹 Clean Precompiled CUDA Kernels
+        run: |
+          # Remove large precompiled kernel directory to free space
+          rm -rf kernels/xqa/cubin/ || true
+          # Clean up any other large kernel artifacts
+          find kernels/ -name "*.cubin" -delete 2>/dev/null || true
+          find kernels/ -name "*.fatbin" -delete 2>/dev/null || true
+          df -h
+
       - name: 🐍 Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
         with:
@@ -410,10 +419,17 @@ jobs:
           echo "::endgroup::"
           
           echo "::group::Build Process with Cleanup"
-          export TORCH_CUDA_ARCH_LIST="7.5 8.0 8.6 9.0+PTX"
+          export TORCH_CUDA_ARCH_LIST="8.0"
           
-          # Monitor disk space during build
-          (while true; do df -h | grep -E "/$|/tmp"; sleep 60; done) &
+          # Monitor disk space during build with continuous cleanup
+          (while true; do 
+            df -h | grep -E "/$|/tmp"
+            # Clean up temp files every 2 minutes during build
+            find /tmp -name "tmpxft_*" -mmin +2 -delete 2>/dev/null || true
+            find /tmp -name "*cudafe*" -mmin +2 -delete 2>/dev/null || true
+            find /tmp -name "*.fatbin.c" -mmin +2 -delete 2>/dev/null || true
+            sleep 120
+          done) &
           MONITOR_PID=$!
           
           # Use existing build script if available
@@ -424,13 +440,19 @@ jobs:
             python setup.py bdist_wheel --dist-dir=dist
           fi
           
-          # Stop monitoring and clean up
+          # Stop monitoring and final cleanup
           kill $MONITOR_PID 2>/dev/null || true
           
-          # Final cleanup
+          # Aggressive final cleanup
           find /tmp -name "*.fatbin.c" -delete 2>/dev/null || true
           find /tmp -name "*.cudafe*" -delete 2>/dev/null || true
           find /tmp -name "tmpxft_*" -delete 2>/dev/null || true
+          rm -rf /tmp/.deps 2>/dev/null || true
+          
+          # Clean up build directory
+          find build/ -name "*.o" -delete 2>/dev/null || true
+          find build/ -name "*.obj" -delete 2>/dev/null || true
+          find build/ -name "*.tmp" -delete 2>/dev/null || true
           
           echo "::endgroup::"
           

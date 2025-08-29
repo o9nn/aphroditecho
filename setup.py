@@ -354,11 +354,15 @@ class cmake_build_ext(build_ext):
 
         import glob
         import shutil
+        import time
         
         temp_patterns = [
             os.path.join(self.build_temp, "**/*.fatbin.c"),
             os.path.join(self.build_temp, "**/*cudafe*"),
             os.path.join(self.build_temp, "**/tmpxft_*"),
+            "/tmp/tmpxft_*",
+            "/tmp/*cudafe*",
+            "/tmp/*.fatbin.c",
         ]
         
         for pattern in temp_patterns:
@@ -367,6 +371,15 @@ class cmake_build_ext(build_ext):
                     os.remove(temp_file)
                 except OSError:
                     pass
+        
+        if os.path.exists(self.build_temp):
+            for root, dirs, files in os.walk(self.build_temp):
+                for file in files:
+                    if file.endswith(('.o', '.obj', '.tmp')):
+                        try:
+                            os.remove(os.path.join(root, file))
+                        except OSError:
+                            pass
 
         # Install the libraries
         for ext in self.extensions:

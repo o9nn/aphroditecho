@@ -3,10 +3,9 @@
 Detailed trajectory timing diagnosis
 """
 
-import numpy as np
 import time
 from aar_core.embodied import (
-    VirtualBody, EmbodiedAgent, HierarchicalMotorController
+    EmbodiedAgent, HierarchicalMotorController
 )
 
 def debug_trajectory_timing():

@@ -13,10 +13,9 @@ Features demonstrated:
 """
 
 import asyncio
-import json
 import logging
 import time
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -169,18 +168,17 @@ class EnvironmentCouplingDemo:
                     })
             
             # Humidity-based adaptations
-            elif parameter == 'humidity':
-                if new_value > 80.0:
-                    adaptations.append({
-                        'trigger': f"High humidity ({new_value}%)",
-                        'adaptation_type': 'humidity_adaptation',
-                        'target_agents': ['all'],
-                        'behavior_changes': {
-                            'ventilation_seeking': True,
-                            'activity_reduction': 0.8,
-                            'hydration_priority': 1.2
-                        }
-                    })
+            elif parameter == 'humidity' and new_value > 80.0:
+                adaptations.append({
+                    'trigger': f"High humidity ({new_value}%)",
+                    'adaptation_type': 'humidity_adaptation',
+                    'target_agents': ['all'],
+                    'behavior_changes': {
+                        'ventilation_seeking': True,
+                        'activity_reduction': 0.8,
+                        'hydration_priority': 1.2
+                    }
+                })
         
         return adaptations
     
@@ -266,14 +264,14 @@ class EnvironmentCouplingDemo:
     async def update_environment_state(self, new_state: Dict[str, Any]) -> Dict[str, Any]:
         """Update environment state and trigger coupling processes."""
         print(f"\n{'='*60}")
-        print(f"ENVIRONMENT STATE UPDATE")
+        print("ENVIRONMENT STATE UPDATE")
         print(f"{'='*60}")
         
         # Detect changes
         changes = self.detect_environment_changes(new_state)
         
         if changes:
-            print(f"Environment changes detected:")
+            print("Environment changes detected:")
             for change in changes:
                 if change['change_type'] in ['increase', 'decrease']:
                     print(f"  • {change['parameter']}: {change['old_value']} → {change['new_value']} "
@@ -298,7 +296,7 @@ class EnvironmentCouplingDemo:
         adaptations = self.determine_behavior_adaptations(changes)
         
         if adaptations:
-            print(f"\nBehavior adaptations determined:")
+            print("\nBehavior adaptations determined:")
             for adaptation in adaptations:
                 print(f"  • {adaptation['trigger']}")
                 print(f"    Type: {adaptation['adaptation_type']}")
@@ -311,14 +309,14 @@ class EnvironmentCouplingDemo:
         application_results = self.apply_behavior_adaptations(adaptations)
         
         if application_results:
-            print(f"\nAdaptations applied:")
+            print("\nAdaptations applied:")
             for agent_id, results in application_results.items():
                 agent_name = self.agents[agent_id]['name']
                 print(f"  • {agent_name} ({agent_id}): {', '.join(results)}")
         
         # Analyze context sensitivity
         sensitivity = self.analyze_context_sensitivity()
-        print(f"\nContext sensitivity analysis:")
+        print("\nContext sensitivity analysis:")
         for context_type, score in sensitivity.items():
             print(f"  • {context_type}: {score:.2f}")
         
@@ -342,16 +340,16 @@ class EnvironmentCouplingDemo:
     def print_system_summary(self):
         """Print a summary of the entire system state."""
         print(f"\n{'='*60}")
-        print(f"SYSTEM SUMMARY")
+        print("SYSTEM SUMMARY")
         print(f"{'='*60}")
         
         # Environment summary
-        print(f"Environment State:")
+        print("Environment State:")
         for key, value in self.environment_state.items():
             print(f"  • {key}: {value}")
         
         # Agent summary
-        print(f"\nAgent Status:")
+        print("\nAgent Status:")
         for agent_id, agent in self.agents.items():
             print(f"  • {agent['name']} ({agent_id}):")
             print(f"    Behavior: {agent['behavior']}")
@@ -364,7 +362,7 @@ class EnvironmentCouplingDemo:
         
         # System statistics
         total_adaptations = sum(len(agent['adaptations_applied']) for agent in self.agents.values())
-        print(f"\nSystem Statistics:")
+        print("\nSystem Statistics:")
         print(f"  • Total coupling events: {len(self.coupling_events)}")
         print(f"  • Total behavior adaptations: {total_adaptations}")
         print(f"  • Active agents: {len(self.agents)}")
@@ -380,7 +378,7 @@ async def run_environment_coupling_demonstration():
     demo.print_system_summary()
     
     # Scenario 1: Normal to hot temperature
-    print(f"\n\nSCENARIO 1: Temperature Increase")
+    print("\n\nSCENARIO 1: Temperature Increase")
     await demo.update_environment_state({
         'temperature': 38.0  # Hot day
     })
@@ -389,7 +387,7 @@ async def run_environment_coupling_demonstration():
     await asyncio.sleep(1)
     
     # Scenario 2: Resource depletion
-    print(f"\n\nSCENARIO 2: Resource Depletion")  
+    print("\n\nSCENARIO 2: Resource Depletion")  
     await demo.update_environment_state({
         'resources': 20,  # Low resources
         'humidity': 85.0   # High humidity
@@ -398,7 +396,7 @@ async def run_environment_coupling_demonstration():
     await asyncio.sleep(1)
     
     # Scenario 3: Hazard introduction
-    print(f"\n\nSCENARIO 3: Hazard Detection")
+    print("\n\nSCENARIO 3: Hazard Detection")
     await demo.update_environment_state({
         'hazards': 3,      # Multiple hazards
         'temperature': 42.0,  # Even hotter
@@ -408,7 +406,7 @@ async def run_environment_coupling_demonstration():
     await asyncio.sleep(1)
     
     # Scenario 4: Environmental improvement
-    print(f"\n\nSCENARIO 4: Environmental Recovery")
+    print("\n\nSCENARIO 4: Environmental Recovery")
     await demo.update_environment_state({
         'temperature': 25.0,  # Moderate temperature
         'resources': 80,      # Resources replenished
@@ -421,7 +419,7 @@ async def run_environment_coupling_demonstration():
     demo.print_system_summary()
     
     print(f"\n{'='*60}")
-    print(f"ACCEPTANCE CRITERIA VALIDATION")
+    print("ACCEPTANCE CRITERIA VALIDATION")
     print(f"{'='*60}")
     
     # Validate that agents adapted behavior based on environment changes

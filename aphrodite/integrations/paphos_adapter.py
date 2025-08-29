@@ -6,15 +6,13 @@ by interfacing with the Crystal Lucky framework-based backend service.
 """
 
 import asyncio
-import json
 import logging
 import subprocess
 import os
 import re
-from typing import Dict, List, Any, Optional, Union
+from typing import Dict, List, Any, Optional
 from dataclasses import dataclass, field
 from pathlib import Path
-import tempfile
 import uuid
 import time
 

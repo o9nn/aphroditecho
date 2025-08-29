@@ -74,8 +74,7 @@ except ImportError:
 import logging
 import time
 from dataclasses import dataclass, field
-from typing import Dict, List, Tuple, Optional, Any, Callable
-from abc import ABC, abstractmethod
+from typing import Dict, List, Tuple, Optional, Any
 from collections import deque
 
 # Import existing components for integration
@@ -170,7 +169,6 @@ class SensorimotorContingencyLearner:
             
             # Extract sensory context and outcome
             sensory_context = experience.initial_body_state.sensory_state.copy()
-            expected_outcome = {}  # We'll build this from patterns
             actual_outcome = experience.sensory_feedback.copy()
             
             # Look for existing similar contingency

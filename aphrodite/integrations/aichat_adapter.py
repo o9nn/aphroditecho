@@ -6,11 +6,9 @@ enabling chat orchestration, RAG capabilities, and multi-model access.
 """
 
 import asyncio
-import json
 import logging
 import subprocess
-import tempfile
-from typing import Dict, List, Any, Optional, Union
+from typing import Dict, List, Any, Optional
 from dataclasses import dataclass, field
 from pathlib import Path
 

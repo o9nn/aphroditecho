@@ -127,18 +127,18 @@ class DTEIntegration:
             logger.info("Creating default resources across all levels")
             
             # User level resources (conscious)
-            user_container_id = self.user_projects.create_container(
+            self.user_projects.create_container(
                 name="Default Container",
                 description="Default container for projects"
             )
             
-            user_timeline_id = self.user_timelines.create_timeline(
+            self.user_timelines.create_timeline(
                 name="Default Timeline",
                 timeline_type="system",
                 description="Default system timeline"
             )
             
-            user_forum_id = self.user_topics.create_forum(
+            self.user_topics.create_forum(
                 name="System Messages",
                 forum_type="system",
                 description="System-generated messages and notifications"
@@ -147,16 +147,10 @@ class DTEIntegration:
             # Echo level resources (subconscious)
             # These would typically be created with more meaningful
             # parameters in a full implementation
-            workspace_context_id = "placeholder_context"
-            workspace_schedule_id = "placeholder_schedule"
-            workspace_journal_id = "placeholder_journal"
             
             # Root level resources (unconscious)
             # These would typically be created with more meaningful
             # parameters in a full implementation
-            root_node_id = "placeholder_node"
-            root_sequence_id = "placeholder_sequence"
-            root_domain_id = "placeholder_domain"
             
             logger.info("Default resources created successfully")
             

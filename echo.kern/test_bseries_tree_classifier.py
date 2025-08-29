@@ -117,7 +117,7 @@ def test_oeis_a000081_validation():
         print("Validation errors:")
         for error in errors:
             print(f"  {error}")
-        assert False, "OEIS A000081 validation failed"
+        raise AssertionError("OEIS A000081 validation failed")
     
     print("✅ OEIS A000081 validation test passed")
 

@@ -12,7 +12,6 @@ Comprehensive tests for Task 2.1.3 embodied memory implementation including:
 
 import pytest
 import time
-import json
 import numpy as np
 from unittest.mock import Mock, patch
 from pathlib import Path
@@ -389,7 +388,6 @@ class TestEmbodiedMemorySystem:
     
     def test_body_state_updates(self):
         """Test body state updates and their effects on memory"""
-        initial_config = self.system.current_context.body_config
         
         # Update body configuration
         new_config = BodyConfiguration(
@@ -507,7 +505,7 @@ class TestEmbodiedMemorySystem:
         assert len(stats['body_states']) == 3
         assert 'average_activation' in stats
         assert 'average_consolidation' in stats
-        assert stats['dtesn_integration'] == False  # Disabled for testing
+        assert stats['dtesn_integration'] is False  # Disabled for testing
 
 class TestDTESNIntegration:
     """Test DTESN integration functionality"""
@@ -525,7 +523,7 @@ class TestDTESNIntegration:
         
         system = EmbodiedMemorySystem(dtesn_integration=True)
         
-        assert system.dtesn_integration == True
+        assert system.dtesn_integration is True
         assert hasattr(system, 'p_system')
         assert hasattr(system, 'esn')
         assert hasattr(system, 'tree_classifier')

@@ -7,7 +7,7 @@ components from echo.kern for membrane computing and reservoir dynamics.
 
 import logging
 import numpy as np
-from typing import Dict, Any, List
+from typing import Dict, Any
 
 # Handle both absolute and relative imports
 try:

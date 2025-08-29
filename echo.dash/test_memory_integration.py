@@ -34,7 +34,7 @@ def test_memory_system_unification():
     
     # Check available memory types
     unified_types = set([t.value for t in UnifiedMemoryType])
-    cognitive_types = set([t.value for t in CognitiveMemoryType])
+    set([t.value for t in CognitiveMemoryType])
     
     print(f"  ✅ Unified memory types: {len(unified_types)} types")
     print("  ✅ All systems use same MemoryType enum")

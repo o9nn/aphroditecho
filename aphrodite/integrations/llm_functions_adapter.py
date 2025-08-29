@@ -8,13 +8,10 @@ discovering and registering tools from the llm-functions directory structure.
 import asyncio
 import json
 import logging
-import subprocess
-import sys
-from typing import Dict, List, Any, Optional, Union, Callable
+from typing import Dict, List, Any, Optional, Callable
 from dataclasses import dataclass, field
 from pathlib import Path
 import importlib.util
-import inspect
 import ast
 import re
 
@@ -157,7 +154,6 @@ class LLMFunctionsAdapter:
             
             # Extract type hints and parameters
             parameters = {}
-            annotations = {}
             
             for arg in func_node.args.args:
                 param_name = arg.arg
@@ -177,8 +173,8 @@ class LLMFunctionsAdapter:
                 # Get default value
                 defaults = func_node.args.defaults
                 num_defaults = len(defaults)
-                num_args = len(func_node.args.args)
-                default_index = len(func_node.args.args) - num_defaults
+                len(func_node.args.args)
+                len(func_node.args.args) - num_defaults
                 
                 if len(func_node.args.args) - len(defaults) <= func_node.args.args.index(arg):
                     required = False

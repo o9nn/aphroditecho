@@ -119,7 +119,7 @@ def get_echo_identity_framework():
     Returns:
         dict: Structured identity framework with purpose, reflections, guidance
     """
-    message = extract_deep_tree_echo_message()
+    extract_deep_tree_echo_message()
     
     # Parse the philosophical framework (simplified extraction)
     framework = {

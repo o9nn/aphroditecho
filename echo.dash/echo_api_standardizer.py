@@ -107,7 +107,7 @@ class EchoAPIStandardizer:
     def _recommend_base_class(self, file_path: Path, content: str, 
                             has_process: bool, has_echo: bool) -> str:
         """Recommend appropriate base class for a component"""
-        filename = file_path.name.lower()
+        file_path.name.lower()
         content_lower = content.lower()
         
         # Check for memory-related functionality

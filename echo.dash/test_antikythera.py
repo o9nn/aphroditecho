@@ -131,7 +131,7 @@ class TestAntikythera(unittest.TestCase):
         """Test setup_celestial_framework function exists"""
         if hasattr(antikythera, 'setup_celestial_framework'):
             try:
-                result = antikythera.setup_celestial_framework()
+                antikythera.setup_celestial_framework()
                 # Function exists and can be called
             except Exception as e:
                 # Function exists but may have dependencies
@@ -156,7 +156,7 @@ class TestAntikythera(unittest.TestCase):
                     gear_names = [str(gear).lower() if hasattr(gear, '__str__') else '' 
                                  for gear in framework]
                     # At least one expected gear pattern should be found
-                    found_expected = any(expected in ' '.join(gear_names) 
+                    any(expected in ' '.join(gear_names) 
                                        for expected in expected_gears)
                     
             except Exception as e:

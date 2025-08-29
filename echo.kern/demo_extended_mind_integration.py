@@ -9,8 +9,6 @@ embodied memory system, showing how cognitive scaffolding enhances agent capabil
 import asyncio
 import time
 import logging
-from typing import Dict, List, Any
-from pathlib import Path
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -411,16 +409,16 @@ class ExtendedMindDemo:
         print("="*60)
         
         if metrics.get('response_time_count', 0) > 0:
-            print(f"Response Time:")
+            print("Response Time:")
             print(f"  Average: {metrics['response_time_avg']:.3f}s")
             print(f"  Std Dev: {metrics['response_time_std']:.3f}s")
             print(f"  Operations: {int(metrics['response_time_count'])}")
             
-            print(f"\nSuccess Rate:")
+            print("\nSuccess Rate:")
             print(f"  Average: {metrics['success_rate_avg']:.1%}")
             print(f"  Operations: {int(metrics['success_rate_count'])}")
             
-            print(f"\nResource Efficiency:")
+            print("\nResource Efficiency:")
             print(f"  Average: {metrics['resource_efficiency_avg']:.3f}")
             print(f"  Operations: {int(metrics['resource_efficiency_count'])}")
         else:
@@ -459,7 +457,7 @@ async def run_demo():
         if 'error' in result:
             print(f"  Status: FAILED - {result['error']}")
         else:
-            print(f"  Status: SUCCESS")
+            print("  Status: SUCCESS")
             for key, value in result.items():
                 if key not in ['task_id']:
                     print(f"  {key}: {value}")
@@ -475,7 +473,7 @@ async def run_demo():
     
     # Check if agents used external tools
     tools_used_count = 0
-    successful_results = [result for _, result in results if isinstance(result, dict) and 'error' not in result]
+    [result for _, result in results if isinstance(result, dict) and 'error' not in result]
     
     for _, result in results:
         if isinstance(result, dict) and 'error' not in result:

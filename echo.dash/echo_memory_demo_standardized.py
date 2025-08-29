@@ -151,7 +151,7 @@ class EchoMemoryDemoStandardized(MemoryEchoComponent):
         }
         
         # Use parent memory storage
-        store_result = self.store_memory(key, data)
+        self.store_memory(key, data)
         
         return EchoResponse(
             success=True,

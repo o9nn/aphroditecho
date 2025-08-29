@@ -6,7 +6,6 @@ import random
 import logging
 import time
 from simulation_persistence import persistence_manager
-from datetime import datetime
 
 # Set up module logger
 logger = logging.getLogger(__name__)
@@ -506,7 +505,7 @@ class DTESimulation(RecursionEngine):
     def _cross_modal_synthesis(self):
         """Synthesize insights across different cognitive modalities"""
         # Identify nodes from different cognitive domains
-        cognitive_domains = {
+        {
             'perception': [n for n in self.G.nodes() if any(word in n.lower() for word in ['see', 'sense', 'observe', 'pattern'])],
             'reasoning': [n for n in self.G.nodes() if any(word in n.lower() for word in ['logic', 'reason', 'think', 'analyze'])],
             'memory': [n for n in self.G.nodes() if any(word in n.lower() for word in ['remember', 'recall', 'past', 'history'])],
@@ -759,11 +758,10 @@ class DTESimulation(RecursionEngine):
                 self._enter_wake_state()
 
             # Step based on consciousness state
-            step_result = None
             if self.consciousness_state == "awake":
-                step_result = self._wake_step()
+                self._wake_step()
             else:
-                step_result = self._dream_step()
+                self._dream_step()
 
             # Calculate base entropy based on current state
             base_entropy = self._calculate_entropy()
@@ -1243,7 +1241,6 @@ class DTESimulation(RecursionEngine):
             "thought_stream_length": len(self.thought_stream),
             "dream_state": self.dream_state,
             "auto_thought_interval": self.auto_thought_interval,
-            "simulation_id": self.simulation_id,
             "identity_coherence": self._calculate_identity_coherence() if hasattr(self, 'identity_anchors') else 0.5,
             "identity_coherence_history_length": len(getattr(self, 'identity_coherence_history', [])),
             "reflection_system_active": self.reflection_system is not None

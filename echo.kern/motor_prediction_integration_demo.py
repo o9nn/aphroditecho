@@ -8,7 +8,6 @@ before execution in real-world scenarios.
 """
 
 import sys
-import time
 from pathlib import Path
 
 # Add echo.kern to path
@@ -72,8 +71,8 @@ def demonstrate_reaching_prediction():
     )
     
     print("Predicting reaching movement...")
-    print(f"Target: Cup at (0.5, 0.2, 1.2)")
-    print(f"Current arm position: Neutral")
+    print("Target: Cup at (0.5, 0.2, 1.2)")
+    print("Current arm position: Neutral")
     
     # Generate comprehensive prediction BEFORE execution
     prediction = agent.predict_movement_outcome_before_execution(
@@ -87,32 +86,32 @@ def demonstrate_reaching_prediction():
     consequences = prediction['action_consequences']
     recommendation = prediction['execution_recommendation']
     
-    print(f"\n📊 Movement Prediction Results:")
+    print("\n📊 Movement Prediction Results:")
     print(f"   Movement Type: {prediction['movement_type']}")
     print(f"   Confidence: {movement_pred['confidence']:.3f}")
     print(f"   Success Probability: {movement_pred['success_probability']:.3f}")
     print(f"   Energy Cost: {movement_pred['energy_cost']:.3f}")
     print(f"   Collision Risk: {movement_pred['collision_risk']:.3f}")
     
-    print(f"\n🧠 Mental Simulation:")
+    print("\n🧠 Mental Simulation:")
     print(f"   Motor Imagery Vividness: {imagery['vividness']:.3f}")
     print(f"   Simulation Steps: {imagery['simulation_steps']}")
     print(f"   Neural Activation Pattern: {len(imagery['neural_activation_pattern'])} dimensions")
     
-    print(f"\n🌍 Action Consequences:")
+    print("\n🌍 Action Consequences:")
     print(f"   Overall Confidence: {consequences['overall_confidence']:.3f}")
     env_consequences = consequences['environmental_consequences'] 
     print(f"   Object Interactions: {len(env_consequences['object_interactions'])}")
     print(f"   Energy Transfer to Environment: {env_consequences['energy_transfer']:.3f}")
     
-    print(f"\n✅ Execution Recommendation:")
+    print("\n✅ Execution Recommendation:")
     print(f"   Should Execute: {recommendation['should_execute']}")
     print(f"   Risk Assessment: {recommendation['risk_assessment']}")
     print(f"   Confidence Threshold Met: {recommendation['confidence_threshold_met']}")
     if recommendation['modifications_suggested']:
         print(f"   Suggested Modifications: {', '.join(recommendation['modifications_suggested'])}")
     
-    print(f"\n⚡ Performance:")
+    print("\n⚡ Performance:")
     print(f"   Prediction Latency: {prediction['prediction_latency']:.3f}s")
     
     return prediction
@@ -179,7 +178,7 @@ def demonstrate_grasping_prediction():
     movement_pred = prediction['movement_prediction']
     consequences = prediction['action_consequences']
     
-    print(f"\n📊 Grasping Prediction:")
+    print("\n📊 Grasping Prediction:")
     print(f"   Success Probability: {movement_pred['success_probability']:.3f}")
     print(f"   Grip Force Prediction: {movement_pred['energy_cost']:.3f}")
     
@@ -193,12 +192,12 @@ def demonstrate_grasping_prediction():
     )
     
     if fragile_interaction:
-        print(f"   ⚠️ Fragile Object Detected: Reduced force recommended")
+        print("   ⚠️ Fragile Object Detected: Reduced force recommended")
     
     sensory_consequences = consequences['sensory_consequences']
     tactile = sensory_consequences['tactile_feedback']
     
-    print(f"\n👋 Predicted Tactile Feedback:")
+    print("\n👋 Predicted Tactile Feedback:")
     for obj, feedback in tactile.items():
         print(f"   {obj}: Force={feedback['contact_force']:.2f}, Texture={feedback['texture_sensation']:.2f}")
     
@@ -283,8 +282,8 @@ def demonstrate_complex_manipulation():
         step_success = pred['movement_prediction']['success_probability']
         overall_success *= step_success
     
-    print(f"\n🎯 Overall Manipulation Analysis:")
-    print(f"   Individual Step Success Rates:")
+    print("\n🎯 Overall Manipulation Analysis:")
+    print("   Individual Step Success Rates:")
     for step_name, pred in predictions:
         success = pred['movement_prediction']['success_probability']
         print(f"     {step_name}: {success:.3f}")
@@ -321,7 +320,7 @@ def demonstrate_system_learning():
     
     print("Simulating motor learning across multiple trials...")
     
-    initial_performance = agent.get_system_performance()
+    agent.get_system_performance()
     
     for trial in range(5):
         print(f"\n--- Trial {trial + 1} ---")
@@ -353,7 +352,7 @@ def demonstrate_system_learning():
     
     final_performance = agent.get_system_performance()
     
-    print(f"\n📈 Learning Progress Summary:")
+    print("\n📈 Learning Progress Summary:")
     print(f"   Total Predictions: {final_performance['total_predictions']}")
     print(f"   Success Rate: {final_performance['prediction_success_rate']:.3f}")
     print(f"   Cache Size: {final_performance['cache_size']}")
@@ -388,7 +387,7 @@ def main():
     print("   • Real-time performance constraints met")
     
     if MOTOR_PREDICTION_AVAILABLE:
-        print(f"\n📊 Demo Summary Statistics:")
+        print("\n📊 Demo Summary Statistics:")
         if reaching_result:
             print(f"   Reaching confidence: {reaching_result['movement_prediction']['confidence']:.3f}")
         if grasping_result:

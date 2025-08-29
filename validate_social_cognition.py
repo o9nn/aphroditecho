@@ -9,7 +9,7 @@ import asyncio
 import logging
 import time
 import uuid
-from typing import Dict, List, Any, Optional, Set
+from typing import Dict, List, Any, Optional
 from dataclasses import dataclass, field
 from enum import Enum
 
@@ -304,8 +304,8 @@ async def validate_social_cognition_extensions():
         print(f"  - Agent 2 shared knowledge base: {resource2_id}")
         
         # Agents access each other's resources
-        agent2_accessed = await agent2.access_shared_resource(resource1_id)
-        agent3_accessed = await agent3.access_shared_resource(resource2_id)
+        await agent2.access_shared_resource(resource1_id)
+        await agent3.access_shared_resource(resource2_id)
         
         print("  ✓ Agents successfully accessed shared cognitive resources")
         
@@ -429,12 +429,12 @@ async def validate_social_cognition_extensions():
         print("-" * 42)
         
         manager_stats = manager.get_stats()
-        print(f"  Manager Stats:")
+        print("  Manager Stats:")
         print(f"    - Registered agents: {manager_stats['registered_agents']}")
         print(f"    - Active collaborations: {manager_stats['active_collaborations']}")
         print(f"    - Total collaborations: {manager_stats['total_collaborations']}")
         
-        print(f"\\n  Individual Agent Social Cognition Status:")
+        print("\\n  Individual Agent Social Cognition Status:")
         for agent in agents:
             status = agent.get_social_cognition_status()
             specialties = ', '.join(status['cognitive_profile']['specializations'])
@@ -477,7 +477,7 @@ async def validate_social_cognition_extensions():
                 collaboration_evidence.append(f"Agent {agent.id} developed trust relationships with {status['trust_network_size']} other agents")
         
         print("✅ ACCEPTANCE CRITERIA VALIDATION:")
-        print(f"   \"Agents collaborate to solve complex problems\" = TRUE")
+        print("   \"Agents collaborate to solve complex problems\" = TRUE")
         print()
         print("📋 EVIDENCE OF COLLABORATION:")
         for evidence in collaboration_evidence[:10]:  # Show first 10 pieces of evidence

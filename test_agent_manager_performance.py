@@ -13,10 +13,9 @@ This test validates:
 import asyncio
 import time
 import pytest
-from typing import Dict, Any, List
 import logging
 
-from aar_core.agents.agent_manager import AgentManager, Agent, AgentCapabilities, AgentStatus
+from aar_core.agents.agent_manager import AgentManager, AgentCapabilities, AgentStatus
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -244,7 +243,7 @@ class TestAgentManagerPerformance:
         assert 0.0 <= health['overall_score'] <= 1.0
         assert health['status'] in ['healthy', 'degraded', 'critical']
         
-        logger.info(f"✅ Performance monitoring validated")
+        logger.info("✅ Performance monitoring validated")
         logger.info(f"   - Total agents: {stats['agent_counts']['total']}")
         logger.info(f"   - Health score: {health['overall_score']:.2f}")
         logger.info(f"   - System status: {health['status']}")

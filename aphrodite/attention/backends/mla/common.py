@@ -1339,7 +1339,6 @@ class MLACommonImpl(MLAAttentionImpl[T], Generic[T]):
                 dtype=k_c_normed.dtype,
             )
 
-        has_decode = attn_metadata.decode_metadata is not None
         has_prefill = attn_metadata.prefill_metadata is not None
 
         num_prefill_tokens: int = attn_metadata.num_prefill_tokens

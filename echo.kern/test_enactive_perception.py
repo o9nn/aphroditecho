@@ -11,11 +11,10 @@ Validates Task 2.3.3 requirements:
 
 import unittest
 import numpy as np
-import time
 import logging
 import sys
 from pathlib import Path
-from unittest.mock import Mock, patch
+from unittest.mock import Mock
 
 # Add the current directory to the path for imports
 sys.path.insert(0, str(Path(__file__).parent))

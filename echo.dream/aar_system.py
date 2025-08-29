@@ -154,8 +154,8 @@ class Relation(AARComponent):
     
     def process(self, input_data):
         """Process information flow between connected components."""
-        source_state = self.source.get_state()
-        target_state = self.target.get_state()
+        self.source.get_state()
+        self.target.get_state()
         
         # Calculate relation strength based on interaction history
         if len(self.state['history']) > 0:

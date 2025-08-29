@@ -12,11 +12,9 @@ at the architectural level.
 """
 
 import numpy as np
-import time
-from typing import Dict, List, Any
 
 from aar_core.embodied import (
-    VirtualBody, EmbodiedAgent, HierarchicalMotorController, 
+    EmbodiedAgent, HierarchicalMotorController, 
     MotorGoal, MotorGoalType
 )
 from aar_core.arena.simulation_engine import ArenaPhysics, ArenaEnvironment
@@ -62,7 +60,7 @@ def demonstrate_hierarchical_architecture():
     
     # Add goals and show planning
     for goal in goals:
-        success = motor_controller.add_motor_goal(goal)
+        motor_controller.add_motor_goal(goal)
         print(f"✓ Added {goal.goal_type.value} goal: {goal.goal_id} (priority: {goal.priority})")
     
     # Show goal decomposition
@@ -150,7 +148,7 @@ def demonstrate_hierarchical_architecture():
     motor_controller.stop_control_loop()
     
     # Execution summary
-    print(f"✓ Execution completed:")
+    print("✓ Execution completed:")
     print(f"  - Total steps: {execution_data['total_steps']}")
     print(f"  - Trajectories completed: {execution_data['trajectory_completions']}")
     
@@ -324,7 +322,7 @@ def demonstrate_smooth_coordinated_movement():
         print(f"  Smoothness: avg={avg_smoothness:.3f}, min={min_smoothness:.3f} {'✅' if smoothness_achieved else '🔧'}")
     else:
         smoothness_achieved = True  # Default if no scores
-        print(f"  Smoothness: Architecture supports smooth trajectories ✅")
+        print("  Smoothness: Architecture supports smooth trajectories ✅")
     
     # 2. Coordination analysis
     coordination_scores = [s for s in movement_data['coordination_scores'] if s is not None]
@@ -335,7 +333,7 @@ def demonstrate_smooth_coordinated_movement():
         print(f"  Coordination: avg={avg_coordination:.3f}, min={min_coordination:.3f} {'✅' if coordination_achieved else '🔧'}")
     else:
         coordination_achieved = True  # Default if no scores
-        print(f"  Coordination: Architecture supports joint coordination ✅")
+        print("  Coordination: Architecture supports joint coordination ✅")
     
     # 3. Movement execution
     movements_occurred = False
@@ -379,15 +377,15 @@ def main():
     print("=" * 80)
     
     print("🏗️ HIERARCHICAL ARCHITECTURE:")
-    print(f"   ✅ High-level goal planning: Functional")
-    print(f"   ✅ Mid-level trajectory generation: Functional") 
-    print(f"   ✅ Low-level motor execution: Functional")
+    print("   ✅ High-level goal planning: Functional")
+    print("   ✅ Mid-level trajectory generation: Functional") 
+    print("   ✅ Low-level motor execution: Functional")
     print(f"   ✅ Three-layer integration: {'Complete' if architecture_complete else 'Partial'}")
     
-    print(f"\n🎯 ACCEPTANCE CRITERIA:")
+    print("\n🎯 ACCEPTANCE CRITERIA:")
     print(f"   {'✅' if acceptance_met else '🔧'} Smooth and coordinated movement execution: {'MET' if acceptance_met else 'ARCHITECTURAL REQUIREMENTS MET'}")
     
-    print(f"\n📊 SYSTEM PERFORMANCE:")
+    print("\n📊 SYSTEM PERFORMANCE:")
     if execution_data['coordination_scores']:
         avg_coord = np.mean(execution_data['coordination_scores'])
         print(f"   Average coordination quality: {avg_coord:.3f}")
@@ -398,25 +396,25 @@ def main():
     print(f"   Trajectories completed: {execution_data['trajectory_completions']}")
     print(f"   Total execution steps: {execution_data['total_steps']}")
     
-    print(f"\n🎉 TASK 3.2.1 STATUS:")
+    print("\n🎉 TASK 3.2.1 STATUS:")
     if architecture_complete:
-        print(f"   ✅ HIERARCHICAL MOTOR CONTROL ARCHITECTURE: COMPLETE")
-        print(f"   ✅ THREE-LAYER SYSTEM: FUNCTIONAL")
-        print(f"   ✅ SMOOTH TRAJECTORY GENERATION: IMPLEMENTED")
-        print(f"   ✅ JOINT COORDINATION: IMPLEMENTED")
-        print(f"   ✅ GOAL-TO-EXECUTION PIPELINE: WORKING")
+        print("   ✅ HIERARCHICAL MOTOR CONTROL ARCHITECTURE: COMPLETE")
+        print("   ✅ THREE-LAYER SYSTEM: FUNCTIONAL")
+        print("   ✅ SMOOTH TRAJECTORY GENERATION: IMPLEMENTED")
+        print("   ✅ JOINT COORDINATION: IMPLEMENTED")
+        print("   ✅ GOAL-TO-EXECUTION PIPELINE: WORKING")
         
         if acceptance_met:
-            print(f"   ✅ ACCEPTANCE CRITERIA: FULLY MET")
+            print("   ✅ ACCEPTANCE CRITERIA: FULLY MET")
         else:
-            print(f"   🔧 ACCEPTANCE CRITERIA: ARCHITECTURALLY MET (motor dynamics tuning needed)")
+            print("   🔧 ACCEPTANCE CRITERIA: ARCHITECTURALLY MET (motor dynamics tuning needed)")
         
-        print(f"\n   🏆 CORE REQUIREMENT ACHIEVED: Hierarchical motor control system with")
-        print(f"       smooth and coordinated movement execution capability is fully")
-        print(f"       implemented and operational.")
+        print("\n   🏆 CORE REQUIREMENT ACHIEVED: Hierarchical motor control system with")
+        print("       smooth and coordinated movement execution capability is fully")
+        print("       implemented and operational.")
         
     else:
-        print(f"   ❌ IMPLEMENTATION INCOMPLETE")
+        print("   ❌ IMPLEMENTATION INCOMPLETE")
     
     return architecture_complete and acceptance_met
 

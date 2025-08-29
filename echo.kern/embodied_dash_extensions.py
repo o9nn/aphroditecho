@@ -7,10 +7,9 @@ capabilities, integrating seamlessly with existing memory management while
 adding 4E embodied AI features.
 """
 
-import json
 import time
 import logging
-from typing import Dict, List, Optional, Any, Tuple
+from typing import Dict, List, Optional, Any
 import sys
 import os
 from pathlib import Path
@@ -620,7 +619,7 @@ if __name__ == "__main__":
         
         # Get statistics
         stats = arch.get_embodied_statistics()
-        print(f"Embodied memory statistics:")
+        print("Embodied memory statistics:")
         for key, value in stats.items():
             if not isinstance(value, dict):
                 print(f"  {key}: {value}")

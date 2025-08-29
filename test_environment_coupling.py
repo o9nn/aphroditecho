@@ -17,12 +17,11 @@ Test Categories:
 """
 
 import asyncio
-import json
 import logging
 import time
 import sys
 import os
-from typing import Dict, List, Any, Optional
+from typing import Dict, Any
 
 # Add project paths
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'echo.kern'))

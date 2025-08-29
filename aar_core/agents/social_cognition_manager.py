@@ -8,14 +8,12 @@ This component implements the social cognition extensions required for Task 2.3.
 of the Deep Tree Echo development roadmap.
 """
 
-import asyncio
 import logging
 import time
 import uuid
-from typing import Dict, List, Any, Optional, Set, Tuple
+from typing import Dict, List, Any, Optional
 from dataclasses import dataclass, field
 from enum import Enum
-import json
 
 logger = logging.getLogger(__name__)
 
@@ -473,7 +471,7 @@ class SocialCognitionManager:
         
         # Calculate weighted scores for each option
         option_scores = {}
-        total_agents = len(agent_preferences)
+        len(agent_preferences)
         
         for i, option in enumerate(options):
             option_id = option.get('id', f'option_{i}')

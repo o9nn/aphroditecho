@@ -151,7 +151,7 @@ class TestIntrospectionEnhancedBehavior(unittest.TestCase):
     def test_introspection_influences_personality(self):
         """Test that introspection can influence personality development"""
         # Get initial curiosity level
-        initial_curiosity = self.cognitive_arch.personality_traits["curiosity"].current_value
+        self.cognitive_arch.personality_traits["curiosity"].current_value
         
         # Perform introspection
         self.cognitive_arch.perform_recursive_introspection()

@@ -272,7 +272,7 @@ class DTESNTestAutomation:
         test_results = self.run_integration_tests()
         
         # Generate report
-        report_file = self.generate_report(test_results)
+        self.generate_report(test_results)
         
         # Check results
         total_duration = time.time() - start_time

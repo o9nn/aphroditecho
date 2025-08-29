@@ -14,7 +14,7 @@ Integrates with existing DTESN attention systems and sensory-motor infrastructur
 import time
 import json
 import logging
-from typing import Dict, List, Optional, Tuple, Union, Any
+from typing import Dict, List, Optional, Tuple, Any
 from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path

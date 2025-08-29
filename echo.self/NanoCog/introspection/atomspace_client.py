@@ -514,7 +514,7 @@ class AtomSpaceClient:
             sti_distribution = {}
             for range_name, (min_val, max_val) in sti_ranges.items():
                 try:
-                    atoms = self.get_atoms_by_sti(min_sti=min_val, max_sti=max_val, limit=1)
+                    self.get_atoms_by_sti(min_sti=min_val, max_sti=max_val, limit=1)
                     count_response = self._make_request(
                         "GET", 
                         "atoms/sti/count", 
@@ -1277,7 +1277,7 @@ class AtomSpaceClient:
         
         # Calculate integration metrics
         active_domains = sum(1 for count in domain_counts.values() if count > 0)
-        total_domain_mentions = sum(domain_counts.values())
+        sum(domain_counts.values())
         
         # Look for explicit integration patterns (mentions of multiple domains together)
         integration_patterns = []

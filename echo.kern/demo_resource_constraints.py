@@ -35,7 +35,7 @@ from datetime import datetime
 sys.path.append(str(Path(__file__).parent))
 
 from resource_constraint_manager import (
-    ResourceConstraintManager, ResourceType, OperationType, ResourceError
+    ResourceConstraintManager, ResourceError
 )
 from dtesn_resource_integration import (
     DTESNResourceIntegrator, ConstrainedAgent
@@ -333,7 +333,7 @@ class ResourceConstraintsDemo:
                     result = future.result(timeout=10)
                     if result:
                         agent_id = result.get("agent_id", "unknown")
-                        operation = result.get("operation", "unknown")
+                        result.get("operation", "unknown")
                         
                         if agent_id not in self.demo_results:
                             self.demo_results[agent_id] = []
@@ -401,7 +401,7 @@ class ResourceConstraintsDemo:
         print("="*80)
         
         summary = analysis_results["demo_summary"]
-        print(f"\n📊 DEMONSTRATION SUMMARY")
+        print("\n📊 DEMONSTRATION SUMMARY")
         print(f"{'='*40}")
         print(f"Total Agents: {summary['total_agents']}")
         print(f"Total Operations: {summary['total_operations']}")
@@ -411,7 +411,7 @@ class ResourceConstraintsDemo:
         print(f"Constraint Violation Rate: {summary['constraint_violation_rate']:.1f}%")
         
         # Agent performance breakdown
-        print(f"\n🤖 AGENT PERFORMANCE BREAKDOWN")
+        print("\n🤖 AGENT PERFORMANCE BREAKDOWN")
         print(f"{'='*50}")
         
         for agent_id, performance in analysis_results["agent_performance"].items():
@@ -425,7 +425,7 @@ class ResourceConstraintsDemo:
             print(f"  Operation Types: {', '.join(set(performance['operations']))}")
         
         # System resource status
-        print(f"\n💾 SYSTEM RESOURCE STATUS")
+        print("\n💾 SYSTEM RESOURCE STATUS")
         print(f"{'='*40}")
         
         for resource_name, status in analysis_results["resource_status"].items():
@@ -438,7 +438,7 @@ class ResourceConstraintsDemo:
         
         # System metrics
         constraint_metrics = analysis_results["system_metrics"]["constraint_manager"]
-        print(f"\n⚡ CONSTRAINT SYSTEM PERFORMANCE")
+        print("\n⚡ CONSTRAINT SYSTEM PERFORMANCE")
         print(f"{'='*45}")
         print(f"Total Operations Processed: {constraint_metrics['total_operations']}")
         print(f"Constraint Violations: {constraint_metrics['constraint_violations']}")
@@ -447,47 +447,47 @@ class ResourceConstraintsDemo:
         print(f"Active Allocations: {constraint_metrics['active_allocations']}")
         
         # Acceptance criteria validation
-        print(f"\n✅ ACCEPTANCE CRITERIA VALIDATION")
+        print("\n✅ ACCEPTANCE CRITERIA VALIDATION")
         print(f"{'='*50}")
         
         criteria_met = 0
         total_criteria = 4
         
-        print(f"1. Agents operate under realistic resource limits:")
+        print("1. Agents operate under realistic resource limits:")
         demo_constraint_violations = sum(perf.get("constraint_violations", 0) 
                                         for perf in agent_performance.values())
         if demo_constraint_violations > 0:
             print(f"   ✅ PASSED - {demo_constraint_violations} operations were constrained")
             criteria_met += 1
         else:
-            print(f"   ❌ FAILED - No resource constraints were enforced")
+            print("   ❌ FAILED - No resource constraints were enforced")
         
-        print(f"2. Computational resource limitations enforced:")
+        print("2. Computational resource limitations enforced:")
         if any(status["utilization_percent"] > 0 for status in analysis_results["resource_status"].values()):
-            print(f"   ✅ PASSED - Resource utilization tracked and limited")
+            print("   ✅ PASSED - Resource utilization tracked and limited")
             criteria_met += 1
         else:
-            print(f"   ❌ FAILED - No resource utilization detected")
+            print("   ❌ FAILED - No resource utilization detected")
         
-        print(f"3. Energy consumption modeling implemented:")
+        print("3. Energy consumption modeling implemented:")
         if constraint_metrics['total_energy_consumed'] > 0:
-            print(f"   ✅ PASSED - Energy consumption tracked and modeled")
+            print("   ✅ PASSED - Energy consumption tracked and modeled")
             criteria_met += 1
         else:
-            print(f"   ❌ FAILED - No energy consumption detected")
+            print("   ❌ FAILED - No energy consumption detected")
         
-        print(f"4. Real-time processing constraints active:")
+        print("4. Real-time processing constraints active:")
         if successful_operations > 0:
-            print(f"   ✅ PASSED - Operations completed within timing constraints")
+            print("   ✅ PASSED - Operations completed within timing constraints")
             criteria_met += 1
         else:
-            print(f"   ❌ FAILED - No operations completed successfully")
+            print("   ❌ FAILED - No operations completed successfully")
         
         print(f"\nOVERALL ACCEPTANCE: {criteria_met}/{total_criteria} criteria met")
         
         if criteria_met == total_criteria:
-            print(f"🎉 ALL ACCEPTANCE CRITERIA PASSED! 🎉")
-            print(f"Phase 2.2.2 Resource Constraints implementation is COMPLETE")
+            print("🎉 ALL ACCEPTANCE CRITERIA PASSED! 🎉")
+            print("Phase 2.2.2 Resource Constraints implementation is COMPLETE")
         else:
             print(f"⚠️  {total_criteria - criteria_met} criteria need attention")
         

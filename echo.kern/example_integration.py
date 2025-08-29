@@ -18,10 +18,8 @@ from pathlib import Path
 # Add paths for imports
 sys.path.insert(0, str(Path(__file__).parent))
 
-from resource_constraint_manager import (
-    ResourceConstraintManager, OperationType, ResourceType
-)
 from dtesn_resource_integration import DTESNResourceIntegrator, ConstrainedAgent
+import contextlib
 
 # Set up logging
 logging.basicConfig(level=logging.INFO, format='%(name)s: %(message)s')
@@ -149,15 +147,15 @@ class IntegratedAgentExample:
         for i in range(20):  # Try 20 operations rapidly
             try:
                 large_input = [0.1] * 1000  # Large input to stress memory
-                result = esn.update_reservoir_state(large_input)
+                esn.update_reservoir_state(large_input)
                 operations_completed += 1
                 
-            except Exception as e:
+            except Exception:
                 operations_failed += 1
                 if i < 5:  # Only log first few failures
                     print(f"   Operation {i+1} failed: Resource constraint")
         
-        print(f"✅ Resource exhaustion test completed:")
+        print("✅ Resource exhaustion test completed:")
         print(f"   Operations completed: {operations_completed}")
         print(f"   Operations failed due to constraints: {operations_failed}")
         print(f"   Constraint enforcement rate: {operations_failed/(operations_completed+operations_failed)*100:.1f}%")
@@ -180,7 +178,7 @@ class IntegratedAgentExample:
         metrics = self.integrator.get_system_performance_metrics()
         constraint_metrics = metrics["constraint_manager"]
         
-        print(f"\nPerformance Metrics:")
+        print("\nPerformance Metrics:")
         print(f"  Total operations: {constraint_metrics['total_operations']}")
         print(f"  Constraint violations: {constraint_metrics['constraint_violations']}")
         print(f"  Violation rate: {constraint_metrics['violation_rate']:.2f}%")
@@ -188,7 +186,7 @@ class IntegratedAgentExample:
         print(f"  Active allocations: {constraint_metrics['active_allocations']}")
         
         # Show agent-specific status
-        print(f"\nAgent Status:")
+        print("\nAgent Status:")
         for agent_id in self.agents:
             agent_status = self.integrator.get_agent_resource_status(agent_id)
             if agent_status:
@@ -258,10 +256,8 @@ def main():
         logger.error(f"Integration example failed: {e}")
         return False
     finally:
-        try:
+        with contextlib.suppress(Exception):
             example.cleanup()
-        except:
-            pass
     
     return True
 

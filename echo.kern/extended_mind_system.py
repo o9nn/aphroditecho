@@ -12,15 +12,12 @@ Integration with DTESN architecture ensures OEIS A000081 compliance and
 real-time performance constraints for neuromorphic computing.
 """
 
-import json
 import time
 import logging
 import numpy as np
-from typing import Dict, List, Optional, Tuple, Any, Union, Callable
-from dataclasses import dataclass, field, asdict
+from typing import Dict, List, Optional, Any, Callable
+from dataclasses import dataclass, field
 from enum import Enum
-from datetime import datetime
-from pathlib import Path
 import threading
 import asyncio
 from abc import ABC, abstractmethod

@@ -54,7 +54,7 @@ class TestCopilotSuggestions(unittest.TestCase):
             }
             mock_post.return_value = mock_response
             
-            result = copilot_suggestions.fetch_suggestions_from_azure_openai({'test': 'data'})
+            copilot_suggestions.fetch_suggestions_from_azure_openai({'test': 'data'})
             
             # Check that the correct URL was called
             expected_url = 'https://test.openai.azure.com/openai/deployments/gpt-4/chat/completions?api-version=2024-02-15-preview'
@@ -90,7 +90,6 @@ class TestCopilotSuggestions(unittest.TestCase):
     
     def test_note_file_handling(self):
         """Test note file reading and writing"""
-        test_note = {"timestamp": 123456, "improvement": {"test": "data"}, "assessment": "test"}
         
         # Test that main function handles missing note file gracefully
         with patch('copilot_suggestions.fetch_suggestions_from_azure_openai') as mock_fetch:

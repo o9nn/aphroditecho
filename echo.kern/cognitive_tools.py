@@ -6,15 +6,13 @@ This module provides concrete implementations of cognitive tools that integrate
 with the Extended Mind System for cognitive scaffolding.
 """
 
-import json
 import time
 import asyncio
 import numpy as np
-from typing import Dict, List, Any, Optional, Tuple
-from dataclasses import dataclass
+from typing import Dict, List, Any, Tuple
 
 from extended_mind_system import (
-    CognitiveTool, ToolInterface, CognitiveTask, ToolType, CognitiveTaskType
+    CognitiveTool, ToolInterface, CognitiveTask, ToolType
 )
 
 class MemoryStoreTool(ToolInterface):
@@ -489,7 +487,7 @@ class KnowledgeBaseTool(ToolInterface):
         else:
             # Try partial matching
             matches = [
-                c for c in self.knowledge_graph['concepts'].keys() 
+                c for c in self.knowledge_graph['concepts'] 
                 if concept_lower in c or c in concept_lower
             ]
             

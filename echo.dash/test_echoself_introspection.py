@@ -405,7 +405,7 @@ class TestRepositoryIntrospector(unittest.TestCase):
         self.assertGreaterEqual(len(files_low), len(files_high))
         
         # README should be included in high threshold due to high salience
-        readme_in_high = any("readme" in str(f).lower() for f in files_high)
+        any("readme" in str(f).lower() for f in files_high)
         # Note: This test might not always pass depending on attention threshold calculation
         # The key is that the filtering mechanism works
 

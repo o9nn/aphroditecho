@@ -115,7 +115,7 @@ def test_evaluation_metrics():
         print(f"✓ Overall performance score: {overall_score:.3f}")
         
         # Generate report
-        report = evaluator.generate_evaluation_report(results)
+        evaluator.generate_evaluation_report(results)
         print("✓ Evaluation report generated successfully")
         
         return True

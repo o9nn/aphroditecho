@@ -163,10 +163,10 @@ def demonstrate_neural_symbolic_synergy(cognitive_system: CognitiveArchitecture)
         print(f"\n🔄 Cycle {cycle}:")
         
         # Introspect
-        prompt = cognitive_system.perform_recursive_introspection()
+        cognitive_system.perform_recursive_introspection()
         
         # Generate goals
-        goals = cognitive_system.adaptive_goal_generation_with_introspection()
+        cognitive_system.adaptive_goal_generation_with_introspection()
         
         # Show evolution
         current_memory_count = len(cognitive_system.memories)

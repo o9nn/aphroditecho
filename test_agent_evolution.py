@@ -181,10 +181,10 @@ async def test_evolution_integration_status():
         
         # Test integration status before connection
         echo_status = echo_engine.get_integration_status()
-        assert echo_status['aar_integration_enabled'] == False
+        assert echo_status['aar_integration_enabled'] is False
         
         aar_stats = await aar_orchestrator.get_orchestration_stats()
-        assert aar_stats['integration_status']['echo_self_engine'] == False
+        assert aar_stats['integration_status']['echo_self_engine'] is False
         
         # Set up integration
         echo_engine.set_aar_integration(aar_orchestrator)
@@ -192,10 +192,10 @@ async def test_evolution_integration_status():
         
         # Test integration status after connection
         echo_status = echo_engine.get_integration_status()
-        assert echo_status['aar_integration_enabled'] == True
+        assert echo_status['aar_integration_enabled'] is True
         
         aar_stats = await aar_orchestrator.get_orchestration_stats()
-        assert aar_stats['integration_status']['echo_self_engine'] == True
+        assert aar_stats['integration_status']['echo_self_engine'] is True
         
         # Test that AAR context is available
         aar_context = await echo_engine._get_aar_context()
@@ -236,7 +236,7 @@ async def test_agent_capabilities_evolution():
         initial_capabilities = [agent['capabilities'] for agent in initial_population]
         
         # Run evolution
-        stats = await echo_engine.evolve_agents_in_arena(agent_population_size=4)
+        await echo_engine.evolve_agents_in_arena(agent_population_size=4)
         
         # Validate that capabilities vary
         multimodal_agents = sum(1 for cap in initial_capabilities if cap.get('multimodal', False))

@@ -11,11 +11,10 @@ This test suite validates:
 """
 
 import pytest
-import asyncio
 import numpy as np
 from aar_core.arena.simulation_engine import (
-    SimulationEngine, Arena, ArenaType, ArenaConfig, 
-    ArenaPhysics, ArenaEnvironment, ArenaObject
+    SimulationEngine, ArenaType, ArenaConfig, 
+    ArenaPhysics, ArenaEnvironment
 )
 
 
@@ -183,7 +182,7 @@ class TestArenaSimulationFramework:
         
         # Record initial positions
         initial_positions = {}
-        for agent_id in agents_data.keys():
+        for agent_id in agents_data:
             initial_positions[agent_id] = arena.agents[agent_id]['position'].copy()
         
         # Run simulation for several steps
@@ -191,7 +190,7 @@ class TestArenaSimulationFramework:
             await arena._update_simulation_step()
         
         # Verify agents moved in their respective directions
-        for agent_id in agents_data.keys():
+        for agent_id in agents_data:
             current_pos = arena.agents[agent_id]['position']
             initial_pos = initial_positions[agent_id]
             

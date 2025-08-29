@@ -148,7 +148,6 @@ class TestDifferentialEmotionTheory(unittest.TestCase):
         import differential_emotion_theory as det_module
         
         # Check for other expected components
-        expected_components = ['DETEmotion']  # We know this exists
         
         # Look for other classes or functions that might exist
         module_attrs = [attr for attr in dir(det_module) 

@@ -115,9 +115,8 @@ class UserTopics:
         self.thread_messages[thread_id] = []
         
         # Create initial message if content is provided
-        message_id = None
         if content:
-            message_id = self._create_message(thread_id, content, None, attributes)
+            self._create_message(thread_id, content, None, attributes)
             
         logger.info(f"Created thread '{title}' in forum '{self.forums[forum_id]['name']}'")
         return thread_id

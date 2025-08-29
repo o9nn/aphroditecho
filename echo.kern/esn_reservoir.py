@@ -175,7 +175,7 @@ class ESNReservoir:
         """Validate memory layout compliance with ESN_RESERVOIRS region"""
         if DTESN_COMPONENTS_AVAILABLE:
             try:
-                validator = DTESNMemoryValidator()
+                DTESNMemoryValidator()
                 # Simulate reservoir memory allocation
                 reservoir_size_bytes = self.reservoir_state.nbytes
                 print(f"Reservoir state size: {reservoir_size_bytes} bytes")

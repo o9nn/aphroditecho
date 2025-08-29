@@ -453,7 +453,7 @@ def _assess_workflow_cognitive_health(workflow: Dict) -> Dict[str, Any]:
     monitoring_vars = ['COGNITIVE_', 'SAFETY_', 'MONITORING_']
     health_indicators['has_monitoring'] = any(
         any(var.startswith(prefix) for prefix in monitoring_vars)
-        for var in env_vars.keys()
+        for var in env_vars
     )
     
     # Calculate structural clarity (inverse of complexity)

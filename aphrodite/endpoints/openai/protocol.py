@@ -621,21 +621,21 @@ class ChatCompletionRequest(OpenAIBaseModel):
 
         # Default parameters
         if (repetition_penalty := self.repetition_penalty) is None:
-            repetition_penalty = default_sampling_params.get(
+            default_sampling_params.get(
                 "repetition_penalty",
                 self._DEFAULT_SAMPLING_PARAMS["repetition_penalty"],
             )
         if (temperature := self.temperature) is None:
-            temperature = default_sampling_params.get(
+            default_sampling_params.get(
                 "temperature", self._DEFAULT_SAMPLING_PARAMS["temperature"])
         if (top_p := self.top_p) is None:
-            top_p = default_sampling_params.get(
+            default_sampling_params.get(
                 "top_p", self._DEFAULT_SAMPLING_PARAMS["top_p"])
         if (top_k := self.top_k) is None:
-            top_k = default_sampling_params.get(
+            default_sampling_params.get(
                 "top_k", self._DEFAULT_SAMPLING_PARAMS["top_k"])
         if (min_p := self.min_p) is None:
-            min_p = default_sampling_params.get(
+            default_sampling_params.get(
                 "min_p", self._DEFAULT_SAMPLING_PARAMS["min_p"])
 
         prompt_logprobs = self.prompt_logprobs
@@ -1191,21 +1191,21 @@ class CompletionRequest(OpenAIBaseModel):
 
         # Default parameters
         if (repetition_penalty := self.repetition_penalty) is None:
-            repetition_penalty = default_sampling_params.get(
+            default_sampling_params.get(
                 "repetition_penalty",
                 self._DEFAULT_SAMPLING_PARAMS["repetition_penalty"],
             )
         if (temperature := self.temperature) is None:
-            temperature = default_sampling_params.get(
+            default_sampling_params.get(
                 "temperature", self._DEFAULT_SAMPLING_PARAMS["temperature"])
         if (top_p := self.top_p) is None:
-            top_p = default_sampling_params.get(
+            default_sampling_params.get(
                 "top_p", self._DEFAULT_SAMPLING_PARAMS["top_p"])
         if (top_k := self.top_k) is None:
-            top_k = default_sampling_params.get(
+            default_sampling_params.get(
                 "top_k", self._DEFAULT_SAMPLING_PARAMS["top_k"])
         if (min_p := self.min_p) is None:
-            min_p = default_sampling_params.get(
+            default_sampling_params.get(
                 "min_p", self._DEFAULT_SAMPLING_PARAMS["min_p"])
 
         prompt_logprobs = self.prompt_logprobs

@@ -4,7 +4,7 @@ Debug exactly what targets are being sent to PID controller
 """
 
 from aar_core.embodied import (
-    VirtualBody, EmbodiedAgent, HierarchicalMotorController, 
+    EmbodiedAgent, HierarchicalMotorController, 
     MotorGoal, MotorGoalType
 )
 
@@ -74,7 +74,7 @@ def debug_target_propagation():
                 dt = 0.01
                 
                 # Before control update
-                before_commands = agent.motor_commands.copy()
+                agent.motor_commands.copy()
                 before_states = {
                     'right_shoulder': agent.get_joint_state('right_shoulder')['angle'],
                     'right_elbow': agent.get_joint_state('right_elbow')['angle']
@@ -85,7 +85,7 @@ def debug_target_propagation():
                 
                 # After control update
                 after_commands = agent.motor_commands.copy()
-                after_states = {
+                {
                     'right_shoulder': agent.get_joint_state('right_shoulder')['angle'],
                     'right_elbow': agent.get_joint_state('right_elbow')['angle']
                 }

@@ -21,14 +21,11 @@ and membrane computing paradigms for dynamic adaptation.
 """
 
 import asyncio
-import json
 import logging
 import time
-from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Dict, List, Any, Optional, Callable, Set, Tuple, Union
-import weakref
+from typing import Dict, List, Any, Optional, Callable, Set
 
 
 logger = logging.getLogger(__name__)

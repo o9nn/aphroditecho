@@ -49,7 +49,7 @@ def test_projects():
     )
     
     # Add resources to the project
-    resource1_id = projects.add_project_resource(
+    projects.add_project_resource(
         project_id=project_id,
         name="Architecture Diagram",
         resource_type="document",
@@ -57,7 +57,7 @@ def test_projects():
         description="Visual representation of the DTE architecture"
     )
     
-    resource2_id = projects.add_project_resource(
+    projects.add_project_resource(
         project_id=project_id,
         name="Research Paper",
         resource_type="document",
@@ -118,7 +118,7 @@ def test_timelines():
     )
     
     # Add events to the timeline
-    event1_id = timelines.add_event(
+    timelines.add_event(
         timeline_id=timeline_id,
         title="Project Kickoff",
         timestamp=datetime.now() - timedelta(days=30),
@@ -126,7 +126,7 @@ def test_timelines():
         phase_id=phase1_id
     )
     
-    event2_id = timelines.add_event(
+    timelines.add_event(
         timeline_id=timeline_id,
         title="Architecture Design",
         timestamp=datetime.now() - timedelta(days=25),
@@ -143,7 +143,7 @@ def test_timelines():
     )
     
     # Add a reminder for an event
-    reminder_id = timelines.add_reminder(
+    timelines.add_reminder(
         event_id=event3_id,
         remind_at=datetime.now() + timedelta(days=1),
         description="Final code review for user level"
@@ -208,7 +208,7 @@ def test_topics():
         content="I think the Composite pattern would be ideal for representing recursive structures."
     )
     
-    message2_id = topics.add_message(
+    topics.add_message(
         thread_id=thread1_id,
         content="The Observer pattern could also be useful for implementing the consciousness stream.",
         parent_message_id=message1_id
@@ -220,12 +220,12 @@ def test_topics():
     )
     
     # Add reactions to messages
-    reaction1_id = topics.add_reaction(
+    topics.add_reaction(
         message_id=message1_id,
         reaction_type="like"
     )
     
-    reaction2_id = topics.add_reaction(
+    topics.add_reaction(
         message_id=message3_id,
         reaction_type="heart"
     )

@@ -12,10 +12,9 @@ It shows that agents improve motor performance over time (acceptance criteria).
 
 from embodied_learning import (
     MotorSkillLearner, BodySchemaLearner,
-    BodyState, SensorimotorExperience, MotorAction
+    BodyState, SensorimotorExperience
 )
 import numpy as np
-import time
 import logging
 
 # Set up logging
@@ -110,7 +109,7 @@ def demonstrate_motor_performance_improvement():
         
         # Track metrics every 10 sessions
         if session % 10 == 0 and session > 0:
-            metrics = learner.get_skill_metrics()
+            learner.get_skill_metrics()
             
             if skill_name in learner.skill_performance:
                 perf = learner.skill_performance[skill_name]

@@ -21,10 +21,8 @@ Author: DTESN Integration Team
 """
 
 import sys
-import os
 import time
 import numpy as np
-from typing import Dict, Any, List
 import logging
 
 # Set up logging
@@ -200,7 +198,7 @@ def test_full_dtesn_stack_integration(bridge, membrane_results):
                     self.age = i
             
             test_individual = TestIndividual(i)
-            cycle_results = bridge.process_individual_through_dtesn(test_individual)
+            bridge.process_individual_through_dtesn(test_individual)
             
         end_time = time.time()
         avg_cycle_time = (end_time - start_time) / 10

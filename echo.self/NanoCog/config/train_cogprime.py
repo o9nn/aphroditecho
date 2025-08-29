@@ -169,7 +169,7 @@ def get_adaptive_learning_rate(iteration: int, max_iterations: int, base_lr: flo
     phase_lr = base_lr * phase_config['learning_rate_multiplier']
     
     # Apply standard cosine decay within phase
-    progress_ratio = iteration / max_iterations
+    iteration / max_iterations
     if iteration < warmup_iters:
         # Warmup phase
         lr = phase_lr * iteration / warmup_iters

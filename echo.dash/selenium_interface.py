@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 from deep_tree_echo import DeepTreeEcho, TreeNode
 from datetime import datetime
 import json
+import contextlib
 
 # Import session manager for automatic conversation saving
 try:
@@ -1097,22 +1098,16 @@ class SeleniumInterface:
         self._save_memory()
         
         if self.page:
-            try:
+            with contextlib.suppress(Exception):
                 self.page.close()
-            except:
-                pass
                 
         if self.browser:
-            try:
+            with contextlib.suppress(Exception):
                 self.browser.close()
-            except:
-                pass
                 
         if self.playwright:
-            try:
+            with contextlib.suppress(Exception):
                 self.playwright.stop()
-            except:
-                pass
 
 def main():
     chat = SeleniumInterface()

@@ -3,10 +3,9 @@
 Diagnostic test for trajectory execution
 """
 
-import numpy as np
 from aar_core.embodied import (
-    VirtualBody, EmbodiedAgent, HierarchicalMotorController, 
-    MotorGoal, MotorGoalType, MidLevelTrajectoryGenerator
+    EmbodiedAgent, HierarchicalMotorController, 
+    MidLevelTrajectoryGenerator
 )
 
 def debug_trajectory_generation():

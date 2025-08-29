@@ -7,7 +7,6 @@ Testing Task 3.1.1: Implement Multi-Modal Virtual Sensors
 - Acceptance Criteria: Agents receive multi-modal sensory input
 """
 
-import pytest
 import numpy as np
 import time
 import sys
@@ -251,7 +250,7 @@ class TestTactileSensor:
             }
         }
         
-        reading = sensor.read_sensor(environment_data)
+        sensor.read_sensor(environment_data)
         contact_info = sensor.get_contact_info()
         
         assert contact_info['contact_detected']

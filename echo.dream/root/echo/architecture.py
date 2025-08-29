@@ -207,9 +207,8 @@ class WorkspaceArchitecture:
             
         # Remove from parent's children list
         parent_id = self.element_parents.get(element_id)
-        if parent_id:
-            if element_id in self.element_children[parent_id]:
-                self.element_children[parent_id].remove(element_id)
+        if parent_id and element_id in self.element_children[parent_id]:
+            self.element_children[parent_id].remove(element_id)
                 
         # Remove from root elements if it's a root
         if element_id in self.root_elements:

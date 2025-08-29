@@ -87,7 +87,7 @@ def demonstrate_learning_progression():
             "traits_used": [PersonaTraitType.BRANCHES, PersonaTraitType.ROOTS, PersonaTraitType.GROWTH]
         }
         
-        result = system.process_experience(experience)
+        system.process_experience(experience)
         
         reasoning = system.persona_kernel.traits[PersonaTraitType.BRANCHES]
         memory = system.persona_kernel.traits[PersonaTraitType.ROOTS]

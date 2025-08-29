@@ -14,7 +14,7 @@ import asyncio
 import numpy as np
 import time
 from aar_core.arena.simulation_engine import (
-    SimulationEngine, Arena, ArenaType, ArenaConfig, 
+    SimulationEngine, ArenaType, ArenaConfig, 
     ArenaPhysics, ArenaEnvironment
 )
 
@@ -25,7 +25,7 @@ async def main():
     
     # Initialize simulation engine
     engine = SimulationEngine()
-    print(f"✓ Simulation Engine initialized")
+    print("✓ Simulation Engine initialized")
     print(f"✓ Available arena types: {[t.value for t in ArenaType]}")
     print(f"✓ Default configurations: {len(engine.default_configs)} types")
     
@@ -81,9 +81,9 @@ async def main():
                   f"vel_mag={vel_mag:.2f}")
     
     final_agent = physics_arena.agents['physics_tester']
-    print(f"✓ Physics effects verified:")
+    print("✓ Physics effects verified:")
     print(f"  - Gravity applied: velocity Z = {final_agent['velocity'][2]:.3f}")
-    print(f"  - Air resistance: velocity reduced over time")
+    print("  - Air resistance: velocity reduced over time")
     print(f"  - Position updated: Z = {final_agent['position'][2]:.2f}")
     
     print("\n⚙️ PHASE 3: Configurable Environment Parameters")
@@ -125,7 +125,7 @@ async def main():
     custom_arena_id = await engine.create_arena(ArenaType.PHYSICS_3D, custom_config)
     custom_arena = engine.get_arena(custom_arena_id)
     
-    print(f"✓ Custom arena created with parameters:")
+    print("✓ Custom arena created with parameters:")
     print(f"  - Dimensions: {custom_arena.config.environment.dimensions}")
     print(f"  - Custom gravity: {custom_arena.config.physics.gravity}")
     print(f"  - Air resistance: {custom_arena.config.physics.air_resistance}")
@@ -249,9 +249,9 @@ async def main():
                 }
             )
             
-            print(f"✓ Resource interaction test:")
+            print("✓ Resource interaction test:")
             print(f"  - Success: {interaction_result['success']}")
-            print(f"  - Collector energy before: 75.0")
+            print("  - Collector energy before: 75.0")
             print(f"  - Collector energy after: {collector['energy']}")
             print(f"  - Resources collected: {collector['resources_collected']}")
     
@@ -271,7 +271,7 @@ async def main():
         print(f"  - Resource consumptions: {stats['resource_consumptions']}")
     
     # Engine-level statistics
-    print(f"\nSimulation Engine Statistics:")
+    print("\nSimulation Engine Statistics:")
     print(f"  - Total arenas created: {engine.total_arenas_created}")
     print(f"  - Active arenas: {len(engine.arenas)}")
     print(f"  - Engine uptime: {time.time() - engine.system_start_time:.1f}s")

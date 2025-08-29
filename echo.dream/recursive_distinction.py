@@ -408,7 +408,7 @@ class SelfReferentialNodeManager:
         # Validate and parse expression if provided
         if expression:
             try:
-                parsed = self.parser.parse(expression)
+                self.parser.parse(expression)
             except SyntaxError as e:
                 raise ValueError(f"Invalid expression: {e}")
         

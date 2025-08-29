@@ -65,7 +65,6 @@ def validate_embodied_learning_integration():
         # Test 2: DTESN Integration
         logger.info("🔍 VALIDATION 2: DTESN Cognitive Architecture Integration")
         try:
-            from cognitive_architecture import CognitiveArchitecture, Memory, MemoryType
             
             # Test that embodied system integrates with cognitive architecture
             cognitive_arch = system.cognitive_architecture
@@ -132,7 +131,7 @@ def validate_embodied_learning_integration():
         logger.info("  Task 2.1.2: 'Agents learn motor skills through body interaction'")
         
         # Simulate learning progression
-        initial_skill_metrics = system.motor_skill_learner.get_skill_metrics()
+        system.motor_skill_learner.get_skill_metrics()
         
         # Practice multiple skills to demonstrate learning
         skills_practiced = ['reach', 'grasp', 'manipulate']
@@ -253,7 +252,7 @@ def main():
         results = validate_embodied_learning_integration()
         
         # Save report
-        report_file = save_validation_report(results)
+        save_validation_report(results)
         
         # Exit with appropriate code
         if results.get('overall_success', False):

@@ -86,7 +86,7 @@ def test_linear_chain_evaluator():
     # Test order 2: f'(f) = f'(y) * f(y) = 2y * y² = 2y³
     evaluator_2 = LinearChainEvaluator(2)
     result_2 = evaluator_2.evaluate(df, 2.0)
-    expected_2 = 2.0 * 2.0 * 4.0  # f'(2) * f(2) = 4 * 4 = 16
+    2.0 * 2.0 * 4.0  # f'(2) * f(2) = 4 * 4 = 16
     
     # Actually for chain rule: if we have f'(f(y)), then it's f'(f(y)) * f'(y)
     # But our implementation is different - let's check what it actually computes
@@ -98,7 +98,7 @@ def test_linear_chain_evaluator():
     # Test order 3: f''(f,f) = f''(y) * f(y) * f(y)
     evaluator_3 = LinearChainEvaluator(3)
     result_3 = evaluator_3.evaluate(df, 2.0)
-    expected_3 = 2.0 * 4.0 * 4.0  # f''(2) * f(2) * f(2) = 2 * 16 = 32
+    2.0 * 4.0 * 4.0  # f''(2) * f(2) * f(2) = 2 * 16 = 32
     
     assert abs(result_3 - 32.0) < 1e-10, f"Order 3: Expected 32, got {result_3}"
     
@@ -127,7 +127,7 @@ def test_star_graph_evaluator():
     
     # This computes f'(y) * f'(y) * f(y) = 2y * 2y * y² = 4y⁴
     # At y = 2: 4 * 16 = 64
-    expected = 4.0 * 2.0 * 2.0 * 4.0  # f'(2) * f'(2) * f(2) = 4 * 4 * 4 = 64
+    4.0 * 2.0 * 2.0 * 4.0  # f'(2) * f'(2) * f(2) = 4 * 4 * 4 = 64
     
     print(f"Star graph result: {result}, expected around: 4 * 2 * 2 * 4 = 64")
     
@@ -316,7 +316,7 @@ def test_error_handling():
     
     try:
         calculator.evaluate_elementary_differential(9999, df_complete, 1.0)
-        assert False, "Should raise error for invalid tree ID"
+        raise AssertionError("Should raise error for invalid tree ID")
     except ValueError:
         pass  # Expected
     

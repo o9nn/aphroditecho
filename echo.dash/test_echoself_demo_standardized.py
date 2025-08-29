@@ -275,7 +275,6 @@ class TestEchoselfDemoStandardized(unittest.TestCase):
         component = EchoselfDemoStandardized(config)
         
         # Mock a method to raise an exception
-        original_method = component._demonstrate_introspection_cycle
         def failing_method(*args, **kwargs):
             raise ValueError("Test error")
         component._demonstrate_introspection_cycle = failing_method

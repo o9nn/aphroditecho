@@ -11,7 +11,6 @@ accessible and functional.
 """
 
 import sys
-import os
 from pathlib import Path
 
 # Add echo.kern to path for import

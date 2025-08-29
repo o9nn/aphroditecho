@@ -13,10 +13,9 @@ import asyncio
 import logging
 import time
 import uuid
-from typing import Dict, List, Any, Optional, Set, Tuple, Callable
+from typing import Dict, List, Any, Optional, Callable
 from dataclasses import dataclass, field
 from enum import Enum
-import json
 import math
 
 logger = logging.getLogger(__name__)
@@ -1007,7 +1006,7 @@ class CollaborativeProblemSolver:
             'consensus_elements': len(consensus_result['final_result']),
             'competitive_elements': len(competitive_result['final_result']) - len(consensus_result['final_result']),
             'contributing_agents': [s.agent_id for s in session.solutions],
-            'reasoning': f"Hybrid approach: consensus + competitive selection"
+            'reasoning': "Hybrid approach: consensus + competitive selection"
         }
     
     def _update_solver_metrics(self, session: CollaborativeProblemSession) -> None:

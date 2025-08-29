@@ -148,7 +148,7 @@ class CognitiveEvolutionBridge:
         )
         
         # Add associations based on agent domains
-        for agent_name in cycle_data["agents"].keys():
+        for agent_name in cycle_data["agents"]:
             agent = self.network.agents.get(agent_name)
             if agent:
                 memory.associations.add(agent.domain)

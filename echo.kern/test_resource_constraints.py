@@ -23,9 +23,7 @@ Acceptance Criteria Validation:
 
 import unittest
 import time
-import threading
 from pathlib import Path
-from unittest.mock import Mock, patch
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # Import modules under test
@@ -36,12 +34,10 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 
 from resource_constraint_manager import (
-    ResourceConstraintManager, ResourceConstraint, EnergyModel, 
-    RealTimeConstraint, ResourceType, OperationType, ResourceError
+    ResourceConstraintManager, OperationType, ResourceError
 )
 from dtesn_resource_integration import (
-    DTESNResourceIntegrator, ConstrainedAgent,
-    ConstrainedPSystemWrapper, ConstrainedESNWrapper, ConstrainedBSeriesWrapper
+    DTESNResourceIntegrator, ConstrainedAgent
 )
 
 class TestResourceConstraintManager(unittest.TestCase):
@@ -521,13 +517,13 @@ class TestResourceConstraintIntegrationAcceptanceCriteria(unittest.TestCase):
         self.assertGreater(constraint_metrics["total_energy_consumed"], 0)
         self.assertGreaterEqual(constraint_metrics["constraint_violations"], failed_operations)
         
-        print(f"\n=== Acceptance Criteria Validation Results ===")
+        print("\n=== Acceptance Criteria Validation Results ===")
         print(f"Successful operations: {successful_operations}")
         print(f"Failed operations (resource constraints): {failed_operations}")
         print(f"Total registered agents: {len(self.agents)}")
         print(f"Total energy consumed: {constraint_metrics['total_energy_consumed']:.6f}J")
         print(f"Constraint violation rate: {constraint_metrics['violation_rate']:.2f}%")
-        print(f"=== Agents successfully operate under realistic resource limits ===")
+        print("=== Agents successfully operate under realistic resource limits ===")
 
 if __name__ == "__main__":
     # Set up logging for test execution

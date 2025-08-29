@@ -158,7 +158,7 @@ class TestDeepTreeEchoAnalyzer(unittest.TestCase):
             analyzer = DeepTreeEchoAnalyzer(temp_dir)
             
             try:
-                fragments = analyzer.analyze_fragments()
+                analyzer.analyze_fragments()
                 # Should find files, even if analysis is incomplete
                 
             except Exception as e:

@@ -12,7 +12,6 @@ import time
 import logging
 import sys
 from pathlib import Path
-from unittest.mock import Mock, patch
 
 # Add the current directory to the path for imports
 sys.path.insert(0, str(Path(__file__).parent))

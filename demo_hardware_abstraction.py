@@ -21,8 +21,7 @@ sys.path.insert(0, '/home/runner/work/aphroditecho/aphroditecho')
 from aar_core.embodied import (
     EmbodiedHardwareManager,
     VirtualBody,
-    VirtualSensor, VirtualActuator,
-    SensorType, ActuatorType
+    VirtualSensor, SensorType
 )
 
 
@@ -60,7 +59,7 @@ class EmbodiedHardwareDemo:
         # Get system status
         status = self.hw_manager.get_system_status()
         hw_status = status['hardware_bridge']['hardware_simulator_status']['simulator']
-        print(f"\n📊 System Status:")
+        print("\n📊 System Status:")
         print(f"   - Devices: {hw_status['device_count']}")
         print(f"   - Sensors: {hw_status['sensor_count']}")
         print(f"   - Actuators: {hw_status['actuator_count']}")
@@ -150,7 +149,7 @@ class EmbodiedHardwareDemo:
                 'wind': [0.1 * np.sin(current_time), 0, 0]
             }
             
-            update_result = self.hw_manager.update(dt, environment_data)
+            self.hw_manager.update(dt, environment_data)
             update_count += 1
             
             # Brief sleep to maintain real-time
@@ -232,8 +231,8 @@ class EmbodiedHardwareDemo:
         validation = self.hw_manager.validate_system_integration()
         criteria_met = validation.get('acceptance_criteria_met', False)
         
-        print(f"\n🎯 Acceptance Criteria:")
-        print(f"   Task 2.2.3: System can interface with simulated hardware")
+        print("\n🎯 Acceptance Criteria:")
+        print("   Task 2.2.3: System can interface with simulated hardware")
         print(f"   Status: {'✅ MET' if criteria_met else '❌ NOT MET'}")
         
         if criteria_met:

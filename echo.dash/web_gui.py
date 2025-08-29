@@ -18,6 +18,7 @@ import threading
 import time
 from datetime import datetime, timedelta
 from pathlib import Path
+import contextlib
 
 # Third-party imports
 try:
@@ -2125,15 +2126,13 @@ def api_network_metrics():
         # Get connection list (limit to 20 for performance)
         connection_list = []
         for conn in connections[:20]:
-            try:
+            with contextlib.suppress(AttributeError, ValueError):
                 connection_list.append({
                     'local_address': f"{conn.laddr.ip}:{conn.laddr.port}" if conn.laddr else "Unknown",
                     'remote_address': f"{conn.raddr.ip}:{conn.raddr.port}" if conn.raddr else "Unknown",
                     'status': conn.status,
                     'type': conn.type.name if hasattr(conn.type, 'name') else str(conn.type)
                 })
-            except (AttributeError, ValueError):
-                pass
         
         return jsonify({
             'sent': f"{sent_mb:.1f} MB",
@@ -2156,15 +2155,13 @@ def api_process_info():
     """API endpoint to get current process information."""
     processes = []
     for proc in psutil.process_iter(['pid', 'name', 'cpu_percent', 'memory_percent']):
-        try:
+        with contextlib.suppress(psutil.NoSuchProcess, psutil.AccessDenied):
             processes.append({
                 'pid': proc.info['pid'],
                 'name': proc.info['name'],
                 'cpu_percent': proc.info['cpu_percent'],
                 'memory_percent': proc.info['memory_percent']
             })
-        except (psutil.NoSuchProcess, psutil.AccessDenied):
-            pass
 
     # Sort by CPU usage, highest first
     processes = sorted(processes, key=lambda p: p['cpu_percent'], reverse=True)[:10]

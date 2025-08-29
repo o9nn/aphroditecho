@@ -471,7 +471,6 @@ class TestEcho9mlSystem(unittest.TestCase):
             })
         
         initial_traits = self.system.persona_kernel.traits.copy()
-        initial_count = self.system.interaction_count
         
         # Save state
         self.system.save_state()
@@ -531,7 +530,7 @@ class TestIntegrationScenarios(unittest.TestCase):
         
         for exp in learning_experiences:
             exp["traits_used"] = [PersonaTraitType.BRANCHES, PersonaTraitType.GROWTH]
-            result = self.system.process_experience(exp)
+            self.system.process_experience(exp)
         
         final_reasoning = self.system.persona_kernel.traits[PersonaTraitType.BRANCHES]
         
@@ -539,7 +538,7 @@ class TestIntegrationScenarios(unittest.TestCase):
         self.assertGreater(final_reasoning, initial_reasoning)
         
         # Confidence should improve or at least stay stable
-        snapshot = self.system.get_cognitive_snapshot()
+        self.system.get_cognitive_snapshot()
         confidence_trend = self.system.meta_cognitive.confidence_history
         if len(confidence_trend) >= 2:
             # Either improved or remained stable (allowing for small numerical differences)
@@ -554,11 +553,11 @@ class TestIntegrationScenarios(unittest.TestCase):
             {"type": "creative", "success": 0.8, "novelty": 0.7, "originality": 0.8}
         ]
         
-        initial_creativity = self.system.persona_kernel.traits[PersonaTraitType.CANOPY]
+        self.system.persona_kernel.traits[PersonaTraitType.CANOPY]
         
         for exp in creative_experiences:
             exp["traits_used"] = [PersonaTraitType.CANOPY, PersonaTraitType.LEAVES]
-            result = self.system.process_experience(exp)
+            self.system.process_experience(exp)
         
         # Should show adaptation to creative challenges
         self.assertGreater(len(self.system.system_log), 0)

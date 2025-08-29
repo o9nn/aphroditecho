@@ -319,9 +319,9 @@ class EchoSelfEvolutionEngine:
         p2_reasoning = any(task.get('task_type') == 'reasoning' and task.get('performance_score', 0) > 0.6 
                           for task in p2_tasks)
         
-        p1_problem_solving = any(task.get('task_type') == 'problem_solving' and task.get('performance_score', 0) > 0.6 
+        any(task.get('task_type') == 'problem_solving' and task.get('performance_score', 0) > 0.6 
                                 for task in p1_tasks)
-        p2_problem_solving = any(task.get('task_type') == 'problem_solving' and task.get('performance_score', 0) > 0.6 
+        any(task.get('task_type') == 'problem_solving' and task.get('performance_score', 0) > 0.6 
                                 for task in p2_tasks)
         
         # Combine best traits

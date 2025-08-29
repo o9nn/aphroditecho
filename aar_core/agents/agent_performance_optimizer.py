@@ -9,11 +9,10 @@ This module adds advanced performance optimization features:
 - Dynamic resource allocation
 """
 
-import asyncio
 import logging
 import time
 import statistics
-from typing import Dict, List, Any, Optional, Tuple
+from typing import Dict, List, Any, Optional
 from dataclasses import dataclass, field
 from enum import Enum
 

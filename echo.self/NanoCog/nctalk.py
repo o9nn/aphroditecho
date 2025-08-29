@@ -245,7 +245,7 @@ class ModelConfig:
         with torch.no_grad():
             with torch.amp.autocast(device_type='cuda' if 'cuda' in self.device else 'cpu'):
                 # Get the input sequence length to know where to start yielding new tokens
-                input_len = x.shape[1]
+                x.shape[1]
                 
                 # Initialize past_key_values for more efficient generation
                 past = None

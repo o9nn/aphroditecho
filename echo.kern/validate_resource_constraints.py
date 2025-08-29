@@ -19,7 +19,7 @@ logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 sys.path.insert(0, str(Path(__file__).parent))
 
 from resource_constraint_manager import (
-    ResourceConstraintManager, ResourceType, OperationType, ResourceError
+    ResourceConstraintManager, OperationType, ResourceError
 )
 from dtesn_resource_integration import DTESNResourceIntegrator, ConstrainedAgent
 
@@ -79,7 +79,7 @@ def validate_constraint_enforcement():
         return "completed"
     
     try:
-        result = manager.enforce_agent_constraints(
+        manager.enforce_agent_constraints(
             "test_agent", OperationType.MEMBRANE_EVOLUTION, slow_operation)
         print("✅ Operation completed under constraints")
     except ResourceError as e:
@@ -125,7 +125,7 @@ def validate_dtesn_integration():
     # Test 3: Constrained operation
     if psystem:
         try:
-            result = psystem.evolve_membrane({"initial_membranes": 1})
+            psystem.evolve_membrane({"initial_membranes": 1})
             print("✅ P-System operation completed under constraints")
         except Exception as e:
             print(f"⚠️  P-System operation: {e}")

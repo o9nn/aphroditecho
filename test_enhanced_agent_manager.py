@@ -111,7 +111,7 @@ async def test_enhanced_agent_manager():
             
             # Get comprehensive performance report
             report = manager.get_performance_report()
-            logger.info(f"✅ Performance report generated:")
+            logger.info("✅ Performance report generated:")
             logger.info(f"   - Total agents monitored: {report['optimization']['total_agents_monitored']}")
             logger.info(f"   - System health score: {report['health_status']['overall_score']:.2f}")
             
@@ -126,7 +126,7 @@ async def test_enhanced_agent_manager():
             
             # Manually trigger optimization
             optimization_result = await manager.trigger_system_optimization()
-            logger.info(f"✅ System optimization completed:")
+            logger.info("✅ System optimization completed:")
             logger.info(f"   - Suggestions: {len(optimization_result['suggestions'])}")
             logger.info(f"   - Applied optimizations: {len(optimization_result['applied_optimizations'])}")
             logger.info(f"   - Optimization time: {optimization_result['optimization_time']:.3f}s")
@@ -203,7 +203,7 @@ async def test_load_balancing_comparison():
             await manager.shutdown()
     
     # Summary comparison
-    logger.info(f"\n=== Load Balancing Comparison Summary ===")
+    logger.info("\n=== Load Balancing Comparison Summary ===")
     for strategy, result in results.items():
         logger.info(f"{strategy}:")
         logger.info(f"  Distribution evenness: {result['distribution_evenness']:.3f}")
@@ -272,7 +272,7 @@ async def test_performance_optimization():
         fast_allocated = len([aid for aid in allocated_agents if aid in fast_agents])
         slow_allocated = len([aid for aid in allocated_agents if aid in slow_agents])
         
-        logger.info(f"✅ Performance-based allocation results:")
+        logger.info("✅ Performance-based allocation results:")
         logger.info(f"   - Fast agents allocated: {fast_allocated}")
         logger.info(f"   - Slow agents allocated: {slow_allocated}")
         logger.info(f"   - Fast agent preference: {fast_allocated / len(allocated_agents):.1%}")

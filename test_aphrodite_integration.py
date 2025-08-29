@@ -140,7 +140,7 @@ async def test_full_deep_tree_echo_fusion():
         # Verify integration status
         stats = evolution_engine.get_statistics()
         assert 'aar_integration_enabled' in stats
-        assert stats['aar_integration_enabled'] == True
+        assert stats['aar_integration_enabled'] is True
         
         perf_stats = aar_orchestrator.performance_stats
         assert 'total_requests' in perf_stats

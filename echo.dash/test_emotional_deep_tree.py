@@ -65,7 +65,7 @@ def create_test_tree():
 def show_emotional_states(dte):
     """Display emotional states for all nodes in the tree"""
     # Map from CoreEmotion index to name
-    emotion_names = [e.name for e in CoreEmotion]
+    [e.name for e in CoreEmotion]
     
     # Collect nodes for display
     nodes = []

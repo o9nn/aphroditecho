@@ -7,7 +7,7 @@ to create embodied AI agents with consistent body representation.
 
 import numpy as np
 import time
-from typing import Dict, List, Any, Optional, Tuple, Callable
+from typing import Dict, Any, Optional, Tuple
 from dataclasses import dataclass
 
 from .virtual_body import VirtualBody
@@ -129,7 +129,7 @@ class EmbodiedAgent:
                     continue
                 
                 current_angle = current_state['angle']
-                current_velocity = current_state['velocity']
+                current_state['velocity']
                 
                 # PID control
                 error = target_value - current_angle

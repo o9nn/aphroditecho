@@ -12,10 +12,9 @@ import asyncio
 import logging
 import time
 import uuid
-from typing import Dict, List, Any, Optional, Set, Callable
+from typing import Dict, List, Any, Optional, Callable
 from dataclasses import dataclass, field
 from enum import Enum
-import json
 
 logger = logging.getLogger(__name__)
 
@@ -599,7 +598,7 @@ class CommunicationProtocols:
     
     async def _process_task_status_update(self, session: ProtocolSession, message: Message) -> None:
         """Process task status update."""
-        task_id = message.content.get('task_id')
+        message.content.get('task_id')
         status = message.content.get('status')
         progress = message.content.get('progress', 0.0)
         
@@ -673,7 +672,7 @@ class CommunicationProtocols:
     
     async def _process_knowledge_share(self, message: Message) -> None:
         """Process knowledge sharing."""
-        knowledge = message.content.get('knowledge', {})
+        message.content.get('knowledge', {})
         knowledge_type = message.content.get('knowledge_type')
         
         # Store or process shared knowledge

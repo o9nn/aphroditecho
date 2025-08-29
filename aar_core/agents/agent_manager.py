@@ -16,6 +16,7 @@ from dataclasses import dataclass, field
 from enum import Enum
 
 from .agent_performance_optimizer import AgentPerformanceOptimizer, OptimizationStrategy
+import contextlib
 
 logger = logging.getLogger(__name__)
 
@@ -661,10 +662,8 @@ class AgentManager:
         self._running = False
         if self._optimization_task:
             self._optimization_task.cancel()
-            try:
+            with contextlib.suppress(asyncio.CancelledError):
                 await self._optimization_task
-            except asyncio.CancelledError:
-                pass
         
         # Terminate all agents
         agent_ids = list(self.agents.keys())

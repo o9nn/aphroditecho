@@ -579,7 +579,6 @@ class Echo9mlSystem:
         start_time = time.time()
         
         # Step 1: Encode experience in hypergraph
-        experience_node_id = f"exp_{self.interaction_count}"
         self.hypergraph_encoder.add_memory_node(
             str(experience), 
             experience.get("type", "general"),
@@ -589,7 +588,7 @@ class Echo9mlSystem:
         # Step 2: Update tensor encoding
         context = experience.get("context", "interaction")
         valence = experience.get("valence", 0.0)
-        tensor_state = self.tensor_encoding.encode_persona(
+        self.tensor_encoding.encode_persona(
             self.persona_kernel, context=context, valence=valence
         )
         

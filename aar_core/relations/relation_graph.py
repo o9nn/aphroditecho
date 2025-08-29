@@ -5,15 +5,13 @@ Manages dynamic relationships and communication between agents in the AAR system
 Provides graph-based relationship modeling with adaptive weights and communication routing.
 """
 
-import asyncio
 import logging
 import time
 import uuid
-from typing import Dict, List, Any, Optional, Set, Tuple
+from typing import Dict, List, Any, Optional
 from dataclasses import dataclass, field
 from enum import Enum
 import networkx as nx
-import numpy as np
 
 logger = logging.getLogger(__name__)
 
@@ -159,7 +157,7 @@ class Relation:
     async def _process_collaboration(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """Process collaboration interaction."""
         task = data.get('task', {})
-        contribution = data.get('contribution', {})
+        data.get('contribution', {})
         
         # Calculate collaboration effectiveness
         effectiveness = min(1.0, self.weight + 0.1)  # Stronger relations are more effective
@@ -188,7 +186,7 @@ class Relation:
     
     async def _process_communication(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """Process communication interaction."""
-        message = data.get('message', '')
+        data.get('message', '')
         channel = data.get('channel', 'direct')
         
         # Communication effectiveness based on trust and relationship strength
@@ -204,7 +202,7 @@ class Relation:
     
     async def _process_dependency(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """Process dependency relationship."""
-        request = data.get('request', {})
+        data.get('request', {})
         
         # Dependencies get stronger with successful interactions
         reliability = self.metrics.success_rate * self.weight
@@ -218,7 +216,7 @@ class Relation:
     
     async def _process_mentor_student(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """Process mentor-student interaction."""
-        learning_data = data.get('learning', {})
+        data.get('learning', {})
         
         # Mentoring effectiveness improves over time
         mentoring_quality = min(1.0, self.weight + (self.metrics.relationship_age / 1000.0))
@@ -246,7 +244,7 @@ class Relation:
     
     async def _process_task_coordination(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """Process task coordination interaction."""
-        coordination_request = data.get('coordination', {})
+        data.get('coordination', {})
         
         # Coordination effectiveness based on communication history
         coordination_quality = (self.metrics.communication_frequency / 10.0) * self.weight
@@ -261,7 +259,7 @@ class Relation:
     
     async def _process_knowledge_exchange(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """Process knowledge exchange interaction."""
-        knowledge_data = data.get('knowledge', {})
+        data.get('knowledge', {})
         
         # Knowledge exchange based on compatibility and trust
         exchange_quality = (self.metrics.trust_level + self.weight) / 2

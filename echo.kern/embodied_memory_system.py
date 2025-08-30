@@ -16,10 +16,9 @@ import json
 import time
 import logging
 import numpy as np
-from typing import Dict, List, Optional, Tuple, Any, Union
+from typing import Dict, List, Optional, Tuple, Any
 from dataclasses import dataclass, field, asdict
 from enum import Enum
-from datetime import datetime
 from pathlib import Path
 import threading
 import math
@@ -846,7 +845,7 @@ def demo_embodied_memory_system():
     
     # Display statistics
     stats = ems.get_stats()
-    print(f"\nSystem Statistics:")
+    print("\nSystem Statistics:")
     for key, value in stats.items():
         print(f"  {key}: {value}")
     

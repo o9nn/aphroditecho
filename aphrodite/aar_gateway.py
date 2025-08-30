@@ -4,15 +4,13 @@ Primary entry point for coordinating 2do components with the Aphrodite Engine.
 """
 
 import asyncio
-import json
 import logging
-from typing import Dict, List, Any, Optional, Union
+from typing import Dict, List, Any, Optional
 from dataclasses import dataclass, asdict
 from enum import Enum
 import uuid
-from pathlib import Path
 
-from aar_core.agents import AgentManager, Agent
+from aar_core.agents import AgentManager
 from aar_core.arena import SimulationEngine
 from aar_core.orchestration import CoreOrchestrator
 from echo.sys.prompt_kernel import PromptStore

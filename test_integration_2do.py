@@ -9,7 +9,6 @@ through the AAR Gateway system.
 import asyncio
 import json
 import logging
-from pathlib import Path
 from typing import Dict, Any
 
 # Set up logging
@@ -37,7 +36,7 @@ def test_function_registry():
     """Test the function registry functionality."""
     try:
         from aphrodite.function_registry import (
-            FunctionRegistry, FunctionSpec, ParameterSpec, SafetyClass
+            FunctionRegistry
         )
         
         # Create registry

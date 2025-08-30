@@ -7,7 +7,7 @@ for virtual body representation.
 
 import numpy as np
 import time
-from typing import Dict, List, Any, Optional, Tuple, Callable
+from typing import Dict, Any, Optional, Tuple
 from dataclasses import dataclass
 from collections import deque
 
@@ -249,7 +249,7 @@ class ProprioceptiveSystem:
         
         # Organize readings by joint
         joint_awareness = {}
-        for joint_id in self.virtual_body.joints.keys():
+        for joint_id in self.virtual_body.joints:
             joint_readings = {
                 'position': None,
                 'velocity': None,
@@ -298,7 +298,7 @@ class ProprioceptiveSystem:
         for sensor_id, sensor in self.sensors.items():
             values = [readings[sensor_id].value for readings in calibration_readings if sensor_id in readings]
             if values:
-                baseline = np.mean(values)
+                np.mean(values)
                 noise_estimate = np.std(values)
                 
                 # Update sensor characteristics based on calibration

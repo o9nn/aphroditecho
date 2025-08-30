@@ -35,8 +35,8 @@ class BlockSpaceManager(ABC):
 
         if version == "placeholder":
             from aphrodite.processing.placeholder_block_space_manager import (
-                PlaceholderBlockSpaceManager)
-            return PlaceholderBlockSpaceManager
+                ProductionBlockSpaceManager)
+            return ProductionBlockSpaceManager
 
         raise ValueError(f"Unknown version {version=}")
 

@@ -5,9 +5,8 @@ This adapter bridges the 2do/llm component's agent abstractions and model wrappe
 with the AAR orchestration system, providing unified access to multi-model capabilities.
 """
 
-import asyncio
 import logging
-from typing import Dict, List, Any, Optional, Union
+from typing import Dict, List, Any, Optional
 from dataclasses import dataclass, field
 import sys
 from pathlib import Path
@@ -142,7 +141,7 @@ class LLMAdapter:
             
             # Create parameters from tool signature if available
             parameters = {}
-            if hasattr(tool, '__call__'):
+            if callable(tool):
                 import inspect
                 sig = inspect.signature(tool)
                 for param_name, param in sig.parameters.items():

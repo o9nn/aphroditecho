@@ -15,11 +15,11 @@ import numpy as np
 import time
 import threading
 import queue
-from typing import Dict, List, Any, Optional, Tuple, Callable, Union
-from dataclasses import dataclass, field
+from typing import Dict, List, Any, Optional, Tuple, Union
+from dataclasses import dataclass
 from enum import Enum
 from abc import ABC, abstractmethod
-import json
+import contextlib
 
 
 class HardwareType(Enum):
@@ -324,10 +324,8 @@ class VirtualActuator(HardwareDevice):
         """Process pending commands."""
         # Get new command if current one is complete
         if self.current_command is None:
-            try:
+            with contextlib.suppress(queue.Empty):
                 self.current_command = self.command_queue.get_nowait()
-            except queue.Empty:
-                pass
                 
         if self.current_command is None:
             return

@@ -40,7 +40,7 @@ def benchmark_gateway_operations() -> Dict[str, Any]:
     # Benchmark: Get functions
     start_time = time.perf_counter()
     for i in range(100):
-        functions = gateway.get_functions()
+        gateway.get_functions()
     functions_time = time.perf_counter() - start_time
     results["get_functions_100_times_ms"] = functions_time * 1000
     

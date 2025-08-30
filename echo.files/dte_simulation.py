@@ -512,12 +512,12 @@ class DTESimulation(RecursionEngine):
         }
         
         # Generate a thought based on destination state
-        if new_state in thoughts or any(k in new_state for k in thoughts.keys()):
+        if new_state in thoughts or any(k in new_state for k in thoughts):
             # Find matching key
             key = new_state
             if new_state not in thoughts:
                 # Try partial match
-                for k in thoughts.keys():
+                for k in thoughts:
                     if k in new_state:
                         key = k
                         break
@@ -581,7 +581,7 @@ class DTESimulation(RecursionEngine):
             if state == self.current_state:
                 group = 0  # Special group for current state
             elif "Insight" in state:
-                group = a = 2  # Group for insights
+                group = 2  # Group for insights
             elif "Branch" in state:
                 group = 3  # Group for branches
                 
@@ -717,7 +717,7 @@ class FractalRecursion(RecursionEngine):
             # Create a more complex branching structure
             if random.random() > 0.5 and self.branching_factor < 4:
                 self.branching_factor += 1
-                old_graph = self.G.copy()
+                self.G.copy()
                 
                 # Create balanced tree with new branching factor
                 self.G = nx.balanced_tree(self.branching_factor, min(4, self.depth), create_using=nx.DiGraph())

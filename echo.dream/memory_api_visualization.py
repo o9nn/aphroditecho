@@ -15,6 +15,7 @@ import datetime
 from app import app
 from models_memory import MemoryNode, MemoryAssociation
 from models import SelfReferentialNode
+import contextlib
 
 logger = logging.getLogger(__name__)
 
@@ -117,10 +118,8 @@ def get_memory_visualization():
             # Add metadata from association if available
             metadata = {}
             if assoc.association_metadata:
-                try:
+                with contextlib.suppress(Exception):
                     metadata = json.loads(assoc.association_metadata)
-                except:
-                    pass
             
             link_data = {
                 'source': node_map[assoc.source_id],

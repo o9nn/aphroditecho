@@ -98,7 +98,7 @@ class TestGitHubTokenHandling(unittest.TestCase):
                 # Mock a failed response (but at least it tries)
                 mock_post.return_value.status_code = 404
                 
-                result = copilot_suggestions.fetch_suggestions_from_copilot(test_note)
+                copilot_suggestions.fetch_suggestions_from_copilot(test_note)
                 
                 # Should attempt to make the request
                 mock_post.assert_called()

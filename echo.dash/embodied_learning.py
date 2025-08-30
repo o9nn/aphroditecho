@@ -14,7 +14,6 @@ import logging
 import time
 from dataclasses import dataclass, field
 from typing import Dict, List, Tuple, Optional, Any
-from abc import ABC, abstractmethod
 
 # Import existing cognitive architecture if available
 try:
@@ -37,7 +36,7 @@ logger = logging.getLogger(__name__)
 class BodyState:
     """Represents the current state of the embodied agent's body"""
     position: Tuple[float, float, float] = (0.0, 0.0, 0.0)  # x, y, z
-    orientation: Tuple[float, float, float] = (0.0, 0.0, 0.0)  # roll, pitch, yaw
+    orientation: Tuple[float, float, float] = (0.0, 0.0, 0.0)  # roll, pitch
     joint_angles: Dict[str, float] = field(default_factory=dict)
     joint_velocities: Dict[str, float] = field(default_factory=dict)
     muscle_activations: Dict[str, float] = field(default_factory=dict)
@@ -161,7 +160,7 @@ class BodySchemaLearner:
             gradient = np.outer(error, combined_input[:100]) * self.learning_rate
             self.body_schema_weights += gradient[:100, :100]
             
-        except Exception as e:
+        except Exception:
             # Fallback to simple weight adjustment
             adjustment = self.learning_rate * 0.01 * np.random.randn(*self.body_schema_weights.shape)
             self.body_schema_weights += adjustment
@@ -1101,7 +1100,7 @@ class MotorSkillLearner:
             'inverse_dynamics_updates': inverse_dynamics_updates,
             'model_confidence': self.inverse_dynamics_learner.model_confidence,
             'skill_levels': {name: self.skill_acquisition_tracker.skill_progression.get(name, {}).get('current_level', 'novice') 
-                           for name in self.skill_performance.keys()}
+                           for name in self.skill_performance}
         }
     
     # New Motor Learning Algorithm Methods
@@ -1219,12 +1218,12 @@ class MotorSkillLearner:
             action_vector = self._normalize_vector(action_vector, action_dim)
             
             # Update forward model
-            forward_error = self.inverse_dynamics_learner.update_forward_model(
+            self.inverse_dynamics_learner.update_forward_model(
                 initial_state_vector, action_vector, final_state_vector
             )
             
             # Update inverse model
-            inverse_error = self.inverse_dynamics_learner.update_inverse_model(
+            self.inverse_dynamics_learner.update_inverse_model(
                 initial_state_vector, action_vector, final_state_vector
             )
             

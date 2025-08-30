@@ -68,8 +68,8 @@ name: 🚀 Aphrodite Engine Build Automation
 env:
   # Build configuration - OPTIMIZED for complex builds
   CMAKE_BUILD_TYPE: Release
-  MAX_JOBS: 8  # Increased from 2 - significant improvement
-  CCACHE_MAXSIZE: 20G  # Increased from 2G - essential for C++/CUDA builds
+  MAX_JOBS: 2  # Reduced from 8 to minimize disk pressure
+  CCACHE_MAXSIZE: 10G  # Reduced from 20G to leave more space for compilation
   # Echo Systems configuration
   ECHO_ENABLE_DEEP_TREE: true
   ECHO_ENABLE_VM_DAEMON: true
@@ -316,6 +316,23 @@ jobs:
           sudo rm -rf "$AGENT_TOOLSDIRECTORY"
           df -h
 
+      - name: 🧹 Clean Build Artifacts During Compilation
+        run: |
+          # Clean up intermediate CUDA compilation artifacts
+          find /tmp -name "*.fatbin.c" -delete 2>/dev/null || true
+          find /tmp -name "*.cudafe*" -delete 2>/dev/null || true
+          find /tmp -name "tmpxft_*" -delete 2>/dev/null || true
+          df -h
+
+      - name: 🧹 Clean Precompiled CUDA Kernels
+        run: |
+          # Remove large precompiled kernel directory to free space
+          rm -rf kernels/xqa/cubin/ || true
+          # Clean up any other large kernel artifacts
+          find kernels/ -name "*.cubin" -delete 2>/dev/null || true
+          find kernels/ -name "*.fatbin" -delete 2>/dev/null || true
+          df -h
+
       - name: 🐍 Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
         with:
@@ -383,7 +400,7 @@ jobs:
             pip install -r requirements/common.txt --timeout 18000
           fi
 
-      - name: 🏗️ Build Aphrodite Engine
+      - name: 🏗️ Build Aphrodite Engine with Disk Management
         timeout-minutes: 900
         run: |
           echo "::group::Build Configuration"
@@ -391,22 +408,93 @@ jobs:
           echo "Python Version: ${{ matrix.python-version }}"
           echo "MAX_JOBS: $MAX_JOBS"
           echo "CMAKE_BUILD_TYPE: $CMAKE_BUILD_TYPE"
+          df -h
           echo "::endgroup::"
           
-          echo "::group::Build Process"
-          export TORCH_CUDA_ARCH_LIST="6.0 6.1 7.0 7.5 8.0 8.6 8.9 9.0+PTX"
+          echo "::group::Virtual Environment Setup"
+          # Create isolated build environment in tmpfs for speed
+          sudo mkdir -p /dev/shm/build_env
+          python -m venv /dev/shm/build_env
+          source /dev/shm/build_env/bin/activate
+          pip install --upgrade pip wheel setuptools
+          
+          # Set build environment variables for virtual env
+          export VIRTUAL_ENV="/dev/shm/build_env"
+          export PATH="/dev/shm/build_env/bin:$PATH"
+          export PYTHONPATH="/dev/shm/build_env/lib/python3.*/site-packages"
+          echo "::endgroup::"
+          
+          echo "::group::Pre-compilation Disk Space Verification"
+          AVAILABLE_GB=$(df / | awk 'NR==2 {print int($4/1024/1024)}')
+          echo "Available disk space: ${AVAILABLE_GB}GB"
+          if [ "$AVAILABLE_GB" -lt 10 ]; then
+            echo "ERROR: Insufficient disk space for CUDA compilation"
+            exit 1
+          fi
+          echo "::endgroup::"
+          
+          echo "::group::Build Process with Aggressive Cleanup"
+          export TORCH_CUDA_ARCH_LIST="8.0"
+          
+          # Monitor disk space during build with ultra-aggressive cleanup
+          (while true; do 
+            df -h | grep -E "/$|/tmp|/dev/shm"
+            # Clean up temp files every 30 seconds during build
+            find /tmp -name "tmpxft_*" -mmin +0.5 -delete 2>/dev/null || true
+            find /tmp -name "*cudafe*" -mmin +0.5 -delete 2>/dev/null || true
+            find /tmp -name "*.fatbin.c" -mmin +0.5 -delete 2>/dev/null || true
+            find /tmp -name "*.stub.c" -mmin +0.5 -delete 2>/dev/null || true
+            find /tmp -name "cc*.s" -mmin +0.5 -delete 2>/dev/null || true
+            # Clean up build artifacts
+            find build/ -name "*.o" -mmin +1 -delete 2>/dev/null || true
+            find build/ -name "*.obj" -mmin +1 -delete 2>/dev/null || true
+            sleep 30
+          done) &
+          MONITOR_PID=$!
           
           # Use existing build script if available
           if [ -f ".github/workflows/scripts/build.sh" ]; then
             bash .github/workflows/scripts/build.sh ${{ matrix.python-version }} ${{ matrix.cuda-version || '12.4' }}
           else
-            # Fallback build process
-            python setup.py bdist_wheel --dist-dir=dist
+            # Fallback build process with CUTLASS optimizations and virtual env
+            export TMPDIR="/dev/shm/tmp"
+            mkdir -p "$TMPDIR"
+            mkdir -p build && cd build
+            cmake -DCMAKE_BUILD_TYPE=$CMAKE_BUILD_TYPE \
+                  -DAPHRODITE_PYTHON_EXECUTABLE="/dev/shm/build_env/bin/python" \
+                  -DAPHRODITE_TARGET_DEVICE=cuda \
+                  -DENABLE_CUTLASS_MOE_SM90=OFF \
+                  -DENABLE_CUTLASS_MOE_SM100=OFF \
+                  -DENABLE_SCALED_MM_SM90=OFF \
+                  -DENABLE_SCALED_MM_C2X=OFF \
+                  -DENABLE_SPARSE_SCALED_MM_C3X=OFF \
+                  -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+                  -DCMAKE_CUDA_COMPILER_LAUNCHER=ccache \
+                  ..
+            # Build with ultra-low parallelism and frequent cleanup
+            cmake --build . --target _C -j1 --verbose
+            cd ..
           fi
+          
+          # Stop monitoring and final cleanup
+          kill $MONITOR_PID 2>/dev/null || true
+          
+          # Aggressive final cleanup
+          find /tmp -name "*.fatbin.c" -delete 2>/dev/null || true
+          find /tmp -name "*.cudafe*" -delete 2>/dev/null || true
+          find /tmp -name "tmpxft_*" -delete 2>/dev/null || true
+          rm -rf /tmp/.deps 2>/dev/null || true
+          
+          # Clean up build directory
+          find build/ -name "*.o" -delete 2>/dev/null || true
+          find build/ -name "*.obj" -delete 2>/dev/null || true
+          find build/ -name "*.tmp" -delete 2>/dev/null || true
+          
           echo "::endgroup::"
           
           echo "::group::Build Results"
           ls -la dist/ || echo "No dist directory found"
+          df -h
           echo "::endgroup::"
 
       - name: 🧪 Basic Smoke Tests
@@ -466,9 +554,9 @@ jobs:
       - name: 💾 Cache Build Directory
         uses: actions/cache@v3
         if: github.event.inputs.skip_cache != 'true'
+        continue-on-error: true
         with:
           path: |
-            build/
             ~/.cache/pip
           key: build-cache-${{ matrix.target_device }}-${{ matrix.python-version }}-${{ hashFiles('setup.py', 'pyproject.toml', 'requirements/**') }}
           restore-keys: |

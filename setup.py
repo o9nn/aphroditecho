@@ -290,11 +290,11 @@ class cmake_build_ext(build_ext):
         # on subsequent calls to python.
         cmake_args += ['-DAPHRODITE_PYTHON_PATH={}'.format(":".join(sys.path))]
 
-        # Override the base directory for FetchContent downloads to $ROOT/.deps
+        # Override the base directory for FetchContent downloads to /tmp/.deps
         # This allows sharing dependencies between profiles,
         # and plays more nicely with sccache.
         # To override this, set the FETCHCONTENT_BASE_DIR environment variable.
-        fc_base_dir = os.path.join(ROOT_DIR, ".deps")
+        fc_base_dir = os.path.join("/tmp", ".deps")
         fc_base_dir = os.environ.get("FETCHCONTENT_BASE_DIR", fc_base_dir)
         cmake_args += ['-DFETCHCONTENT_BASE_DIR={}'.format(fc_base_dir)]
 
@@ -351,6 +351,55 @@ class cmake_build_ext(build_ext):
         ]
 
         subprocess.check_call(["cmake", *build_args], cwd=self.build_temp)
+
+        import glob
+        import shutil
+        import time
+        import threading
+        
+        def ultra_aggressive_cleanup():
+            while True:
+                temp_patterns = [
+                    os.path.join(self.build_temp, "**/*.fatbin.c"),
+                    os.path.join(self.build_temp, "**/*cudafe*"),
+                    os.path.join(self.build_temp, "**/tmpxft_*"),
+                    "/tmp/tmpxft_*",
+                    "/tmp/*cudafe*",
+                    "/tmp/*.fatbin.c",
+                    "/tmp/*.stub.c",
+                    "/tmp/cc*.s",
+                ]
+                
+                for pattern in temp_patterns:
+                    for temp_file in glob.glob(pattern, recursive=True):
+                        try:
+                            if os.path.getmtime(temp_file) < time.time() - 30:
+                                os.remove(temp_file)
+                        except OSError:
+                            pass
+                
+                if os.path.exists(self.build_temp):
+                    for root, dirs, files in os.walk(self.build_temp):
+                        for file in files:
+                            if file.endswith(('.o', '.obj', '.tmp', '.fatbin.c', '.stub.c')):
+                                try:
+                                    file_path = os.path.join(root, file)
+                                    if os.path.getmtime(file_path) < time.time() - 30:
+                                        os.remove(file_path)
+                                except OSError:
+                                    pass
+                
+                import gc
+                gc.collect()
+                time.sleep(15)
+        
+        cleanup_thread = threading.Thread(target=ultra_aggressive_cleanup, daemon=True)
+        cleanup_thread.start()
+        
+        os.environ['TMPDIR'] = '/dev/shm/tmp' if os.path.exists('/dev/shm') else '/tmp'
+        os.environ['MAX_JOBS'] = '1'
+        os.environ['NVCC_THREADS'] = '1'
+        os.environ['TORCH_CUDA_ARCH_LIST'] = '8.0'
 
         # Install the libraries
         for ext in self.extensions:

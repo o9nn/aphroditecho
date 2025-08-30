@@ -6,8 +6,6 @@ Manage Lightning AI deployments from local development environment
 
 import os
 import json
-import time
-import requests
 import subprocess
 from datetime import datetime
 from pathlib import Path
@@ -108,7 +106,7 @@ echo "✅ Deployment complete - artifacts in /tmp/artifacts/"
         
         cost = pricing.get(gpu_type, 5) * build_hours
         
-        print(f"💰 Estimated Cost:")
+        print("💰 Estimated Cost:")
         print(f"   GPU Type: {gpu_type}")
         print(f"   Duration: {build_hours} hours")
         print(f"   Cost: ~{cost} tokens")

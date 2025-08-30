@@ -619,9 +619,9 @@ def admin_update_settings():
     """Update application settings (admin only)."""
     # In a real application, check if current user is admin
     
-    debug = request.form.get('debug') == 'true'
-    max_content_length = int(request.form.get('max_content_length', 16777216))  # Default 16MB
-    session_lifetime = int(request.form.get('session_lifetime', 3600))  # Default 1 hour
+    request.form.get('debug') == 'true'
+    int(request.form.get('max_content_length', 16777216))  # Default 16MB
+    int(request.form.get('session_lifetime', 3600))  # Default 1 hour
     
     # In a real application, you would update these settings in a configuration file
     # or environment variables. For this demo, we'll just display a message.
@@ -770,7 +770,7 @@ def chat():
             response_type = "code_generation"
             
             # Store the response in the database
-            system_response_id = diagnostic_logger.log_chat(
+            diagnostic_logger.log_chat(
                 content=response,
                 message_type='system',
                 conversation_id=conversation_id,
@@ -796,7 +796,7 @@ def chat():
     processing_time_ms = (time.time() - start_time) * 1000
     
     # Store the system response in the database
-    system_response_id = diagnostic_logger.log_chat(
+    diagnostic_logger.log_chat(
         content=response,
         message_type='system',
         conversation_id=conversation_id,
@@ -1277,7 +1277,7 @@ def get_thought_process():
         # Try to extract relationships from state data
         if thought.state_before and thought.state_after:
             try:
-                state_before = json.loads(thought.state_before) if isinstance(thought.state_before, str) else thought.state_before
+                json.loads(thought.state_before) if isinstance(thought.state_before, str) else thought.state_before
                 state_after = json.loads(thought.state_after) if isinstance(thought.state_after, str) else thought.state_after
                 
                 # If states contain references to other thoughts, create links
@@ -1285,7 +1285,7 @@ def get_thought_process():
                     for related_id in state_after['related_thoughts']:
                         if related_id in node_map:
                             # Create association link with emotional tone
-                            related_thought = thoughts[node_map[related_id]]
+                            thoughts[node_map[related_id]]
                             
                             # Calculate relationship emotional tone (average of source and target)
                             relationship_valence = emotional_valence

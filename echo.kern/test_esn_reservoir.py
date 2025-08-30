@@ -310,7 +310,6 @@ class TestESNIntegration(unittest.TestCase):
     def test_dtesn_architecture_compliance(self):
         """Test compliance with DTESN architecture specifications"""
         # Test reservoir size follows OEIS A000081 constraints
-        valid_sizes = [1, 1, 2, 4, 9, 20, 48, 115]  # First few OEIS A000081 values
         
         for size in [20, 48]:  # Test with OEIS-compliant sizes
             esn = create_standard_esn(size)

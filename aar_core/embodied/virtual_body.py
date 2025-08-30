@@ -8,11 +8,10 @@ Integrates with existing arena physics simulation.
 import numpy as np
 import time
 from typing import Dict, List, Any, Optional, Tuple
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
-import json
 
-from ..arena.simulation_engine import ArenaObject, ArenaPhysics, ArenaEnvironment
+from ..arena.simulation_engine import ArenaObject, ArenaPhysics
 
 
 class JointType(Enum):

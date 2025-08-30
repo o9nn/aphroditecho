@@ -456,7 +456,7 @@ class ChatSessionManager:
         try:
             if TreeNode:
                 # Create a tree node for analysis when available
-                node = TreeNode(content)
+                TreeNode(content)
                 # Use ML-based analysis when dependencies are available
                 word_count = len(content.split())
                 complexity = min(word_count / 100.0, 1.0)  # Normalize to 0-1

@@ -14,7 +14,7 @@ This module implements Phase 3.1.3 requirements:
 
 import time
 import logging
-from typing import Dict, List, Optional, Any, Tuple
+from typing import Dict, List, Optional
 from pathlib import Path
 import json
 import threading
@@ -30,8 +30,7 @@ except ImportError:
     import os
     sys.path.insert(0, os.path.dirname(__file__))
     from kernel.dtesn.sensor_attention_mechanism import (
-        SensorModalityType, SensorInput, SensorAttentionMechanism,
-        create_sensor_attention_for_dtesn, integrate_with_sensory_motor
+        SensorModalityType, SensorInput, create_sensor_attention_for_dtesn, integrate_with_sensory_motor
     )
 
 
@@ -501,7 +500,7 @@ if __name__ == "__main__":
     
     # Print performance summary
     summary = attention_system.get_attention_summary()
-    print(f"\nPerformance Summary:")
+    print("\nPerformance Summary:")
     print(f"  Inputs processed: {summary['system_state']['total_inputs_processed']}")
     print(f"  Avg processing time: {summary['system_state']['avg_processing_time_ms']:.2f}ms")
     print(f"  Meets real-time constraints: {summary['performance_metrics']['meets_realtime_constraints']}")

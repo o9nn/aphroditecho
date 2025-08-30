@@ -65,7 +65,7 @@ class ActivityStream:
         }
         
         # Initialize state
-        self.activities = {k: [] for k in self.paths.keys()}
+        self.activities = {k: [] for k in self.paths}
         self.max_items = 100
         self.system_stats = {}
         
@@ -321,7 +321,7 @@ def main(stream_type: StreamType = StreamType.ALL, verbose: bool = False):
                     json.dump([], f)
                 print(f"Created {component} log file: {path}")
         
-        last_seen = {k: [] for k in paths.keys()}
+        last_seen = {k: [] for k in paths}
         print("Starting event monitor... (Press Ctrl+C to stop)")
         print("-" * 80)
         

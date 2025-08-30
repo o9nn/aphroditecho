@@ -88,7 +88,7 @@ class DemoIndividual(Individual):
         offspring1_genome = {}
         offspring2_genome = {}
         
-        for key in self.genome.keys():
+        for key in self.genome:
             if key in other.genome:
                 if random.random() < 0.5:
                     offspring1_genome[key] = self.genome[key]
@@ -107,7 +107,7 @@ async def demonstrate_meta_learning():
     
     # 1. Initialize meta-learning system
     print("\n1. Initializing Meta-Learning System...")
-    meta_config = MetaLearningConfig(
+    MetaLearningConfig(
         learning_rate=0.01,
         memory_size=500,
         batch_size=16,

@@ -622,7 +622,7 @@ def main():
         
         # 3. opencog-central Scheme Files
         print("\n💻 Processing opencog-central Scheme Files")
-        scheme_files_path_pattern = os.path.join(opencog_central_path, "Scheme", "**", "*.scm")
+        os.path.join(opencog_central_path, "Scheme", "**", "*.scm")
         scheme_files = collect_files(opencog_central_path, "Scheme/**/*.scm", "Scheme")
         
         for scm_file in scheme_files:

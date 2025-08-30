@@ -859,7 +859,7 @@ def match_pattern_template(pattern_id):
 @app.route('/api/memory/nodes/<int:node_id>/similar', methods=['GET'])
 def find_similar_memories(node_id):
     """Find memories similar to the given node."""
-    node = MemoryNode.query.get_or_404(node_id)
+    MemoryNode.query.get_or_404(node_id)
     
     limit = request.args.get('limit', default=10, type=int)
     threshold = request.args.get('threshold', type=float)

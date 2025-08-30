@@ -13,7 +13,7 @@ from dataclasses import dataclass
 
 from ..agents.agent_manager import AgentManager, AgentCapabilities, AgentStatus
 from ..arena.simulation_engine import SimulationEngine, ArenaType
-from ..relations.relation_graph import RelationGraph, RelationType
+from ..relations.relation_graph import RelationGraph
 
 # Import social cognition extensions
 try:
@@ -660,7 +660,7 @@ class AARCoreOrchestrator:
         """Handle request that requires collaborative problem solving."""
         try:
             # Import here to avoid circular imports
-            from ..orchestration.collaborative_solver import ProblemDefinition, ProblemType, SolutionStrategy
+            from ..orchestration.collaborative_solver import ProblemDefinition, SolutionStrategy
             
             # Create problem definition
             problem = ProblemDefinition(

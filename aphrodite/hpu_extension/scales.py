@@ -8,6 +8,7 @@ import torch
 import habana_frameworks.torch.utils.experimental as htexp
 
 from aphrodite.platforms import current_platform
+import contextlib
 
 
 def is_hpu_gaudi2():
@@ -62,10 +63,8 @@ def get_fullscale(dtype, device, exp_bias=None):
     default_exp_bias = get_default_exp_bias(dtype)
     fullscale = 1
     if device == "GAUDI2" and dtype == torch.float8_e4m3fn:
-        try:
+        with contextlib.suppress(AttributeError):
             fullscale = MAX_RANGE[torch.float8_e4m3fnuz]
-        except AttributeError:
-            pass
     else:
         fullscale = MAX_RANGE[dtype]
     exp_bias = default_exp_bias if exp_bias is None else exp_bias
@@ -93,7 +92,7 @@ DEVICES_SCALE_FACTORS = {
 
 
 FP8_143_SCALES = {
-    device: get_fp8_hw_alligned_scales(torch.float8_e4m3fn, device) for device in DEVICES_SCALE_FACTORS.keys()
+    device: get_fp8_hw_alligned_scales(torch.float8_e4m3fn, device) for device in DEVICES_SCALE_FACTORS
 }
 
 
@@ -103,7 +102,7 @@ FP8_143_SCALES_TRAITS = {
         max(FP8_143_SCALES[device]),
         DEVICES_SCALE_FACTORS[device],
     )
-    for device in DEVICES_SCALE_FACTORS.keys()
+    for device in DEVICES_SCALE_FACTORS
 }
 
 

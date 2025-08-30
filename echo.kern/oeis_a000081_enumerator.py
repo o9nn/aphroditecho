@@ -205,7 +205,7 @@ def validate_membrane_hierarchy_enhanced(hierarchy_counts: List[int], max_depth:
             errors.append(f"Level {level} exceeds max_depth {max_depth}")
             continue
             
-        expected_count = enumerator.get_term(level) if level > 0 else 1  # Special case: level 0 = root = 1
+        enumerator.get_term(level) if level > 0 else 1  # Special case: level 0 = root = 1
         
         if level == 0:
             # Level 0 should always have exactly 1 (root)

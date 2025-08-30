@@ -262,7 +262,7 @@ async def run_performance_benchmarks():
         print(f"  {status} {criterion.replace('_', ' ').title()}")
     
     # Overall assessment
-    print(f"\n🎉 Overall Assessment:")
+    print("\n🎉 Overall Assessment:")
     if criteria_results['acceptance_criteria_met']:
         print("✅ SUCCESS: Agents evolve and improve performance over time!")
         print("   All acceptance criteria have been validated.")

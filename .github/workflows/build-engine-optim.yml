@@ -299,20 +299,25 @@ jobs:
           echo "::endgroup::"
           
           echo "::group::Build Process"
-          export TORCH_CUDA_ARCH_LIST="6.0 6.1 7.0 7.5 8.0 8.6 8.9 9.0+PTX"
+          export TORCH_CUDA_ARCH_LIST="8.0"
           
           # Use existing build script if available
           if [ -f ".github/workflows/scripts/build.sh" ]; then
             bash .github/workflows/scripts/build.sh ${{ matrix.python-version }} ${{ matrix.cuda-version || '12.4' }}
           else
-            # Fallback build process with CMake
+            # Fallback build process with CUTLASS optimizations
             mkdir -p build && cd build
             cmake -DCMAKE_BUILD_TYPE=$CMAKE_BUILD_TYPE \
                   -DAPHRODITE_PYTHON_EXECUTABLE=$(which python) \
                   -DAPHRODITE_TARGET_DEVICE=${{ matrix.target_device }} \
+                  -DENABLE_CUTLASS_MOE_SM90=OFF \
+                  -DENABLE_CUTLASS_MOE_SM100=OFF \
+                  -DENABLE_SCALED_MM_SM90=OFF \
+                  -DENABLE_SCALED_MM_C2X=OFF \
+                  -DENABLE_SPARSE_SCALED_MM_C3X=OFF \
                   -DTorch_DIR=$TORCH_DIR/share/cmake/Torch \
                   ..
-            cmake --build . --target _C -j$MAX_JOBS
+            cmake --build . --target _C -j1
             cd ..
           fi
           echo "::endgroup::"

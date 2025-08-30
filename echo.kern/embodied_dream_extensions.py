@@ -9,7 +9,6 @@ capabilities.
 
 import json
 import time
-from datetime import datetime
 from typing import Dict, Optional, Any
 import sys
 import os
@@ -465,7 +464,7 @@ if __name__ == "__main__":
         embodied_context=test_context
     )
     
-    print(f"Created embodied memory node:")
+    print("Created embodied memory node:")
     print(f"  Content: {memory.content}")
     print(f"  Body state: {memory.embodied_context.body_state}")
     print(f"  Position: {memory.embodied_context.body_config.position}")

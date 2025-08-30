@@ -9,7 +9,6 @@ Comprehensive tests for Phase 3.1.3: Create Attention Mechanisms for Sensors
 import unittest
 import time
 import threading
-from unittest.mock import Mock, patch
 from pathlib import Path
 import tempfile
 import json
@@ -296,7 +295,7 @@ class TestSensorAttentionMechanism(unittest.TestCase):
         self.attention.process_sensor_inputs(test_inputs)
         
         # Verify state exists
-        state = self.attention.get_attention_state()
+        self.attention.get_attention_state()
         # Reset
         self.attention.reset_attention_state()
         
@@ -386,7 +385,7 @@ class TestIntegrationUtilities(unittest.TestCase):
         self.assertEqual(result['status'], 'processed')
         
         # Should have some attention-filtered results
-        attention_keys = [k for k in result.keys() if 'filtered' in k or 'attention_active' in k]
+        attention_keys = [k for k in result if 'filtered' in k or 'attention_active' in k]
         self.assertGreater(len(attention_keys), 0)
     
     def test_dtesn_integration_factory(self):

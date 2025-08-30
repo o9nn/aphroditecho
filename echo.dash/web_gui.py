@@ -18,6 +18,7 @@ import threading
 import time
 from datetime import datetime, timedelta
 from pathlib import Path
+import contextlib
 
 # Third-party imports
 try:
@@ -116,12 +117,18 @@ HEARTBEAT_THREAD = None
 def start_heartbeat_thread():
     """Start the adaptive heartbeat system in a separate daemon thread."""
     global HEARTBEAT_THREAD
-    if HEARTBEAT_SYSTEM and (HEARTBEAT_THREAD is None or not HEARTBEAT_THREAD.is_alive()):
-        HEARTBEAT_THREAD = threading.Thread(target=HEARTBEAT_SYSTEM.start, daemon=True)
+    if HEARTBEAT_SYSTEM and (
+        HEARTBEAT_THREAD is None or not HEARTBEAT_THREAD.is_alive()
+    ):
+        HEARTBEAT_THREAD = threading.Thread(
+            target=HEARTBEAT_SYSTEM.start, daemon=True
+        )
         HEARTBEAT_THREAD.start()
         logger.info("Started adaptive heartbeat thread")
     elif not ADAPTIVE_HEARTBEAT_AVAILABLE:
-        logger.warning("Adaptive heartbeat not available - missing dependencies")
+        logger.warning(
+            "Adaptive heartbeat not available - missing dependencies"
+        )
 
 # Memory for storing historical data
 SYSTEM_HISTORY = {
@@ -2125,15 +2132,13 @@ def api_network_metrics():
         # Get connection list (limit to 20 for performance)
         connection_list = []
         for conn in connections[:20]:
-            try:
+            with contextlib.suppress(AttributeError, ValueError):
                 connection_list.append({
                     'local_address': f"{conn.laddr.ip}:{conn.laddr.port}" if conn.laddr else "Unknown",
                     'remote_address': f"{conn.raddr.ip}:{conn.raddr.port}" if conn.raddr else "Unknown",
                     'status': conn.status,
                     'type': conn.type.name if hasattr(conn.type, 'name') else str(conn.type)
                 })
-            except (AttributeError, ValueError):
-                pass
         
         return jsonify({
             'sent': f"{sent_mb:.1f} MB",
@@ -2156,15 +2161,13 @@ def api_process_info():
     """API endpoint to get current process information."""
     processes = []
     for proc in psutil.process_iter(['pid', 'name', 'cpu_percent', 'memory_percent']):
-        try:
+        with contextlib.suppress(psutil.NoSuchProcess, psutil.AccessDenied):
             processes.append({
                 'pid': proc.info['pid'],
                 'name': proc.info['name'],
                 'cpu_percent': proc.info['cpu_percent'],
                 'memory_percent': proc.info['memory_percent']
             })
-        except (psutil.NoSuchProcess, psutil.AccessDenied):
-            pass
 
     # Sort by CPU usage, highest first
     processes = sorted(processes, key=lambda p: p['cpu_percent'], reverse=True)[:10]

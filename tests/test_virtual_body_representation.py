@@ -12,8 +12,6 @@ This test suite validates:
 
 import pytest
 import numpy as np
-import time
-from typing import Dict, Any
 
 from aar_core.embodied import VirtualBody, EmbodiedAgent, ProprioceptiveSystem, BodyJoint, JointType, JointLimits
 from aar_core.arena.simulation_engine import ArenaPhysics, ArenaEnvironment
@@ -80,7 +78,7 @@ class TestVirtualBodyRepresentation:
     
     def test_virtual_physics_integration(self):
         """Test integration with virtual physics simulation."""
-        initial_position = self.virtual_body.position.copy()
+        self.virtual_body.position.copy()
         
         # Apply physics update
         self.virtual_body.update_physics(0.01, self.arena_physics)

@@ -1,6 +1,5 @@
 """Integration tests for memory subsystem."""
 
-import pytest
 from datetime import timedelta
 
 from aphrodite.aar_core.memory import MemoryManager, MemoryType

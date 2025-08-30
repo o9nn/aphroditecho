@@ -136,7 +136,7 @@ class PatternMatcher:
             return 0.0
         
         # Apply matcher
-        threshold = rules.get('threshold', self.similarity_threshold)
+        rules.get('threshold', self.similarity_threshold)
         params = rules.get('params', {})
         
         try:

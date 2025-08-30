@@ -6,9 +6,7 @@ problem solving components that implement Task 2.3.2 requirements.
 """
 
 import pytest
-import asyncio
 import time
-from unittest.mock import AsyncMock, MagicMock
 
 from aar_core.agents.social_cognition_manager import (
     SocialCognitionManager, 

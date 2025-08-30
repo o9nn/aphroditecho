@@ -115,7 +115,7 @@ def test_error_handling():
     # Test negative index
     try:
         enumerator.get_term(-1)
-        assert False, "Should raise ValueError for negative index"
+        raise AssertionError("Should raise ValueError for negative index")
     except ValueError as e:
         assert "non-negative" in str(e), "Should mention non-negative requirement"
     

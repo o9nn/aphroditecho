@@ -593,7 +593,7 @@ def get_domain_network():
     include_connections = request.args.get('include_connections', 'true').lower() == 'true'
     
     mapper = get_connection_mapper()
-    network_data = mapper.generate_domain_network(include_connections)
+    mapper.generate_domain_network(include_connections)
     
     # Transform data to D3.js friendly format
     nodes = []
@@ -629,9 +629,9 @@ def get_domain_network():
 def get_concept_network():
     """Get concept network data for visualization."""
     domain_id = request.args.get('domain_id')
-    include_connections = request.args.get('include_connections', 'true').lower() == 'true'
+    request.args.get('include_connections', 'true').lower() == 'true'
     
-    mapper = get_connection_mapper()
+    get_connection_mapper()
     nodes = []
     edges = []
     

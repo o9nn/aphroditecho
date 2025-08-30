@@ -6,7 +6,6 @@ Tests integration between the new multi-modal sensors and the existing
 DTESN multimodal fusion system in echo.kern
 """
 
-import numpy as np
 import sys
 import os
 
@@ -50,7 +49,7 @@ def test_dtesn_integration():
     
     # Get synchronized readings
     readings = manager.get_synchronized_readings(environment_data)
-    fused_data = manager.fuse_sensor_data(readings)
+    manager.fuse_sensor_data(readings)
     
     # Prepare data for DTESN fusion (simulate the format expected by DTESN)
     dtesn_modality_data = []
@@ -94,7 +93,7 @@ def test_dtesn_integration():
         weighted_confidence *= (1.0 + 0.1 * (num_modalities - 1))
         weighted_confidence = min(1.0, weighted_confidence)
     
-    print(f"\n✓ DTESN fusion simulation:")
+    print("\n✓ DTESN fusion simulation:")
     print(f"  Input modalities: {num_modalities}")
     print(f"  Fusion confidence: {weighted_confidence:.3f}")
     print(f"  Multi-modal boost applied: {0.1 * (num_modalities - 1):.1f}")

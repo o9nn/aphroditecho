@@ -12,7 +12,6 @@ import time
 import logging
 import sys
 from pathlib import Path
-from unittest.mock import Mock, patch
 
 # Add the current directory to the path for imports
 sys.path.insert(0, str(Path(__file__).parent))
@@ -172,8 +171,7 @@ class TestBodySchemaLearner(unittest.TestCase):
             motor_action=motor_action,
             resulting_body_state=resulting_state,
             sensory_feedback={'touch': 'contact'},
-            sensory_feedback={},
-                success=True
+            success=True
         )
         
         initial_experiences = len(learner.experiences)

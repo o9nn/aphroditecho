@@ -11,19 +11,17 @@ Integration component for real-time system integration.
 
 import numpy as np
 import time
-import threading
-from typing import Dict, List, Any, Optional, Tuple, Callable
+from typing import Dict, List, Any, Optional
 from dataclasses import dataclass
 
 from .hardware_abstraction import (
     EmbeddedHardwareSimulator,
     VirtualSensor, VirtualActuator,
     SensorType, ActuatorType,
-    SensorReading, ActuatorCommand,
-    HardwareEvent
+    SensorReading, ActuatorCommand
 )
 from .proprioception import ProprioceptiveSystem, ProprioceptiveReading
-from .virtual_body import VirtualBody, BodyJoint
+from .virtual_body import VirtualBody
 
 
 @dataclass
@@ -173,7 +171,7 @@ class ProprioceptiveHardwareBridge:
             self.bridge_update_count += 1
             self.last_update_time = current_time
             
-        except Exception as e:
+        except Exception:
             self.bridge_errors += 1
             # In production would log error
             pass
@@ -205,7 +203,7 @@ class ProprioceptiveHardwareBridge:
                     if not self.hardware_simulator.send_actuator_command(actuator_id, command):
                         success = False
                         
-        except Exception as e:
+        except Exception:
             self.bridge_errors += 1
             success = False
             
@@ -330,7 +328,7 @@ class EmbodiedHardwareManager:
             self.initialized = True
             return True
             
-        except Exception as e:
+        except Exception:
             self.initialized = False
             return False
             
@@ -351,9 +349,8 @@ class EmbodiedHardwareManager:
         
     def start(self) -> bool:
         """Start embodied hardware system."""
-        if not self.initialized:
-            if not self.initialize():
-                return False
+        if not self.initialized and not self.initialize():
+            return False
                 
         self.running = True
         return True

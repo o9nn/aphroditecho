@@ -47,7 +47,7 @@ class MockIndividual(Individual):
         offspring1_genome = {}
         offspring2_genome = {}
         
-        for key in self.genome.keys():
+        for key in self.genome:
             if key in other.genome:
                 if np.random.random() < 0.5:
                     offspring1_genome[key] = self.genome[key]

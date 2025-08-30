@@ -10,22 +10,22 @@ import pytest
 import asyncio
 import time
 import numpy as np
-from unittest.mock import Mock, patch
-from typing import Dict, List, Any
+from unittest.mock import Mock
+from typing import List
 
 # Import the modules to test
 from extended_mind_system import (
     ExtendedMindSystem, CognitiveTask, CognitiveTaskType, ToolType, 
     ResourceType, CognitiveTool, EnvironmentalResource, 
     ToolIntegrationManager, ResourceCouplingEngine,
-    SocialCoordinationSystem, CulturalInterfaceManager,
-    ScaffoldingResult
+    SocialCoordinationSystem, ScaffoldingResult
 )
 
 from cognitive_tools import (
     MemoryStoreTool, ComputationTool, KnowledgeBaseTool,
     create_default_cognitive_tools
 )
+import contextlib
 
 class TestExtendedMindSystem:
     """Test cases for the main Extended Mind System."""
@@ -224,10 +224,8 @@ class TestToolIntegrationManager:
         
         # Clean up operations
         for op in operations:
-            try:
+            with contextlib.suppress(Exception):
                 await op
-            except:
-                pass
 
 class TestResourceCouplingEngine:
     """Test cases for Resource Coupling Engine."""

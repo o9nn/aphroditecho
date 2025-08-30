@@ -121,7 +121,7 @@ try:
         
         # Check body awareness improvement
         final_awareness = system.get_embodiment_metrics()['body_awareness']
-        print(f"\nBody awareness development:")
+        print("\nBody awareness development:")
         print(f"  Initial confidence: {initial_awareness['schema_confidence']:.3f}")
         print(f"  Final confidence: {final_awareness['schema_confidence']:.3f}")
         print(f"  Improvement: {final_awareness['schema_confidence'] - initial_awareness['schema_confidence']:+.3f}")
@@ -146,11 +146,11 @@ try:
             
             planned_action = system.plan_spatial_movement(target_pos, current_body_state)
             if planned_action:
-                print(f"  ✓ Movement planned successfully")
+                print("  ✓ Movement planned successfully")
                 print(f"    Joint targets: {planned_action.joint_targets}")
                 print(f"    Duration: {planned_action.duration:.2f}s")
             else:
-                print(f"  ✗ Target unreachable with current body constraints")
+                print("  ✗ Target unreachable with current body constraints")
         
         # Demonstrate motor skill learning
         print("\n🎯 PHASE 3: Motor Skill Acquisition")
@@ -173,7 +173,7 @@ try:
                 )
                 
                 # Simulate skill practice outcome (gradually improving)
-                success_prob = min(0.9, 0.2 + attempt * 0.15)  # Increasing success
+                min(0.9, 0.2 + attempt * 0.15)  # Increasing success
                 success = attempt >= 2 and (attempt / 5.0) > 0.4
                 reward = 1.0 if success else 0.2
                 
@@ -289,11 +289,11 @@ try:
             # Save results
             results_file = save_demonstration_results(final_metrics)
             
-            print(f"\n📋 IMPLEMENTATION SUMMARY:")
-            print(f"Task 2.1.2 - Embodied Learning Algorithms: ✅ COMPLETE")
-            print(f"Integration with DTESN architecture: ✅ WORKING") 
-            print(f"Real-time performance: ✅ OPTIMIZED")
-            print(f"Test coverage: ✅ COMPREHENSIVE")
+            print("\n📋 IMPLEMENTATION SUMMARY:")
+            print("Task 2.1.2 - Embodied Learning Algorithms: ✅ COMPLETE")
+            print("Integration with DTESN architecture: ✅ WORKING") 
+            print("Real-time performance: ✅ OPTIMIZED")
+            print("Test coverage: ✅ COMPREHENSIVE")
             print(f"Results file: {results_file}")
             
         except Exception as e:

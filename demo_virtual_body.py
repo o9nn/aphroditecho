@@ -7,8 +7,7 @@ system implemented for Task 2.1.1.
 """
 
 import numpy as np
-import time
-from aar_core.embodied import VirtualBody, EmbodiedAgent
+from aar_core.embodied import EmbodiedAgent
 from aar_core.arena.simulation_engine import ArenaPhysics, ArenaEnvironment
 
 

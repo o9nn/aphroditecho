@@ -214,7 +214,7 @@ class DTESNIntegratedSystem:
         Returns:
             Dictionary with system state and outputs
         """
-        start_time = time.perf_counter_ns()
+        time.perf_counter_ns()
         
         if self.config.integration_mode == DTESNIntegrationMode.STANDALONE:
             return self._update_standalone(global_input)

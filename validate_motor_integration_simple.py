@@ -3,9 +3,7 @@
 Simple test to debug the motor control integration issue
 """
 
-import numpy as np
-import time
-from aar_core.embodied import VirtualBody, EmbodiedAgent, HierarchicalMotorController, MotorGoal, MotorGoalType
+from aar_core.embodied import EmbodiedAgent, HierarchicalMotorController, MotorGoal, MotorGoalType
 from aar_core.arena.simulation_engine import ArenaPhysics, ArenaEnvironment
 
 def test_simple_motor_control():

@@ -14,7 +14,6 @@ This serves as the final validation for the task completion.
 import logging
 import time
 import sys
-from pathlib import Path
 
 # Set up comprehensive logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -48,13 +47,13 @@ def validate_task_2_3_3_complete():
         print("-" * 50)
         
         from enactive_perception import (
-            EnactivePerceptionSystem, SensorimotorContingencyLearner, 
+            SensorimotorContingencyLearner, 
             ActionBasedPerceptionModule, create_enactive_perception_system,
             BodyState, MotorAction, SensorimotorExperience
         )
         
         from enactive_perception_integration import (
-            EnactivePerceptionIntegrator, create_integrated_enactive_system,
+            create_integrated_enactive_system,
             validate_task_2_3_3_acceptance_criteria
         )
         
@@ -155,7 +154,7 @@ def validate_task_2_3_3_complete():
         test_body_state = BodyState(sensory_state={'environment': 0.4, 'feedback': 0.5})
         
         prediction = system.predict_perceptual_outcome(test_action, test_body_state)
-        print(f"✅ Perceptual prediction generated:")
+        print("✅ Perceptual prediction generated:")
         print(f"   Confidence: {prediction.confidence:.3f}")
         print(f"   Exploration value: {prediction.exploration_value:.3f}")
         print(f"   Predicted outcome keys: {list(prediction.predicted_sensory_outcome.keys())}")
@@ -221,7 +220,7 @@ def validate_task_2_3_3_complete():
         attention_weights_developed = len(final_metrics['attention_weights']) - len(initial_metrics['attention_weights'])
         perceptual_history_built = final_metrics['perceptual_history_length'] - initial_metrics['perceptual_history_length']
         
-        print(f"\n✅ Perception emergence through interaction:")
+        print("\n✅ Perception emergence through interaction:")
         print(f"   New contingencies learned: {contingencies_emerged}")
         print(f"   Attention weights developed: {attention_weights_developed}")
         print(f"   Perceptual history built: {perceptual_history_built}")
@@ -241,7 +240,7 @@ def validate_task_2_3_3_complete():
         integrated_system = create_integrated_enactive_system("integration_test")
         integration_metrics = integrated_system.get_integration_metrics()
         
-        print(f"✅ Integrated system created:")
+        print("✅ Integrated system created:")
         print(f"   Enactive system active: {integration_metrics['enactive_active']}")
         print(f"   Embodied learning active: {integration_metrics['embodied_active']}")
         print(f"   AAR system active: {integration_metrics['aar_active']}")
@@ -281,7 +280,7 @@ def validate_task_2_3_3_complete():
         # Test prediction performance  
         start_time = time.time()
         for i in range(10):
-            test_prediction = system.predict_perceptual_outcome(
+            system.predict_perceptual_outcome(
                 MotorAction(joint_targets={'perf': i * 0.1}),
                 BodyState(sensory_state={'perf': i * 0.1})
             )
@@ -320,7 +319,7 @@ def validate_task_2_3_3_complete():
                 print(f"{test_name.replace('_', ' ').title()}: {status}")
         
         # Task 2.3.3 Requirements Validation
-        print(f"\nTask 2.3.3 Requirements:")
+        print("\nTask 2.3.3 Requirements:")
         print("-" * 30)
         print(f"✅ Action-based perception mechanisms: {'IMPLEMENTED' if validation_results['action_based_perception'] else 'MISSING'}")
         print(f"✅ Sensorimotor contingency learning: {'IMPLEMENTED' if validation_results['sensorimotor_contingency_learning'] else 'MISSING'}")

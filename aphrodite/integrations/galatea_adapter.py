@@ -6,13 +6,11 @@ with the AAR orchestration system, providing web-based access to agents and aren
 """
 
 import asyncio
-import json
 import logging
 import subprocess
-from typing import Dict, List, Any, Optional, Union
+from typing import Dict, List, Any, Optional
 from dataclasses import dataclass, field
 from pathlib import Path
-import tempfile
 
 logger = logging.getLogger(__name__)
 
@@ -311,7 +309,7 @@ class GalateaAdapter:
 
     def list_services(self) -> List[Dict[str, Any]]:
         """List all services and their status."""
-        return [self.get_service_status(name) for name in self.services.keys()]
+        return [self.get_service_status(name) for name in self.services]
 
     async def create_user_session(self, username: str, user_id: Optional[str] = None,
                                  permissions: Optional[List[str]] = None) -> str:

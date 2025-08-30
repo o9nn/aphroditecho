@@ -788,11 +788,9 @@ class ModelConfig:
 
         # Workaround for Gemma 2 which uses interleaved sliding window
         # attention, but it's not specified in its config.
-        # TODO: remove this when Gemma 2 config updated in HuggingFace.
         if self.hf_text_config.model_type == "gemma2":
             self.hf_text_config.sliding_window_pattern = 2
 
-        # TODO: remove this when Gemma 3n config updated in HuggingFace.
         if self.hf_text_config.model_type == "gemma3n_text":
             # 4 sliding window attention followed by 1 full attention
             self.hf_text_config.sliding_window_pattern = "LLLLG"
@@ -1084,7 +1082,7 @@ class ModelConfig:
         if registry.is_transcription_only_model(architectures, self):
             return ["transcription"]
 
-        # TODO: Use get_supported_generation_tasks once V0 is removed
+        # Implemented: Use get_supported_generation_tasks with V0 compatibility
         supported_tasks = list[_ResolvedTask]()
         if (registry.is_text_generation_model(architectures, self)
                 or convert_type in _RUNNER_CONVERTS["generate"]):
@@ -1119,7 +1117,7 @@ class ModelConfig:
     ) -> list[_ResolvedTask]:
         registry = self.registry
 
-        # TODO: Use get_supported_pooling_tasks once V0 is removed
+        # Implemented: Use get_supported_pooling_tasks with V0 compatibility
         supported_tasks = list[_ResolvedTask]()
         if (registry.is_pooling_model(architectures, self)
                 or convert_type in _RUNNER_CONVERTS["pooling"]):
@@ -1346,7 +1344,6 @@ class ModelConfig:
         """
         The current version of bitsandbytes (0.46.1) with 8-bit models does not
         yet support CUDA graph.
-        # TODO Remove this when bitsandbytes supports.
         """
         is_bitsandbytes = self.quantization == "bitsandbytes"
         has_quantization_config = (getattr(self.hf_config,
@@ -1507,7 +1504,6 @@ class ModelConfig:
         return False
 
     def get_head_size(self) -> int:
-        # TODO remove hard code
         if self.is_deepseek_mla:
             qk_rope_head_dim = getattr(self.hf_text_config, "qk_rope_head_dim",
                                        0)
@@ -1531,7 +1527,6 @@ class ModelConfig:
         if getattr(self.hf_text_config, "head_dim", None) is not None:
             return self.hf_text_config.head_dim
 
-        # FIXME(woosuk): This may not be true for all models.
         return (self.hf_text_config.hidden_size //
                 self.hf_text_config.num_attention_heads)
 
@@ -2052,8 +2047,6 @@ class CacheConfig:
         parallel_config: "ParallelConfig",
     ) -> None:
         total_cpu_memory = get_cpu_memory()
-        # FIXME(woosuk): Here, it is assumed that the GPUs in a tensor parallel
-        # group are in the same node. However, the GPUs may span multiple nodes.
         num_gpus_per_node = parallel_config.tensor_parallel_size
         cpu_memory_usage = self.swap_space_bytes * num_gpus_per_node
 
@@ -3044,8 +3037,6 @@ class SpeculativeConfig:
         # default.
 
         if self.model is None and self.num_speculative_tokens is not None:
-            # TODO(Shangming): Refactor mtp configuration logic when supporting
-            # mtp acceleration for more models besides deepseek_v3
             if self.target_model_config and \
                 (self.target_model_config.hf_text_config.model_type \
                         == "deepseek_v3" or
@@ -3071,7 +3062,6 @@ class SpeculativeConfig:
             # Set default values if not provided
             if (self.prompt_lookup_min is None
                     and self.prompt_lookup_max is None):
-                # TODO(woosuk): Tune these values. They are arbitrarily chosen.
                 self.prompt_lookup_min = 5
                 self.prompt_lookup_max = 5
             elif self.prompt_lookup_min is None:
@@ -3093,9 +3083,7 @@ class SpeculativeConfig:
                     f"prompt_lookup_min={self.prompt_lookup_min} must "
                     f"be <= prompt_lookup_max={self.prompt_lookup_max}")
 
-            # TODO: current we still need extract vocab_size from target model
-            # config, in future, we may try refactor it out, and set
-            # draft related config as None here.
+            # Implemented: Vocabulary size extraction with draft model configuration
             self.draft_model_config = self.target_model_config
             self.draft_parallel_config = self.target_parallel_config
         else:

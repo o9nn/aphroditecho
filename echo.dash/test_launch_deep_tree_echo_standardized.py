@@ -252,7 +252,6 @@ class TestDeepTreeEchoLauncherStandardized(unittest.TestCase):
         component = DeepTreeEchoLauncherStandardized(config)
         
         # Mock a method to raise an exception
-        original_method = component._get_launcher_status
         def failing_method(*args, **kwargs):
             raise ValueError("Test error")
         component._get_launcher_status = failing_method

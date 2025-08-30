@@ -11,10 +11,9 @@ Integrates with Deep Tree Echo Sensory-Motor Integration Phase 3.2.
 
 import numpy as np
 import time
-from typing import Dict, List, Any, Optional, Tuple, Callable, Union
+from typing import Dict, List, Any, Optional, Tuple, Callable
 from dataclasses import dataclass, field
 from enum import Enum
-from collections import deque
 import math
 
 from .virtual_body import VirtualBody
@@ -289,7 +288,7 @@ class MidLevelTrajectoryGenerator:
         
         # Get current joint positions from virtual body
         current_positions = {}
-        for joint_id in joint_targets.keys():
+        for joint_id in joint_targets:
             joint_state = self.virtual_body.get_joint_state(joint_id)
             if joint_state:
                 current_positions[joint_id] = joint_state['angle']
@@ -329,7 +328,7 @@ class MidLevelTrajectoryGenerator:
         
         # Get current joint positions
         current_positions = {}
-        for joint_id in joint_targets.keys():
+        for joint_id in joint_targets:
             joint_state = self.virtual_body.get_joint_state(joint_id)
             if joint_state:
                 current_positions[joint_id] = joint_state['angle']
@@ -372,7 +371,7 @@ class MidLevelTrajectoryGenerator:
         """Generate dynamic balance maintenance trajectory."""
         joint_targets = objective['joint_targets']
         duration = objective['duration']
-        balance_constraints = objective.get('balance_constraints', {})
+        objective.get('balance_constraints', {})
         
         # Create small oscillatory movements to maintain balance
         joint_trajectories = {}
@@ -404,7 +403,7 @@ class MidLevelTrajectoryGenerator:
     
     def _generate_gesture_trajectory(self, goal_id: str, objective: Dict[str, Any]) -> Trajectory:
         """Generate expressive gesture trajectory."""
-        gesture_sequence = objective.get('gesture_sequence', [])
+        objective.get('gesture_sequence', [])
         duration = objective['duration']
         
         joint_trajectories = {}

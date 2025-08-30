@@ -16,7 +16,7 @@ import logging
 import time
 import sys
 from pathlib import Path
-from typing import Dict, List, Optional, Any
+from typing import Dict, Optional, Any
 
 # Import the enactive perception system
 try:

@@ -14,14 +14,12 @@ handle noisy, multi-modal sensor data with adaptive calibration.
 """
 
 import sys
-import os
 import numpy as np
 import time
 import random
-import math
 import json
 from pathlib import Path
-from typing import Dict, List, Tuple, Any
+from typing import Dict, List, Any
 
 # Add echo.kern to path for imports
 sys.path.append(str(Path(__file__).parent.parent))

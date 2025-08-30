@@ -5,15 +5,13 @@ Provides virtual environments for agent interaction and simulation.
 Supports 3D environments with physics simulation and configurable parameters.
 """
 
-import asyncio
 import logging
 import time
 import uuid
 import numpy as np
-from typing import Dict, List, Any, Optional, Tuple, Set
+from typing import Dict, List, Any, Optional, Tuple
 from dataclasses import dataclass, field
 from enum import Enum
-import json
 
 logger = logging.getLogger(__name__)
 
@@ -449,7 +447,7 @@ class Arena:
     async def _process_modify_action(self, agent: Dict[str, Any], action: Dict[str, Any]) -> Dict[str, Any]:
         """Process agent environment modification action."""
         target_position = action.get('position', agent['position'].tolist())
-        modification_type = action.get('modification_type', 'elevation')
+        action.get('modification_type', 'elevation')
         intensity = action.get('intensity', 1.0)
         
         # Apply modification (placeholder - would integrate with terrain system)
@@ -846,10 +844,7 @@ class SimulationEngine:
         
         # Create new arena
         custom_config = context.get('arena_config')
-        if custom_config:
-            config = ArenaConfig(**custom_config)
-        else:
-            config = None
+        config = ArenaConfig(**custom_config) if custom_config else None
         
         return await self.create_arena(arena_type, config, arena_id)
     

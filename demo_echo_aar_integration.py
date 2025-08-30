@@ -98,7 +98,7 @@ async def demonstrate_echo_self_aar_integration():
                   f"(fitness: {sample.get('fitness_score', 0):.3f})")
     
     # Step 4: System Performance Analysis
-    print(f"\n📊 Step 4: System Performance Analysis...")
+    print("\n📊 Step 4: System Performance Analysis...")
     
     final_stats = await aar_orchestrator.get_orchestration_stats()
     
@@ -111,14 +111,14 @@ async def demonstrate_echo_self_aar_integration():
     final_fitness = evolution_results[-1]['best_fitness']
     overall_improvement = final_fitness - initial_fitness
     
-    print(f"\n   Evolution Summary:")
+    print("\n   Evolution Summary:")
     print(f"     Initial best fitness: {initial_fitness:.3f}")
     print(f"     Final best fitness: {final_fitness:.3f}")
     print(f"     Overall improvement: {overall_improvement:+.3f}")
     print(f"     Generations completed: {len(evolution_results)}")
     
     # Step 5: Validation Results
-    print(f"\n✅ Step 5: Acceptance Criteria Validation")
+    print("\n✅ Step 5: Acceptance Criteria Validation")
     
     validations = {
         'Agent evolution system operational': len(evolution_results) > 0,
@@ -135,7 +135,7 @@ async def demonstrate_echo_self_aar_integration():
     
     all_passed = all(validations.values())
     
-    print(f"\n🎉 Integration Demonstration Complete!")
+    print("\n🎉 Integration Demonstration Complete!")
     print(f"   Status: {'SUCCESS' if all_passed else 'PARTIAL'}")
     print(f"   Agents evolved and improved performance over time: {'✅' if all_passed else '❌'}")
     

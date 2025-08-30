@@ -24,7 +24,7 @@ def create_xauth_file():
     if not os.path.exists(xauth_path):
         try:
             logger.info(f"Creating empty .Xauthority file at {xauth_path}")
-            with open(xauth_path, 'wb') as f:
+            with open(xauth_path, 'wb'):
                 pass  # Create empty file
             return True
         except Exception as e:
@@ -44,7 +44,7 @@ def create_x11_auth_cookie():
         
         # Extract display number
         if display and display.startswith(':'):
-            display_num = display[1:]
+            display[1:]
             # Create MIT-MAGIC-COOKIE for this display
             cookie = subprocess.check_output("openssl rand -hex 16", shell=True).decode('utf-8').strip()
             

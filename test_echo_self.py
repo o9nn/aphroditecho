@@ -177,7 +177,7 @@ async def test_evolution_engine():
         # Get initial stats
         initial_pop = engine.current_population
         initial_stats = initial_pop.calculate_statistics()
-        best_initial = initial_pop.get_best_individual()
+        initial_pop.get_best_individual()
         
         print(f"  Initial best fitness: {initial_stats['best']:.4f}")
         print(f"  Initial average fitness: {initial_stats['average']:.4f}")

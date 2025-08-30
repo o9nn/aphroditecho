@@ -328,7 +328,7 @@ class MetaLearningOptimizer:
         low_performers = [exp for exp in batch if exp.fitness_score <= _mean([e.fitness_score for e in batch])]
         
         # Calculate gradients based on performance differences
-        for param_name in self.meta_parameters.keys():
+        for param_name in self.meta_parameters:
             if 'adaptation' in param_name:
                 # Higher adaptation for stagnant populations
                 stagnation_factor = 1.0 - _mean([exp.convergence_rate for exp in high_performers])

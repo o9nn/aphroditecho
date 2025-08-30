@@ -29,11 +29,9 @@ class RoadmapParser:
             content = f.read()
         
         # Extract tasks with checkboxes
-        task_pattern = r'^- \[ \] \*\*Task ([^*]+)\*\*: (.+?)(?=\n  - |\n- |\n### |\n## |\Z)'
         phase_pattern = r'^### (Phase \d+(?:\.\d+)?): (.+?) \((.+?)\)'
         
         current_phase = None
-        current_section = None
         
         lines = content.split('\n')
         i = 0

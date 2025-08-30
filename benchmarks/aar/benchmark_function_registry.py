@@ -56,21 +56,21 @@ def benchmark_function_registry() -> Dict[str, Any]:
     # Benchmark: Function listing
     start_time = time.perf_counter()
     for i in range(100):
-        functions = registry.list_functions()
+        registry.list_functions()
     list_time = time.perf_counter() - start_time
     results["list_functions_100_times_ms"] = list_time * 1000
     
     # Benchmark: Function invocation
     start_time = time.perf_counter()
     for i in range(100):
-        result = registry.invoke("test.add", {"a": i, "b": i + 1})
+        registry.invoke("test.add", {"a": i, "b": i + 1})
     invoke_time = time.perf_counter() - start_time
     results["invoke_add_100_times_ms"] = invoke_time * 1000
     
     # Benchmark: Function existence check
     start_time = time.perf_counter()
     for i in range(100):
-        exists = registry.has("test.add")
+        registry.has("test.add")
     has_time = time.perf_counter() - start_time
     results["has_check_100_times_ms"] = has_time * 1000
     

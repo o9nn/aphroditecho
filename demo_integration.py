@@ -7,7 +7,6 @@ with the Aphrodite Engine through the AAR Gateway and Integration Manager.
 """
 
 import asyncio
-import json
 import logging
 from pathlib import Path
 
@@ -53,7 +52,7 @@ async def demo_integration_manager():
             logger.info(f"  {status_symbol} {component['name']:<15} {component['status']:<18} - {component['description']}")
         
         # Demonstrate function registry
-        logger.info(f"\nFunction Registry Status:")
+        logger.info("\nFunction Registry Status:")
         logger.info("-" * 50)
         
         # These would be actual functions from the registry
@@ -73,13 +72,13 @@ async def demo_integration_manager():
         logger.info(f"\n✓ {len(sample_functions)} functions available in registry")
         
         # Demonstrate AAR Gateway
-        logger.info(f"\nAAR Gateway Status:")
+        logger.info("\nAAR Gateway Status:")
         logger.info("-" * 50)
         
         gateway_components = [comp["name"] for comp in components]
         logger.info(f"  ✓ {len(gateway_components)} components registered")
-        logger.info(f"  ✓ Gateway health: healthy")
-        logger.info(f"  ✓ Request routing: active")
+        logger.info("  ✓ Gateway health: healthy")
+        logger.info("  ✓ Request routing: active")
         
         # Integration Summary
         logger.info("\nIntegration Summary:")
@@ -217,7 +216,7 @@ def generate_integration_metrics():
     
     logger.info(f"  Components Integrated: {components_integrated}")
     logger.info(f"  Adapter Classes:       {adapters_created}")
-    logger.info(f"  Languages Supported:   5 (Python, Rust, JavaScript, Go, Crystal)")
+    logger.info("  Languages Supported:   5 (Python, Rust, JavaScript, Go, Crystal)")
     
     # Architecture completeness
     architecture_completeness = {
@@ -230,7 +229,7 @@ def generate_integration_metrics():
         "External Services": "✓ paphos-backend"
     }
     
-    logger.info(f"\n  Architecture Coverage:")
+    logger.info("\n  Architecture Coverage:")
     for layer, status in architecture_completeness.items():
         logger.info(f"    {status} {layer}")
 

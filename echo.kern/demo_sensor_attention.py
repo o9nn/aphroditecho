@@ -22,7 +22,6 @@ from pathlib import Path
 sys.path.insert(0, os.path.dirname(__file__))
 
 from sensor_attention_integration import create_attention_guided_system
-from kernel.dtesn.sensor_attention_mechanism import SensorModalityType, SensorInput
 
 
 def simulate_environment_scenario(scenario_name: str) -> dict:
@@ -159,7 +158,7 @@ def demonstrate_attention_mechanisms():
         }
     
     # Display performance summary
-    print(f"\n📈 Performance Summary")
+    print("\n📈 Performance Summary")
     print("-" * 30)
     
     system_summary = system.get_attention_summary()
@@ -170,7 +169,7 @@ def demonstrate_attention_mechanisms():
     print(f"Real-time performance: {'✓' if system_summary['performance_metrics']['meets_realtime_constraints'] else '✗'}")
     
     # Show scenario comparison
-    print(f"\n📋 Scenario Comparison")
+    print("\n📋 Scenario Comparison")
     print("-" * 25)
     
     for scenario, data in results.items():
@@ -191,7 +190,7 @@ def demonstrate_attention_mechanisms():
 def demonstrate_integration_with_mock_sensory_motor():
     """Demonstrate integration with a mock sensory-motor system"""
     
-    print(f"\n🔗 Integration with Mock Sensory-Motor System")
+    print("\n🔗 Integration with Mock Sensory-Motor System")
     print("=" * 50)
     
     # Create mock sensory-motor system
@@ -280,11 +279,11 @@ if __name__ == "__main__":
         # Save results
         output_file = save_demonstration_results(results, summary)
         
-        print(f"\n✅ Demo completed successfully!")
+        print("\n✅ Demo completed successfully!")
         print(f"📁 Results available in: {output_file}")
         
         # Final validation
-        print(f"\n🎯 Phase 3.1.3 Requirements Validation:")
+        print("\n🎯 Phase 3.1.3 Requirements Validation:")
         print("✓ Selective attention for sensory input - IMPLEMENTED")
         print("✓ Dynamic sensor prioritization - IMPLEMENTED") 
         print("✓ Attention-guided perception - IMPLEMENTED")

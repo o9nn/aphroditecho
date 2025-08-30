@@ -208,10 +208,7 @@ def _fsdpa_prompt_attention(query: torch.Tensor,
     query = query.transpose(1, 2)
     key = key.transpose(1, 2)
     value = value.transpose(1, 2)
-    if 'fp32_softmax' in enabled_flags():
-        softmax_mode = 'fp32'
-    else:
-        softmax_mode = 'fast'
+    softmax_mode = 'fp32' if 'fp32_softmax' in enabled_flags() else 'fast'
     recompute_mode = True
     assert attn_bias is not None or valid_seq_lengths is not None, \
         'Either attn_bias or valid_seq_lengths must be != None'

@@ -549,13 +549,13 @@ class CognitiveWorkflowValidator:
         
         if 'env' in workflow:
             env_vars = workflow['env']
-            cognitive_vars = [var for var in env_vars.keys() if 'cognitive' in var.lower()]
+            cognitive_vars = [var for var in env_vars if 'cognitive' in var.lower()]
             if cognitive_vars:
                 compatibility_score += 0.2  # Cognitive awareness
         
         # Check for safety mechanisms
         jobs = workflow.get('jobs', {})
-        has_validation = any('validate' in job_name.lower() for job_name in jobs.keys())
+        has_validation = any('validate' in job_name.lower() for job_name in jobs)
         if has_validation:
             compatibility_score += 0.1  # Validation presence
         

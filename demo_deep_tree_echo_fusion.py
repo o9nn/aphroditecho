@@ -185,7 +185,7 @@ async def demonstrate_deep_tree_echo_fusion():
         stats = await evolution_engine.evolve_step()
         
         # Simulate AAR coordination
-        coordination_request = {
+        {
             'evolution_step': step + 1,
             'best_fitness': stats['best_fitness'],
             'population_diversity': stats.get('population_diversity', 0.5),

@@ -8,7 +8,7 @@ showcasing multiple agents interacting in a simulated environment with relations
 import asyncio
 import logging
 import time
-from aar_core import AARCoreOrchestrator, AgentManager, SimulationEngine, RelationGraph
+from aar_core import AARCoreOrchestrator
 from aar_core.orchestration.core_orchestrator import AARConfig
 
 # Configure logging to see system operations
@@ -153,7 +153,7 @@ async def demonstrate_aar_system():
         
         # Agent statistics
         agent_stats = final_stats['component_stats']['agents']
-        print(f"Agent Management:")
+        print("Agent Management:")
         print(f"   Total agents spawned: {agent_stats['performance_stats']['total_spawned']}")
         print(f"   Active agents: {agent_stats['agent_counts']['active']}")
         print(f"   Peak concurrent agents: {agent_stats['performance_stats']['peak_concurrent_agents']}")
@@ -161,14 +161,14 @@ async def demonstrate_aar_system():
         
         # Arena statistics  
         sim_stats = final_stats['component_stats']['simulation']
-        print(f"Arena Simulation:")
+        print("Arena Simulation:")
         print(f"   Total arenas created: {sim_stats['system_info']['total_arenas_created']}")
         print(f"   Active arenas: {sim_stats['system_info']['active_arenas']}")
         print(f"   Total interactions: {sim_stats['system_info']['total_agent_interactions']}")
         
         # Relationship statistics
         rel_stats = final_stats['component_stats']['relations']
-        print(f"Relationship Graph:")
+        print("Relationship Graph:")
         print(f"   Total relationships: {rel_stats['graph_topology']['total_relations']}")
         print(f"   Graph density: {rel_stats['graph_topology']['density']:.3f}")
         print(f"   Avg trust level: {rel_stats['average_metrics']['avg_trust_level']:.3f}")
@@ -176,7 +176,7 @@ async def demonstrate_aar_system():
         
         # System health
         health = final_stats['system_health']
-        print(f"System Health:")
+        print("System Health:")
         print(f"   Overall score: {health['overall_score']:.3f}")
         print(f"   Status: {health['status']}")
         print(f"   Error rate: {final_stats['performance_stats']['error_rate']:.3f}")
@@ -208,7 +208,7 @@ async def demonstrate_aar_system():
                 for community, agents in communities.items():
                     print(f"   {community}: {len(agents)} agents")
         
-        print(f"\n🎯 ACCEPTANCE CRITERIA VALIDATION")
+        print("\n🎯 ACCEPTANCE CRITERIA VALIDATION")
         print("=" * 40)
         print("✅ Multiple agents can interact in simulated environment")
         print(f"   - Maximum agents in single interaction: {max(r['orchestration_meta']['agents_used'] for r in [result2, result4])}")
@@ -216,7 +216,7 @@ async def demonstrate_aar_system():
         print(f"   - Relationships formed: {rel_stats['graph_topology']['total_relations']}")
         print(f"   - System remains healthy: {health['status'] == 'healthy'}")
         
-        print(f"\n🏆 DEMONSTRATION COMPLETED SUCCESSFULLY!")
+        print("\n🏆 DEMONSTRATION COMPLETED SUCCESSFULLY!")
         print(f"Total demonstration time: {time.time() - (time.time() - duration1 - duration2 - duration3 - duration4):.2f}s")
         
     except Exception as e:
@@ -225,7 +225,7 @@ async def demonstrate_aar_system():
         traceback.print_exc()
     
     finally:
-        print(f"\n🔧 Shutting down system...")
+        print("\n🔧 Shutting down system...")
         await orchestrator.shutdown()
         print("System shutdown complete.")
 

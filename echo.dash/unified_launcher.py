@@ -293,7 +293,7 @@ class UnifiedLauncher:
             root = TkinterDnD.Tk()
             
             # Initialize GUI dashboard
-            app = GUIDashboard(root, **components)
+            GUIDashboard(root, **components)
             
             # Configure window
             root.protocol("WM_DELETE_WINDOW", lambda: (root.quit(), root.destroy()))

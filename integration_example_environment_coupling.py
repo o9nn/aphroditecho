@@ -256,18 +256,17 @@ class EnvironmentCouplingIntegrationExample:
                         }
                     })
             
-            elif parameter == 'resources':
-                if new_value < 30:
-                    adaptations.append({
-                        'trigger': f"Resource scarcity ({new_value} remaining)",
-                        'target_agents': ['explorer_1', 'gatherer_1'],
-                        'adaptation': {
-                            'behavior': 'resource_seeking',
-                            'movement_speed': 1.5,
-                            'priority': 'resource_gathering',
-                            'cooperation_level': 1.8
-                        }
-                    })
+            elif parameter == 'resources' and new_value < 30:
+                adaptations.append({
+                    'trigger': f"Resource scarcity ({new_value} remaining)",
+                    'target_agents': ['explorer_1', 'gatherer_1'],
+                    'adaptation': {
+                        'behavior': 'resource_seeking',
+                        'movement_speed': 1.5,
+                        'priority': 'resource_gathering',
+                        'cooperation_level': 1.8
+                    }
+                })
         
         return adaptations
     
@@ -350,14 +349,14 @@ class EnvironmentCouplingIntegrationExample:
             await asyncio.sleep(0.1)
         
         # Final statistics
-        logger.info(f"\n=== Simulation Complete ===")
-        logger.info(f"Coupling Statistics:")
+        logger.info("\n=== Simulation Complete ===")
+        logger.info("Coupling Statistics:")
         logger.info(f"  Updates processed: {self.coupling_stats['updates_processed']}")
         logger.info(f"  Adaptations applied: {self.coupling_stats['adaptations_applied']}")
         logger.info(f"  Agents adapted: {len(self.coupling_stats['agents_adapted'])}")
         
         # Show final agent states
-        logger.info(f"\nFinal Agent States:")
+        logger.info("\nFinal Agent States:")
         for agent_id, agent in self.arena.agents.items():
             logger.info(f"  {agent_id}:")
             logger.info(f"    Behavior: {agent['behavior']}")
@@ -408,10 +407,10 @@ async def main():
     agents_adapted = len(final_status['coupling_stats']['agents_adapted'])
     
     print(f"\n{'='*60}")
-    print(f"INTEGRATION VALIDATION")
+    print("INTEGRATION VALIDATION")
     print(f"{'='*60}")
-    print(f"✓ Arena simulation integrated with coupling system")
-    print(f"✓ Environment changes detected and processed")
+    print("✓ Arena simulation integrated with coupling system")
+    print("✓ Environment changes detected and processed")
     print(f"✓ {adaptations} behavior adaptations applied")
     print(f"✓ {agents_adapted}/{len(integration.arena.agents)} agents adapted behaviors")
     

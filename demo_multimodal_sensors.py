@@ -12,9 +12,6 @@ This demo shows how agents can receive multi-modal sensory input
 and fuse the information for enhanced perception.
 """
 
-import numpy as np
-import time
-import json
 import sys
 import os
 
@@ -23,7 +20,7 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 from aar_core.embodied.hardware_abstraction import (
     VisionSensor, AuditorySensor, TactileSensor,
-    MultiModalSensorManager, SensorType
+    MultiModalSensorManager
 )
 
 
@@ -239,7 +236,7 @@ class MultiModalSensorDemo:
             sensor_type = reading.sensor_type.value
             print(f"  {sensor_id} ({sensor_type}): confidence={reading.confidence:.3f}")
         
-        print(f"\nFusion results:")
+        print("\nFusion results:")
         print(f"  Overall confidence: {fused_data['confidence']:.3f}")
         print(f"  Modalities fused: {list(fused_data['modalities'].keys())}")
         
@@ -269,14 +266,14 @@ class MultiModalSensorDemo:
         print(f"  • Field of view: {vision_params['field_of_view']}°")
         print(f"  • Depth range: {vision_params['depth_range'][0]}-{vision_params['depth_range'][1]}m")
         print(f"  • Update rate: {self.vision_sensor.update_rate} Hz")
-        print(f"  • Features: Object detection, motion detection, color analysis")
+        print("  • Features: Object detection, motion detection, color analysis")
         
         # Auditory capabilities  
         print("\nAuditory Sensor Capabilities:")
         print(f"  • Frequency range: {self.auditory_sensor.frequency_range[0]}-{self.auditory_sensor.frequency_range[1]} Hz")
         print(f"  • Spatial resolution: {self.auditory_sensor.spatial_resolution}°")
         print(f"  • Sample rate: {self.auditory_sensor.update_rate} kHz")
-        print(f"  • Features: Spatial localization, frequency analysis, multi-source tracking")
+        print("  • Features: Spatial localization, frequency analysis, multi-source tracking")
         
         # Tactile capabilities
         print("\nTactile Sensor Capabilities:")
@@ -284,11 +281,11 @@ class MultiModalSensorDemo:
         print(f"  • Pressure range: {self.tactile_sensor.pressure_range[0]}-{self.tactile_sensor.pressure_range[1]} N/cm²")
         print(f"  • Spatial resolution: {self.tactile_sensor.spatial_resolution[0]}×{self.tactile_sensor.spatial_resolution[1]} tactels")
         print(f"  • Update rate: {self.tactile_sensor.update_rate} Hz")
-        print(f"  • Features: Pressure mapping, texture detection, temperature sensing")
+        print("  • Features: Pressure mapping, texture detection, temperature sensing")
         
         # System capabilities
         system_status = self.sensor_manager.get_system_status()
-        print(f"\nMulti-Modal System:")
+        print("\nMulti-Modal System:")
         print(f"  • Total sensors: {system_status['sensor_count']}")
         print(f"  • Sensor fusion: {'Enabled' if system_status['fusion_enabled'] else 'Disabled'}")
         print(f"  • Sync tolerance: {system_status['sync_tolerance']*1000:.1f} ms")

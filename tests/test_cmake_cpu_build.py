@@ -5,10 +5,8 @@ This test ensures that CPU builds work correctly even when PyTorch has CUDA
 support but CUDA libraries are not available on the system.
 """
 
-import os
 import subprocess
 import sys
-import tempfile
 import shutil
 from pathlib import Path
 import pytest

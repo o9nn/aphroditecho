@@ -11,15 +11,11 @@ This test validates the three-layer hierarchical motor control system:
 """
 
 import numpy as np
-import time
 import matplotlib
 matplotlib.use('Agg')  # Use non-interactive backend
-import matplotlib.pyplot as plt
-from typing import Dict, List, Any, Tuple
 
 from aar_core.embodied import (
-    VirtualBody, EmbodiedAgent, ProprioceptiveSystem,
-    HierarchicalMotorController, MotorGoal, MotorGoalType
+    EmbodiedAgent, HierarchicalMotorController, MotorGoal, MotorGoalType
 )
 from aar_core.arena.simulation_engine import ArenaPhysics, ArenaEnvironment
 
@@ -119,7 +115,7 @@ def test_mid_level_trajectory_generation():
     print(f"✓ Maximum velocity change: {max_velocity_change:.4f}")
     
     # Test 2: Coordination between joints
-    elbow_traj = trajectory.joint_trajectories['right_elbow']
+    trajectory.joint_trajectories['right_elbow']
     
     # Check coordination weights
     assert len(trajectory.coordination_weights) > 0, "Should have coordination weights"

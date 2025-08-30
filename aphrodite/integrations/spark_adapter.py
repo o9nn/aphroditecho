@@ -1,20 +1,32 @@
 """
 Spark Adapter - Integrates Spark.sys with AAR system
 
-This adapter manages prompt collections, themes, and update pipelines from spark.sys,
+This adapter manages prompt collections, themes, and update pipelines from 
+spark.sys,
 integrating them with the echo.sys prompt kernel for system-wide coherence.
 """
 
 import asyncio
 import json
 import logging
-from typing import Dict, List, Any, Optional, Union
+from typing import Dict, List, Any, Optional
 from dataclasses import dataclass, field
 from pathlib import Path
 import hashlib
 import time
 
-from echo.sys.prompt_kernel import PromptStore
+try:
+    import sys
+    echo_sys_path = Path(__file__).parent.parent.parent / "echo.sys"
+    if str(echo_sys_path) not in sys.path:
+        sys.path.insert(0, str(echo_sys_path))
+    from prompt_kernel.prompt_store import PromptStore
+except ImportError:
+    class PromptStore:
+        def __init__(self):
+            self.prompts = {}
+        def get_prompt(self, name): return None
+        def list_prompts(self): return []
 
 logger = logging.getLogger(__name__)
 
@@ -82,12 +94,16 @@ class SparkAdapter:
         self.components: Dict[str, SparkComponent] = {}
         
         # Initialize from spark.sys directory
-        self.spark_root = Path(__file__).parent.parent.parent / "2do" / "spark.sys"
+        self.spark_root = (
+            Path(__file__).parent.parent.parent / "2do" / "spark.sys"
+        )
         
         if self.spark_root.exists():
             self._load_spark_assets()
         else:
-            logger.warning("Spark.sys directory not found, running in compatibility mode")
+            logger.warning(
+                "Spark.sys directory not found, running in compatibility mode"
+            )
             self._setup_compatibility_mode()
 
     def _load_spark_assets(self):
@@ -173,7 +189,10 @@ class SparkAdapter:
             name=metadata.get('name', file_path.stem.replace('_', ' ').title()),
             template=template,
             category=metadata.get('category', 'general'),
-            tags=metadata.get('tags', '').split(',') if metadata.get('tags') else [],
+            tags=(
+                metadata.get('tags', '').split(',') 
+                if metadata.get('tags') else []
+            ),
             version=metadata.get('version', '1.0.0'),
             author=metadata.get('author', 'unknown'),
             metadata={'file_path': str(file_path), **metadata}
@@ -211,7 +230,7 @@ class SparkAdapter:
     def _load_themes(self):
         """Load themes from spark.sys."""
         # Look for theme configuration files
-        theme_files = [
+        [
             self.spark_root / "theme.json",
             self.spark_root / "tailwind.config.js",
             self.spark_root / "src" / "themes"
@@ -304,7 +323,9 @@ class SparkAdapter:
             SparkPrompt(
                 id="error_handler",
                 name="Error Handler",
-                template="I apologize, but I encountered an error. Please try again.",
+                template=(
+                    "I apologize, but I encountered an error. Please try again."
+                ),
                 category="system"
             )
         ]
@@ -379,16 +400,18 @@ class SparkAdapter:
         logger.info(f"Created prompt {prompt.id}")
         return prompt
 
-    def update_prompt(self, prompt_id: str, updates: Dict[str, Any]) -> Optional[SparkPrompt]:
+    def update_prompt(
+        self, prompt_id: str, updates: Dict[str, Any]
+    ) -> Optional[SparkPrompt]:
         """Update an existing prompt."""
         prompt = self.prompts.get(prompt_id)
         if not prompt:
             return None
         
         # Update fields
-        for field, value in updates.items():
-            if hasattr(prompt, field):
-                setattr(prompt, field, value)
+        for field_name, value in updates.items():
+            if hasattr(prompt, field_name):
+                setattr(prompt, field_name, value)
         
         # Recalculate hash if template changed
         if 'template' in updates:
@@ -423,7 +446,9 @@ class SparkAdapter:
         """Get a component by name."""
         return self.components.get(component_name)
 
-    def list_components(self, component_type: Optional[str] = None) -> List[SparkComponent]:
+    def list_components(
+        self, component_type: Optional[str] = None
+    ) -> List[SparkComponent]:
         """List components with optional type filtering."""
         components = list(self.components.values())
         
@@ -432,7 +457,9 @@ class SparkAdapter:
         
         return components
 
-    async def render_prompt(self, prompt_id: str, variables: Optional[Dict[str, Any]] = None) -> Optional[str]:
+    async def render_prompt(
+        self, prompt_id: str, variables: Optional[Dict[str, Any]] = None
+    ) -> Optional[str]:
         """Render a prompt template with variables."""
         prompt = self.get_prompt(prompt_id)
         if not prompt:
@@ -490,14 +517,18 @@ class SparkAdapter:
             self._load_spark_assets()
             
             new_count = len(self.prompts)
-            logger.info(f"Asset update complete: {old_count} -> {new_count} prompts")
+            logger.info(
+                f"Asset update complete: {old_count} -> {new_count} prompts"
+            )
             
             # Sync with echo.sys
             await self.sync_with_echo_sys()
             
             return {"old_count": old_count, "new_count": new_count}
         else:
-            logger.warning("Cannot update assets - spark.sys directory not found")
+            logger.warning(
+                "Cannot update assets - spark.sys directory not found"
+            )
             return {"error": "spark.sys directory not found"}
 
     def export_prompts(self, format: str = "json") -> str:

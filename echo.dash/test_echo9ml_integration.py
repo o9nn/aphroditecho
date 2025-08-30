@@ -91,7 +91,7 @@ class TestEcho9mlIntegration(unittest.TestCase):
         )
         
         # Check goal was added to traditional system
-        goals_with_id = [g for g in self.enhanced_arch.goals if hasattr(g, 'id') and g.id == goal_id]
+        [g for g in self.enhanced_arch.goals if hasattr(g, 'id') and g.id == goal_id]
         self.assertGreater(len(self.enhanced_arch.goals), 0)
         
         # Check Echo9ml system processed the goal
@@ -156,7 +156,7 @@ class TestEcho9mlIntegration(unittest.TestCase):
         
         # Get initial state
         initial_state = self.enhanced_arch.get_enhanced_cognitive_state()
-        initial_interactions = initial_state["echo9ml"]["system_stats"]["interaction_count"]
+        initial_state["echo9ml"]["system_stats"]["interaction_count"]
         
         # Save state
         self.enhanced_arch.save_enhanced_state()
@@ -242,7 +242,7 @@ class TestIntegrationScenarios(unittest.TestCase):
             ("Plan advanced ML project", MemoryType.INTENTIONAL, 0.8)
         ]
         
-        initial_reasoning = list(self.arch.echo9ml_system.persona_kernel.traits.values())[0]  # Get any trait as reference
+        list(self.arch.echo9ml_system.persona_kernel.traits.values())[0]  # Get any trait as reference
         
         for step_content, memory_type, importance in learning_steps:
             # Store memory

@@ -445,7 +445,7 @@ class TestPSystemMembraneHierarchy(unittest.TestCase):
         """Test system statistics collection"""
         # Create some membranes
         root_id = self.system.create_membrane(MembraneType.ROOT, "root")
-        child_id = self.system.create_membrane(MembraneType.LEAF, "child", root_id)
+        self.system.create_membrane(MembraneType.LEAF, "child", root_id)
         
         # Add objects
         root = self.system.get_membrane(root_id)
@@ -463,8 +463,8 @@ class TestPSystemMembraneHierarchy(unittest.TestCase):
         """Test membrane tree structure generation"""
         # Create hierarchy
         root_id = self.system.create_membrane(MembraneType.ROOT, "root")
-        child1_id = self.system.create_membrane(MembraneType.LEAF, "child1", root_id)
-        child2_id = self.system.create_membrane(MembraneType.LEAF, "child2", root_id)
+        self.system.create_membrane(MembraneType.LEAF, "child1", root_id)
+        self.system.create_membrane(MembraneType.LEAF, "child2", root_id)
         
         tree = self.system.get_membrane_tree()
         

@@ -60,7 +60,7 @@ class AphroditeEngineApp(L.LightningWork):
         start_time = time.time()
         
         try:
-            result = self.log_and_run([
+            self.log_and_run([
                 "timeout", "14400",  # 4 hour timeout
                 "python", "-m", "pip", "install", "-e", ".",
                 "--timeout", "7200", "--verbose"

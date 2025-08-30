@@ -8,7 +8,6 @@ import sys
 import json
 import yaml
 from pathlib import Path
-import tempfile
 import os
 
 def test_workflow_yaml_validity():

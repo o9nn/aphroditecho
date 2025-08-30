@@ -13,7 +13,7 @@ import threading
 import tempfile
 from pathlib import Path
 import json
-from unittest.mock import Mock, patch
+from unittest.mock import Mock
 
 # Import the integration module
 import sys

@@ -425,7 +425,7 @@ class EvolutionNetwork:
             "evolution_cycles": [],
             "job_cycles": [],
             "start_time": datetime.utcnow().isoformat(),
-            "agent_progression": {name: [] for name in self.agents.keys()}
+            "agent_progression": {name: [] for name in self.agents}
         }
         
         for cycle in range(cycles):

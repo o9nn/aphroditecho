@@ -1,6 +1,5 @@
 """Integration tests for arena subsystem."""
 
-import pytest
 
 from aphrodite.aar_core.arena import ArenaManager, ArenaState
 
@@ -97,7 +96,7 @@ class TestArenaIntegration:
         """Test arena listing and filtering."""
         # Create multiple arenas
         arena1 = self.arena_manager.create_arena("Arena 1")
-        arena2 = self.arena_manager.create_arena("Arena 2")
+        self.arena_manager.create_arena("Arena 2")
         
         # List all arenas
         all_arenas = self.arena_manager.list_arenas()
@@ -119,7 +118,7 @@ class TestArenaIntegration:
         """Test arena statistics."""
         # Create arenas in different states
         arena1 = self.arena_manager.create_arena("Stats Arena 1")
-        arena2 = self.arena_manager.create_arena("Stats Arena 2")
+        self.arena_manager.create_arena("Stats Arena 2")
         
         # Activate one
         self.arena_manager.activate_arena(arena1.id)

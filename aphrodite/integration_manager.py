@@ -8,9 +8,8 @@ integrated components following the Deep Tree Echo integration strategy.
 import asyncio
 import json
 import logging
-from typing import Dict, List, Any, Optional, Union
+from typing import Dict, List, Any, Optional
 from dataclasses import dataclass, field
-from pathlib import Path
 import time
 
 from .aar_gateway import AARGateway, GatewayRequest, GatewayResponse

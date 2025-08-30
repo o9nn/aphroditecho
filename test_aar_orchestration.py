@@ -8,14 +8,10 @@ Validates the acceptance criteria: Multiple agents can interact in simulated env
 import asyncio
 import time
 import pytest
-from typing import Dict, Any, List
 
 # Import AAR components
-from aar_core import AARCoreOrchestrator, AgentManager, SimulationEngine, RelationGraph
+from aar_core import AARCoreOrchestrator
 from aar_core.orchestration.core_orchestrator import AARConfig
-from aar_core.agents.agent_manager import AgentCapabilities, AgentStatus
-from aar_core.arena.simulation_engine import ArenaType, ArenaConfig
-from aar_core.relations.relation_graph import RelationType
 
 
 class TestAAROrchestrationSystem:
@@ -261,7 +257,7 @@ class TestAAROrchestrationSystem:
         }
         
         result1 = await orchestrator.orchestrate_inference(initial_request)
-        initial_agent_count = result1['orchestration_meta']['agents_used']
+        result1['orchestration_meta']['agents_used']
         
         # Second interaction referencing previous context
         followup_request = {
@@ -274,7 +270,7 @@ class TestAAROrchestrationSystem:
             }
         }
         
-        result2 = await orchestrator.orchestrate_inference(followup_request)
+        await orchestrator.orchestrate_inference(followup_request)
         
         # Verify agents maintained relationships and context
         relation_stats = orchestrator.relation_graph.get_graph_stats()
@@ -445,8 +441,8 @@ async def run_comprehensive_tests():
         relations = final_stats['component_stats']['relations']['graph_topology']['total_relations']
         print(f"   ✅ Relationship formation successful ({relations} relations)")
         
-        print(f"\n🎉 All tests completed successfully!")
-        print(f"Final system stats:")
+        print("\n🎉 All tests completed successfully!")
+        print("Final system stats:")
         print(f"   - Total requests processed: {final_stats['performance_stats']['total_requests']}")
         print(f"   - Active agents: {final_stats['component_stats']['agents']['agent_counts']['active']}")
         print(f"   - Active arenas: {final_stats['component_stats']['simulation']['system_info']['active_arenas']}")

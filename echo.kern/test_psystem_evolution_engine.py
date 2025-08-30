@@ -463,8 +463,8 @@ class TestEvolutionEngineIntegration(unittest.TestCase):
         engine = PSystemEvolutionEngine()
         system = create_dtesn_psystem_example()
         
-        initial_membrane_count = len(system.membranes)
-        initial_tree = system.get_membrane_tree()
+        len(system.membranes)
+        system.get_membrane_tree()
         
         # Run evolution
         engine.evolve_system(system)

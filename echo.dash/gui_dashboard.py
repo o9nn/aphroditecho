@@ -605,7 +605,7 @@ class GUIDashboard:
             cmap = plt.cm.viridis
             norm = mcolors.Normalize(vmin=0, vmax=1)
 
-            nodes = nx.draw_networkx_nodes(G, pos, node_size=node_sizes, node_color=echo_values, cmap=cmap, alpha=0.9, ax=ax)
+            nx.draw_networkx_nodes(G, pos, node_size=node_sizes, node_color=echo_values, cmap=cmap, alpha=0.9, ax=ax)
 
             nx.draw_networkx_edges(G, pos, edge_color='gray', alpha=0.5, arrows=True, ax=ax)
 
@@ -891,7 +891,7 @@ class GUIDashboard:
         node_colors = [type_to_color[t] for t in memory_types]
         
         # Draw nodes
-        nodes = nx.draw_networkx_nodes(G, pos, 
+        nx.draw_networkx_nodes(G, pos, 
                                       node_size=node_sizes, 
                                       node_color=node_colors, 
                                       alpha=0.8, ax=ax)
@@ -936,7 +936,7 @@ class GUIDashboard:
                 return
                 
             # Find closest node
-            node_list = list(G.nodes())
+            list(G.nodes())
             closest_node = None
             min_dist = float('inf')
             

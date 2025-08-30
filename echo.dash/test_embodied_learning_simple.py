@@ -20,7 +20,7 @@ def test_basic_functionality():
     try:
         from embodied_learning import (
             BodyState, MotorAction, SensorimotorExperience,
-            EmbodiedLearningSystem, create_embodied_learning_system
+            create_embodied_learning_system
         )
         
         print("✓ Successfully imported embodied learning modules")

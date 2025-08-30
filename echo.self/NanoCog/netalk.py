@@ -37,6 +37,7 @@ except ImportError as e:
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from introspection.echo_client import EchoSelfClient
+import contextlib
 
 console = Console()
 
@@ -413,10 +414,8 @@ def main():
                 # Introspection mode
                 depth = 3
                 if len(user_input.split()) > 1:
-                    try:
+                    with contextlib.suppress(ValueError):
                         depth = int(user_input.split()[1])
-                    except ValueError:
-                        pass
                 
                 result = introspection_mode.perform_introspection(model_config, depth)
                 

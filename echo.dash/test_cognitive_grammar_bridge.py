@@ -193,7 +193,7 @@ class TestCognitiveGrammarBridge(unittest.TestCase):
             bridge.initialize()
             
             # First remember something
-            node_id = bridge.remember("test concept", "test context")
+            bridge.remember("test concept", "test context")
             
             # Then try to recall
             matches = bridge.recall("test")

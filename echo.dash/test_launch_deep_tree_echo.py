@@ -53,7 +53,7 @@ class TestLaunchDeepTreeEcho(unittest.TestCase):
         """Test that logging is properly configured in the module"""
         # Check if logger is configured
         import logging
-        logger = logging.getLogger('launch_deep_tree_echo')
+        logging.getLogger('launch_deep_tree_echo')
         
         # Module should have configured logging
         root_logger = logging.getLogger()
@@ -79,7 +79,7 @@ class TestLaunchDeepTreeEcho(unittest.TestCase):
         
         try:
             # Test main function execution
-            result = await launch_deep_tree_echo.main()
+            await launch_deep_tree_echo.main()
             
             # Verify the flow was called
             mock_parser.assert_called_once_with("deep-tree-echo")
@@ -190,7 +190,7 @@ class TestLaunchDeepTreeEcho(unittest.TestCase):
         root_logger = logging.getLogger()
         
         # Look for file handlers
-        file_handlers = [h for h in root_logger.handlers 
+        [h for h in root_logger.handlers 
                         if hasattr(h, 'baseFilename')]
         
         # If the module was executed, it should have configured logging

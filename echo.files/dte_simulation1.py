@@ -1,4 +1,8 @@
-"""Implement missing abstract methods get_state and reset, add continuous reflection to step method, add identity coherence validation methods and integrate identity monitoring into step method"""
+"""
+Implement missing abstract methods get_state and reset, add continuous 
+reflection to step method, add identity coherence validation methods and 
+integrate identity monitoring into step method
+"""
 from abc import ABC, abstractmethod
 import networkx as nx
 import numpy as np
@@ -6,7 +10,6 @@ import random
 import logging
 import time
 from simulation_persistence import persistence_manager
-from datetime import datetime
 
 # Set up module logger
 logger = logging.getLogger(__name__)
@@ -62,7 +65,11 @@ class DTESimulation(RecursionEngine):
 
         # Initialize components
         self.fractal_recursion = FractalRecursion()
-        self.pattern_matcher = PatternMatcher()
+        try:
+            from pattern_matcher import PatternMatcher
+            self.pattern_matcher = PatternMatcher()
+        except ImportError:
+            self.pattern_matcher = None
 
         # Initialize anthropic integration
         try:
@@ -209,7 +216,11 @@ class DTESimulation(RecursionEngine):
         self.reflection_system = None  # Initially no reflection system
         self.reflection_interval = 60 * 60 # Every 60 minutes
         self.last_reflection_time = time.time()
-        self.reflection_system = SystemReflection()
+        try:
+            from system_reflection import SystemReflection
+            self.reflection_system = SystemReflection()
+        except ImportError:
+            self.reflection_system = None
 
          # Identity anchors
         self.identity_anchors = {
@@ -506,7 +517,7 @@ class DTESimulation(RecursionEngine):
     def _cross_modal_synthesis(self):
         """Synthesize insights across different cognitive modalities"""
         # Identify nodes from different cognitive domains
-        cognitive_domains = {
+        {
             'perception': [n for n in self.G.nodes() if any(word in n.lower() for word in ['see', 'sense', 'observe', 'pattern'])],
             'reasoning': [n for n in self.G.nodes() if any(word in n.lower() for word in ['logic', 'reason', 'think', 'analyze'])],
             'memory': [n for n in self.G.nodes() if any(word in n.lower() for word in ['remember', 'recall', 'past', 'history'])],
@@ -741,8 +752,7 @@ class DTESimulation(RecursionEngine):
             self.transitions.append((self.current_state, insight_name))
 
             # Connect to a random other state
-            other_state = random.choice([s for s in self.states if s != insight_name and s```python
- != self.current_state])
+            other_state = random.choice([s for s in self.states if s != insight_name and s != self.current_state])
             self.G.add_edge(insight_name, other_state)
             self.transitions.append((insight_name, other_state))
 
@@ -760,11 +770,10 @@ class DTESimulation(RecursionEngine):
                 self._enter_wake_state()
 
             # Step based on consciousness state
-            step_result = None
             if self.consciousness_state == "awake":
-                step_result = self._wake_step()
+                self._wake_step()
             else:
-                step_result = self._dream_step()
+                self._dream_step()
 
             # Calculate base entropy based on current state
             base_entropy = self._calculate_entropy()
@@ -1244,7 +1253,6 @@ class DTESimulation(RecursionEngine):
             "thought_stream_length": len(self.thought_stream),
             "dream_state": self.dream_state,
             "auto_thought_interval": self.auto_thought_interval,
-            "simulation_id": self.simulation_id,
             "identity_coherence": self._calculate_identity_coherence() if hasattr(self, 'identity_anchors') else 0.5,
             "identity_coherence_history_length": len(getattr(self, 'identity_coherence_history', [])),
             "reflection_system_active": self.reflection_system is not None
@@ -1486,4 +1494,4 @@ class FractalRecursion(RecursionEngine):
         # Create initial transitions
         self.transitions = []
         for i in range(self.depth - 1):
-            self.transitions.append((f"
+            self.transitions.append((f"state_{i}", f"state_{i+1}"))

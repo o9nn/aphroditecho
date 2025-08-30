@@ -70,7 +70,7 @@ def model_runner(deep_tree_config):
 @pytest.mark.asyncio
 async def test_deep_tree_integration(model_runner):
     """Test basic Deep Tree Echo integration."""
-    scheduler_output = MockSchedulerOutput()
+    MockSchedulerOutput()
     
     # Test that the enhanced runner initializes correctly
     assert model_runner.echo_enabled

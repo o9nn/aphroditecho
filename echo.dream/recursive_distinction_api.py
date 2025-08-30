@@ -565,7 +565,7 @@ def update_node(node_id):
         if 'expression' in data:
             # Validate expression if provided
             if data['expression']:
-                temp = node_manager.parser.parse(data['expression'])
+                node_manager.parser.parse(data['expression'])
                 
             node.expression = data['expression']
         

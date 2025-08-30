@@ -14,8 +14,6 @@ Test Acceptance Criteria: Agents predict movement outcomes before execution
 import unittest
 import sys
 import time
-import json
-from unittest.mock import Mock, patch
 from pathlib import Path
 
 # Add echo.kern to path for imports
@@ -127,7 +125,7 @@ class TestForwardModel(unittest.TestCase):
             duration=2.0,
             force=1.0
         )
-        high_force_prediction = self.forward_model.predict_movement_outcome(
+        self.forward_model.predict_movement_outcome(
             self.test_state, high_force_action
         )
         # Note: This might not always be true due to complexity of energy calculation
@@ -614,7 +612,7 @@ class TestAcceptanceCriteria(unittest.TestCase):
         self.assertIn('should_execute', recommendation)
         self.assertIsInstance(recommendation['should_execute'], bool)
         
-        print(f"✓ Agent predicted movement outcomes before execution")
+        print("✓ Agent predicted movement outcomes before execution")
         print(f"  Movement confidence: {movement_pred['confidence']:.3f}")
         print(f"  Success probability: {movement_pred['success_probability']:.3f}")
         print(f"  Motor imagery vividness: {imagery['vividness']:.3f}")
@@ -761,7 +759,7 @@ class TestAcceptanceCriteria(unittest.TestCase):
         self.assertIn('learning_effects', secondary_effects)
         self.assertIn('fatigue_accumulation', secondary_effects)
         
-        print(f"✓ Comprehensive action consequences predicted")
+        print("✓ Comprehensive action consequences predicted")
         print(f"  Environmental interactions: {len(env_consequences['object_interactions'])}")
         print(f"  Overall consequence confidence: {consequences['overall_confidence']:.3f}")
 

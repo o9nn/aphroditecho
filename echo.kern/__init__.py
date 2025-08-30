@@ -29,7 +29,7 @@ logger = logging.getLogger(__name__)
 
 # Core component imports
 try:
-    from embodied_memory_system import (
+    from .embodied_memory_system import (
         EmbodiedMemorySystem,
         EmbodiedMemory, 
         EmbodiedContext,
@@ -41,7 +41,6 @@ try:
     logger.debug("✓ Embodied memory system imported successfully")
 except ImportError as e:
     logger.debug(f"Note: embodied memory system uses local imports: {e}")
-    # Create placeholder classes to prevent import errors
     class EmbodiedMemorySystem: pass
     class EmbodiedMemory: pass
     class EmbodiedContext: pass
@@ -51,14 +50,14 @@ except ImportError as e:
     def create_embodied_memory_bridge(): pass
 
 try:
-    from psystem_membranes import PSystemMembranes
+    from .psystem_membranes import PSystemMembranes
     logger.debug("✓ P-System membranes imported successfully")
 except ImportError as e:
     logger.debug(f"Note: P-System membranes uses local imports: {e}")
     class PSystemMembranes: pass
 
 try:
-    from esn_reservoir import ESNReservoir
+    from .esn_reservoir import ESNReservoir
     logger.debug("✓ ESN reservoir imported successfully")
 except ImportError as e:
     logger.debug(f"Note: ESN reservoir uses local imports: {e}")
@@ -120,7 +119,7 @@ def get_echo_identity_framework():
     Returns:
         dict: Structured identity framework with purpose, reflections, guidance
     """
-    message = extract_deep_tree_echo_message()
+    extract_deep_tree_echo_message()
     
     # Parse the philosophical framework (simplified extraction)
     framework = {

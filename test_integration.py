@@ -83,10 +83,10 @@ async def test_integration():
         aar_orchestrator.set_echo_self_integration(echo_engine)
         
         # Test integration status
-        echo_stats = echo_engine.get_statistics()
+        echo_engine.get_statistics()
         aar_stats = await aar_orchestrator.get_orchestration_stats()
         
-        assert aar_stats['integration_status']['echo_self_engine'] == True
+        assert aar_stats['integration_status']['echo_self_engine'] is True
         
         print("✅ Integration tests passed")
         return True

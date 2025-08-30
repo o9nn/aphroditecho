@@ -14,17 +14,13 @@ real-time performance constraints for neuromorphic computing.
 Acceptance Criteria: Agents predict movement outcomes before execution
 """
 
-import json
 import time
 import logging
 import math
-from typing import Dict, List, Optional, Tuple, Any, Union
-from dataclasses import dataclass, field, asdict
+from typing import Dict, List, Optional, Tuple, Any
+from dataclasses import dataclass, field
 from enum import Enum
-from datetime import datetime
-from pathlib import Path
 from collections import deque
-import threading
 
 # Graceful dependency handling for ML libraries
 try:

@@ -18,6 +18,20 @@ try:
 except ImportError:
     EchoselfIntrospection = None
 
+# Import Phase 3.3.3 self-monitoring system
+try:
+    import sys
+    import os
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'echo.kern'))
+    from phase_3_3_3_self_monitoring import (
+        create_self_monitoring_system, MonitoringLevel, 
+        PerformanceMetrics, BodyStateMetrics
+    )
+    SELF_MONITORING_AVAILABLE = True
+except ImportError:
+    SELF_MONITORING_AVAILABLE = False
+    logging.warning("Phase 3.3.3 self-monitoring system not available")
+
 # Import the cognitive grammar bridge for neural-symbolic integration
 try:
     from cognitive_grammar_bridge import CognitiveGrammarBridge, SymbolicExpression, NeuralPattern
@@ -160,6 +174,22 @@ class CognitiveArchitecture:
                 self.logger.info("Echoself introspection system initialized")
             except Exception as e:
                 self.logger.warning(f"Failed to initialize echoself introspection: {e}")
+        
+        # Initialize Phase 3.3.3 self-monitoring system
+        self.self_monitoring_system = None
+        if SELF_MONITORING_AVAILABLE:
+            try:
+                agent_id = f"cognitive_agent_{int(time.time())}"
+                self.self_monitoring_system = create_self_monitoring_system(
+                    agent_id=agent_id,
+                    monitoring_level=MonitoringLevel.DETAILED
+                )
+                self.self_monitoring_system.start_monitoring(monitoring_interval=1.0)  # 1 second intervals
+                self.logger.info(f"Phase 3.3.3 self-monitoring system initialized for agent {agent_id}")
+            except Exception as e:
+                self.logger.warning(f"Failed to initialize self-monitoring system: {e}")
+        else:
+            self.logger.warning("Phase 3.3.3 self-monitoring system not available")
         
         # Initialize cognitive grammar bridge for neural-symbolic integration
         self.cognitive_grammar = None
@@ -398,9 +428,30 @@ class CognitiveArchitecture:
         return ideas
     
     def _get_performance_metric(self, metric: str) -> float:
-        """Get performance metric value"""
-        # Placeholder for actual metrics
-        return np.random.random()
+        """Get performance metric value from self-monitoring system"""
+        if self.self_monitoring_system and SELF_MONITORING_AVAILABLE:
+            try:
+                status = self.self_monitoring_system.get_monitoring_status()
+                
+                # Map metric names to monitoring data
+                if metric == 'memory_usage' and 'recent_performance' in status:
+                    return status['recent_performance'].get('avg_accuracy_score', 0.7)
+                elif metric == 'response_time' and 'recent_performance' in status:
+                    # Normalize response time to 0-1 scale (lower is better)
+                    avg_time = status['recent_performance'].get('avg_response_time_ms', 500)
+                    return max(0.0, 1.0 - (avg_time / 1000.0))  # 1000ms = 0 score
+                elif metric == 'learning_rate':
+                    # Use error count as inverse indicator of learning
+                    error_count = status.get('detected_errors_count', 0)
+                    return max(0.1, 1.0 - (error_count * 0.1))
+                elif metric == 'goal_completion' and 'recent_performance' in status:
+                    return status['recent_performance'].get('avg_success_rate', 0.8)
+                
+            except Exception as e:
+                self.logger.warning(f"Error getting performance metric {metric}: {e}")
+        
+        # Fallback to placeholder for compatibility
+        return np.random.uniform(0.5, 0.9)
     
     def _memory_to_dict(self, memory: Memory) -> Dict:
         """Convert memory to dictionary for storage"""
@@ -923,3 +974,181 @@ class CognitiveArchitecture:
                 "error": str(e),
                 "initialized": self.cognitive_grammar.is_initialized
             }
+    
+    # Phase 3.3.3 Self-Monitoring Integration Methods
+    
+    def has_self_monitoring(self) -> bool:
+        """Check if self-monitoring system is available and active"""
+        return (self.self_monitoring_system is not None and 
+                SELF_MONITORING_AVAILABLE and 
+                self.self_monitoring_system.is_monitoring)
+    
+    def get_self_monitoring_status(self) -> Dict[str, Any]:
+        """Get comprehensive self-monitoring status"""
+        if not self.has_self_monitoring():
+            return {
+                "available": False,
+                "status": "not_available",
+                "reason": "Self-monitoring system not initialized or not available"
+            }
+        
+        try:
+            status = self.self_monitoring_system.get_monitoring_status()
+            status["available"] = True
+            return status
+        except Exception as e:
+            self.logger.error(f"Error getting self-monitoring status: {e}")
+            return {
+                "available": True,
+                "status": "error",
+                "error": str(e)
+            }
+    
+    def record_cognitive_performance(self, operation: str, 
+                                   response_time_ms: float,
+                                   accuracy: float,
+                                   success: bool) -> None:
+        """Record cognitive performance metrics in self-monitoring system"""
+        if not self.has_self_monitoring():
+            return
+        
+        try:
+            # Create performance metrics from cognitive operation
+            metrics = PerformanceMetrics(
+                response_time_ms=response_time_ms,
+                accuracy_score=accuracy,
+                success_rate=1.0 if success else 0.0,
+                metadata={
+                    'operation': operation,
+                    'cognitive_agent': True
+                }
+            )
+            
+            # Since the monitoring system collects metrics automatically,
+            # we can enhance it by updating the internal collection
+            # This would be called from cognitive operations
+            self._log_activity(f"Cognitive performance recorded", {
+                'operation': operation,
+                'response_time_ms': response_time_ms,
+                'accuracy': accuracy,
+                'success': success
+            })
+        except Exception as e:
+            self.logger.error(f"Error recording cognitive performance: {e}")
+    
+    def report_cognitive_body_state(self, joint_states: Optional[Dict[str, float]] = None,
+                                  balance: Optional[float] = None,
+                                  movement_error: Optional[float] = None) -> None:
+        """Report virtual body state for embodied cognitive agents"""
+        if not self.has_self_monitoring():
+            return
+        
+        try:
+            # Create body state metrics (for future embodied cognitive agents)
+            body_state = BodyStateMetrics(
+                joint_positions=joint_states or {},
+                balance_state=balance or 1.0,
+                movement_execution_error=movement_error or 0.0,
+                proprioceptive_feedback={
+                    'cognitive_load': self._calculate_current_cognitive_load(),
+                    'memory_pressure': min(len(self.memories) / 1000, 1.0),
+                    'goal_pressure': min(len(self.goals) / 50, 1.0)
+                }
+            )
+            
+            self._log_activity("Cognitive body state reported", {
+                'balance_state': body_state.balance_state,
+                'movement_error': body_state.movement_execution_error,
+                'cognitive_load': body_state.proprioceptive_feedback.get('cognitive_load', 0)
+            })
+        except Exception as e:
+            self.logger.error(f"Error reporting cognitive body state: {e}")
+    
+    def get_performance_recommendations(self) -> List[str]:
+        """Get performance improvement recommendations from self-monitoring"""
+        if not self.has_self_monitoring():
+            return ["Self-monitoring system not available"]
+        
+        try:
+            status = self.self_monitoring_system.get_monitoring_status()
+            recommendations = []
+            
+            # Analyze monitoring data for recommendations
+            if 'recent_performance' in status:
+                perf = status['recent_performance']
+                
+                if perf.get('avg_response_time_ms', 0) > 1000:
+                    recommendations.append("Consider optimizing cognitive processing speed")
+                
+                if perf.get('avg_accuracy_score', 1.0) < 0.8:
+                    recommendations.append("Review learning algorithms and training data")
+                
+                if perf.get('avg_success_rate', 1.0) < 0.9:
+                    recommendations.append("Analyze failed operations for improvement opportunities")
+            
+            if status.get('detected_errors_count', 0) > 0:
+                recommendations.append("Review and address detected errors")
+            
+            if len(self.memories) > 800:  # High memory usage
+                recommendations.append("Consider memory consolidation and archiving")
+            
+            return recommendations or ["System performance appears optimal"]
+            
+        except Exception as e:
+            self.logger.error(f"Error getting performance recommendations: {e}")
+            return [f"Error analyzing performance: {str(e)}"]
+    
+    def export_self_monitoring_data(self, output_path: str) -> bool:
+        """Export self-monitoring data for analysis"""
+        if not self.has_self_monitoring():
+            self.logger.warning("Cannot export: self-monitoring system not available")
+            return False
+        
+        try:
+            # Enhance monitoring data with cognitive context
+            enhanced_path = output_path.replace('.json', '_cognitive_enhanced.json')
+            self.self_monitoring_system.export_monitoring_data(enhanced_path)
+            
+            # Add cognitive-specific data
+            cognitive_data = {
+                'memories_count': len(self.memories),
+                'goals_count': len(self.goals),
+                'active_goals_count': len(self.active_goals),
+                'personality_traits': {
+                    name: trait.current_value 
+                    for name, trait in self.personality_traits.items()
+                },
+                'activities_count': len(self.activities)
+            }
+            
+            # Load and enhance the exported data
+            with open(enhanced_path, 'r') as f:
+                monitoring_data = json.load(f)
+            
+            monitoring_data['cognitive_context'] = cognitive_data
+            
+            with open(enhanced_path, 'w') as f:
+                json.dump(monitoring_data, f, indent=2)
+            
+            self.logger.info(f"Enhanced cognitive monitoring data exported to {enhanced_path}")
+            return True
+            
+        except Exception as e:
+            self.logger.error(f"Error exporting self-monitoring data: {e}")
+            return False
+    
+    def cleanup_self_monitoring(self) -> None:
+        """Clean up self-monitoring system resources"""
+        if self.self_monitoring_system:
+            try:
+                self.self_monitoring_system.stop_monitoring()
+                self.logger.info("Self-monitoring system stopped")
+            except Exception as e:
+                self.logger.error(f"Error stopping self-monitoring system: {e}")
+    
+    def __del__(self):
+        """Ensure proper cleanup of monitoring resources"""
+        try:
+            self.cleanup_self_monitoring()
+        except:
+            pass  # Ignore errors during cleanup

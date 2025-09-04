@@ -315,6 +315,220 @@ class DTESNDynamicIntegration:
         
         return updated_params, metrics
     
+    async def apply_ewc_constraint(
+        self,
+        parameter_name: str,
+        current_params: torch.Tensor,
+        proposed_update: torch.Tensor,
+        fisher_information: torch.Tensor,
+        consolidated_params: torch.Tensor,
+        ewc_lambda: float = 1000.0
+    ) -> Tuple[torch.Tensor, Dict[str, Any]]:
+        """
+        Apply Elastic Weight Consolidation constraint to prevent catastrophic forgetting.
+        
+        Args:
+            parameter_name: Name of the parameter being updated
+            current_params: Current parameter values
+            proposed_update: Proposed parameter update
+            fisher_information: Fisher Information Matrix diagonal approximation
+            consolidated_params: Previously consolidated important parameters
+            ewc_lambda: EWC regularization strength
+            
+        Returns:
+            Tuple of (constrained_update, ewc_metrics)
+        """
+        try:
+            # Compute EWC penalty for proposed update
+            param_diff = proposed_update - consolidated_params
+            ewc_penalty = fisher_information * (param_diff ** 2)
+            total_ewc_loss = torch.sum(ewc_penalty)
+            
+            # Adaptive constraint strength based on parameter importance
+            importance_weights = torch.clamp(fisher_information / torch.max(fisher_information), 0.1, 1.0)
+            
+            # Apply constraint: blend between proposed update and consolidated parameters
+            constraint_strength = torch.sigmoid(ewc_lambda * importance_weights * param_diff.abs())
+            constrained_update = (
+                (1 - constraint_strength) * proposed_update + 
+                constraint_strength * consolidated_params
+            )
+            
+            # Calculate how much the constraint modified the update
+            modification_magnitude = torch.norm(constrained_update - proposed_update).item()
+            preservation_score = torch.norm(constrained_update - consolidated_params).item() / (
+                torch.norm(proposed_update - consolidated_params).item() + 1e-8
+            )
+            
+            ewc_metrics = {
+                "ewc_loss": float(total_ewc_loss),
+                "ewc_lambda": ewc_lambda,
+                "constraint_strength_mean": float(torch.mean(constraint_strength)),
+                "modification_magnitude": modification_magnitude,
+                "preservation_score": preservation_score,
+                "parameter_importance_mean": float(torch.mean(fisher_information)),
+                "forgetting_prevention_active": modification_magnitude > 1e-6
+            }
+            
+            logger.debug(
+                f"EWC constraint applied to {parameter_name}: "
+                f"loss={total_ewc_loss:.6f}, modification={modification_magnitude:.6f}"
+            )
+            
+            return constrained_update, ewc_metrics
+            
+        except Exception as e:
+            logger.error(f"EWC constraint application failed: {e}")
+            # Fallback to original update if EWC fails
+            return proposed_update, {
+                "ewc_error": str(e),
+                "fallback_used": True,
+                "forgetting_prevention_active": False
+            }
+    
+    async def update_fisher_information(
+        self,
+        parameter_name: str,
+        current_params: torch.Tensor,
+        gradient: torch.Tensor,
+        learning_signal_strength: float
+    ) -> torch.Tensor:
+        """
+        Update Fisher Information Matrix approximation for EWC.
+        
+        The Fisher Information Matrix represents the importance of each parameter
+        for the current task performance.
+        
+        Args:
+            parameter_name: Name of the parameter
+            current_params: Current parameter values
+            gradient: Gradient from current learning
+            learning_signal_strength: Strength of the learning signal (0-1)
+            
+        Returns:
+            Updated Fisher Information Matrix (diagonal approximation)
+        """
+        try:
+            # Simple diagonal Fisher Information approximation using squared gradients
+            # This approximates the second derivative of the loss w.r.t. parameters
+            fisher_update = (gradient ** 2) * learning_signal_strength
+            
+            # Get existing Fisher information or initialize
+            if not hasattr(self, '_fisher_information'):
+                self._fisher_information = {}
+            
+            if parameter_name in self._fisher_information:
+                # Exponential moving average update
+                decay_rate = 0.9
+                existing_fisher = self._fisher_information[parameter_name]
+                updated_fisher = decay_rate * existing_fisher + (1 - decay_rate) * fisher_update
+            else:
+                updated_fisher = fisher_update
+            
+            self._fisher_information[parameter_name] = updated_fisher
+            
+            logger.debug(
+                f"Updated Fisher information for {parameter_name}: "
+                f"mean={torch.mean(updated_fisher):.6f}, max={torch.max(updated_fisher):.6f}"
+            )
+            
+            return updated_fisher
+            
+        except Exception as e:
+            logger.error(f"Fisher information update failed: {e}")
+            # Return uniform importance if computation fails
+            return torch.ones_like(current_params) * 0.1
+    
+    async def consolidate_important_parameters(
+        self,
+        parameter_name: str,
+        current_params: torch.Tensor,
+        fisher_information: torch.Tensor,
+        consolidation_threshold: float = 0.5
+    ) -> Tuple[bool, Dict[str, Any]]:
+        """
+        Consolidate parameters that are deemed important for retention.
+        
+        Args:
+            parameter_name: Name of the parameter to potentially consolidate
+            current_params: Current parameter values
+            fisher_information: Fisher Information Matrix for importance
+            consolidation_threshold: Threshold for consolidation decision
+            
+        Returns:
+            Tuple of (was_consolidated, consolidation_metrics)
+        """
+        try:
+            # Determine if parameters should be consolidated based on importance
+            mean_importance = torch.mean(fisher_information).item()
+            max_importance = torch.max(fisher_information).item()
+            
+            should_consolidate = mean_importance > consolidation_threshold
+            
+            if should_consolidate:
+                # Store consolidated parameters
+                if not hasattr(self, '_consolidated_parameters'):
+                    self._consolidated_parameters = {}
+                
+                if parameter_name in self._consolidated_parameters:
+                    # Weighted average with existing consolidated parameters
+                    existing_consolidated = self._consolidated_parameters[parameter_name]
+                    importance_weight = min(mean_importance, 0.8)  # Cap at 0.8
+                    
+                    consolidated = (
+                        (1 - importance_weight) * existing_consolidated +
+                        importance_weight * current_params
+                    )
+                else:
+                    consolidated = current_params.clone()
+                
+                self._consolidated_parameters[parameter_name] = consolidated
+                
+                consolidation_metrics = {
+                    "parameter_name": parameter_name,
+                    "consolidated": True,
+                    "mean_importance": mean_importance,
+                    "max_importance": max_importance,
+                    "consolidation_threshold": consolidation_threshold,
+                    "parameter_norm": float(torch.norm(consolidated)),
+                    "importance_distribution": {
+                        "q25": float(torch.quantile(fisher_information, 0.25)),
+                        "q50": float(torch.quantile(fisher_information, 0.50)),
+                        "q75": float(torch.quantile(fisher_information, 0.75))
+                    }
+                }
+                
+                logger.info(
+                    f"Consolidated parameters for {parameter_name}: "
+                    f"importance={mean_importance:.4f}, norm={consolidation_metrics['parameter_norm']:.4f}"
+                )
+                
+                return True, consolidation_metrics
+            
+            else:
+                return False, {
+                    "consolidated": False,
+                    "mean_importance": mean_importance,
+                    "consolidation_threshold": consolidation_threshold,
+                    "reason": "importance_below_threshold"
+                }
+                
+        except Exception as e:
+            logger.error(f"Parameter consolidation failed: {e}")
+            return False, {"consolidated": False, "error": str(e)}
+    
+    def get_consolidated_parameters(self) -> Dict[str, torch.Tensor]:
+        """Get all consolidated parameters."""
+        if hasattr(self, '_consolidated_parameters'):
+            return self._consolidated_parameters.copy()
+        return {}
+    
+    def get_fisher_information(self) -> Dict[str, torch.Tensor]:
+        """Get all Fisher Information matrices."""
+        if hasattr(self, '_fisher_information'):
+            return self._fisher_information.copy()
+        return {}
+    
     async def enhanced_incremental_update(
         self,
         parameter_name: str,

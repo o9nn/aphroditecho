@@ -412,6 +412,245 @@ class MLSystem:
                 
         except Exception as e:
             self.logger.error(f"Error learning from interaction: {str(e)}")
+    
+    def create_continuous_learning_interaction(
+        self, 
+        interaction_type: str,
+        start_state: Dict,
+        end_state: Dict,
+        success: bool,
+        performance_score: Optional[float] = None
+    ) -> 'InteractionData':
+        """
+        Create InteractionData suitable for continuous learning system.
+        
+        This bridges the MLSystem's interaction learning with the 
+        ContinuousLearningSystem interface.
+        
+        Args:
+            interaction_type: Type of interaction
+            start_state: Initial state
+            end_state: Final state  
+            success: Whether interaction was successful
+            performance_score: Optional explicit performance score
+            
+        Returns:
+            InteractionData object for continuous learning
+        """
+        try:
+            # Import here to avoid circular dependency
+            from datetime import datetime
+            
+            # Generate interaction ID
+            interaction_id = f"{interaction_type}_{len(self.interaction_history):06d}"
+            
+            # Calculate performance feedback if not provided
+            if performance_score is None:
+                if success:
+                    # Base success score with quality modifiers
+                    performance_score = 0.7
+                    
+                    # Boost for efficient interactions
+                    if 'duration' in end_state and end_state['duration'] < 1.0:
+                        performance_score += 0.1
+                    
+                    # Boost for accurate interactions  
+                    if 'accuracy' in end_state and end_state['accuracy'] > 0.8:
+                        performance_score += 0.2
+                        
+                    # Cap at 1.0
+                    performance_score = min(performance_score, 1.0)
+                else:
+                    # Base failure score with context
+                    performance_score = -0.3
+                    
+                    # Less penalty for partial success
+                    if 'partial_success' in end_state and end_state['partial_success']:
+                        performance_score = -0.1
+            
+            # Extract context metadata
+            context_metadata = {
+                'ml_system_generated': True,
+                'interaction_duration': end_state.get('duration', 0.0),
+                'task_complexity': self._estimate_task_complexity(start_state, end_state),
+                'learning_context': interaction_type
+            }
+            
+            # Add importance weighting for certain interaction types
+            if interaction_type in ['reasoning', 'memory_recall', 'complex_task']:
+                context_metadata['importance'] = 0.8
+            elif interaction_type in ['simple_task', 'routine']:
+                context_metadata['importance'] = 0.3
+            else:
+                context_metadata['importance'] = 0.5
+            
+            # Create the interaction data
+            # Note: This creates a mock InteractionData-like dict since we can't import the actual class
+            interaction_data = {
+                'interaction_id': interaction_id,
+                'interaction_type': interaction_type,
+                'input_data': {
+                    'start_state': start_state,
+                    'context': context_metadata
+                },
+                'output_data': {
+                    'end_state': end_state,
+                    'success': success
+                },
+                'performance_feedback': performance_score,
+                'timestamp': datetime.now(),
+                'context_metadata': context_metadata,
+                'success': success
+            }
+            
+            self.logger.debug(
+                f"Created continuous learning interaction: {interaction_id}, "
+                f"performance={performance_score:.3f}, success={success}"
+            )
+            
+            return interaction_data
+            
+        except Exception as e:
+            self.logger.error(f"Error creating continuous learning interaction: {str(e)}")
+            # Return minimal interaction data
+            return {
+                'interaction_id': f"error_{len(self.interaction_history)}",
+                'interaction_type': interaction_type,
+                'input_data': start_state,
+                'output_data': end_state,
+                'performance_feedback': -0.5 if not success else 0.5,
+                'timestamp': datetime.now(),
+                'context_metadata': {'error': str(e)},
+                'success': success
+            }
+    
+    def _estimate_task_complexity(self, start_state: Dict, end_state: Dict) -> float:
+        """Estimate task complexity based on state changes."""
+        try:
+            complexity_factors = []
+            
+            # State change magnitude
+            if 'position' in start_state and 'position' in end_state:
+                start_pos = start_state['position']
+                end_pos = end_state['position']
+                if isinstance(start_pos, (list, tuple)) and isinstance(end_pos, (list, tuple)):
+                    distance = sum((e - s)**2 for s, e in zip(start_pos, end_pos))**0.5
+                    complexity_factors.append(min(distance / 1000.0, 1.0))  # Normalize
+            
+            # Path complexity
+            if 'path' in end_state and isinstance(end_state['path'], list):
+                path_length = len(end_state['path'])
+                complexity_factors.append(min(path_length / 100.0, 1.0))  # Normalize
+            
+            # Duration complexity
+            if 'duration' in end_state:
+                duration = end_state['duration'] 
+                complexity_factors.append(min(duration / 10.0, 1.0))  # Normalize
+            
+            # Data size complexity
+            def estimate_data_size(data):
+                if isinstance(data, dict):
+                    return len(str(data))
+                elif isinstance(data, (list, tuple)):
+                    return len(data)
+                else:
+                    return len(str(data))
+            
+            input_size = estimate_data_size(start_state)
+            output_size = estimate_data_size(end_state)
+            size_complexity = (input_size + output_size) / 10000.0  # Normalize
+            complexity_factors.append(min(size_complexity, 1.0))
+            
+            # Average complexity factors, or use default
+            if complexity_factors:
+                return sum(complexity_factors) / len(complexity_factors)
+            else:
+                return 0.5  # Default medium complexity
+                
+        except Exception as e:
+            self.logger.warning(f"Error estimating task complexity: {str(e)}")
+            return 0.5  # Default complexity
+    
+    async def learn_continuously(
+        self,
+        continuous_learning_system,
+        interaction_type: str,
+        start_state: Dict,
+        end_state: Dict,
+        success: bool,
+        performance_score: Optional[float] = None
+    ) -> Dict[str, Any]:
+        """
+        Learn from interaction using the continuous learning system.
+        
+        This method integrates MLSystem with ContinuousLearningSystem
+        for enhanced online learning capabilities.
+        
+        Args:
+            continuous_learning_system: The continuous learning system instance
+            interaction_type: Type of interaction
+            start_state: Initial state
+            end_state: Final state
+            success: Whether interaction was successful
+            performance_score: Optional performance score override
+            
+        Returns:
+            Learning result from continuous learning system
+        """
+        try:
+            # Create interaction data suitable for continuous learning
+            interaction_data = self.create_continuous_learning_interaction(
+                interaction_type, start_state, end_state, success, performance_score
+            )
+            
+            # Also perform traditional learning
+            self.learn_from_interaction(interaction_type, start_state, end_state, success)
+            
+            # Apply continuous learning if system is available
+            if hasattr(continuous_learning_system, 'learn_from_interaction'):
+                # Convert dict to InteractionData object if needed
+                if isinstance(interaction_data, dict):
+                    try:
+                        from aphrodite.continuous_learning import InteractionData
+                        from datetime import datetime
+                        
+                        interaction_obj = InteractionData(
+                            interaction_id=interaction_data['interaction_id'],
+                            interaction_type=interaction_data['interaction_type'], 
+                            input_data=interaction_data['input_data'],
+                            output_data=interaction_data['output_data'],
+                            performance_feedback=interaction_data['performance_feedback'],
+                            timestamp=interaction_data['timestamp'],
+                            context_metadata=interaction_data['context_metadata'],
+                            success=interaction_data['success']
+                        )
+                        interaction_data = interaction_obj
+                    except ImportError:
+                        # Fallback if continuous learning not available
+                        self.logger.warning("ContinuousLearning not available, using traditional learning only")
+                        return {"success": True, "method": "traditional_only"}
+                
+                # Apply continuous learning
+                cl_result = await continuous_learning_system.learn_from_interaction(interaction_data)
+                
+                self.logger.info(
+                    f"Continuous learning applied: success={cl_result.get('success', False)}, "
+                    f"interaction={interaction_data.interaction_id if hasattr(interaction_data, 'interaction_id') else 'unknown'}"
+                )
+                
+                return {
+                    "success": cl_result.get('success', False),
+                    "method": "continuous_learning",
+                    "continuous_result": cl_result,
+                    "traditional_learning": True
+                }
+            else:
+                self.logger.warning("Continuous learning system not properly configured")
+                return {"success": True, "method": "traditional_only"}
+                
+        except Exception as e:
+            self.logger.error(f"Error in continuous learning: {str(e)}")
+            return {"success": False, "error": str(e), "method": "failed"}
             
     def _save_interaction_history(self):
         """Save interaction history to disk"""

@@ -33,6 +33,7 @@ Developed through a collaboration between [PygmalionAI](https://pygmalion.chat) 
 ## 📋 Table of Contents
 
 - [🧠 Deep Tree Echo Integration](#-deep-tree-echo-integration)
+- [🚀 Automated Deployment Pipeline](#-automated-deployment-pipeline)
 - [🏗️ System Architecture](#️-system-architecture)
 - [🔥 News & Updates](#-news--updates)
 - [✨ Key Features](#-key-features)
@@ -357,6 +358,106 @@ aphrodite run meta-llama/Meta-Llama-3.1-8B-Instruct \
   --aar-max-agents 1000 \
   --embodied-cognition
 ```
+
+## 🚀 Automated Deployment Pipeline
+
+**Phase 4.3.1**: Complete MLOps solution with automated model deployment, A/B testing, and quality assurance.
+
+Aphrodite Engine includes a comprehensive automated deployment pipeline that ensures reliable model deployments with confidence:
+
+### ✨ Key Features
+
+- **🔍 Automated Quality Assurance**: Comprehensive pre-deployment validation
+  - Model compatibility testing with Aphrodite Engine
+  - Performance benchmarking against configurable thresholds
+  - Security compliance validation
+  - Deep Tree Echo integration verification
+
+- **🧪 A/B Testing Framework**: Safe model version comparison
+  - Configurable traffic splitting (5%, 10%, 25%, 50%)
+  - Real-time metrics collection and analysis
+  - Automated promotion/rollback decisions
+  - Comprehensive monitoring dashboards
+
+- **🚀 Deployment Orchestration**: Seamless multi-environment deployment
+  - Progressive rollout with safety checks
+  - Automatic rollback on failure detection
+  - Multi-environment support (staging → production)
+  - Integration with existing CI/CD workflows
+
+- **📊 Production Monitoring**: Continuous health monitoring
+  - Real-time performance metrics
+  - Error rate and latency tracking
+  - Resource utilization monitoring
+  - Automated alerting and incident response
+
+### 🎯 Quick Start
+
+**Manual Deployment:**
+```bash
+# Trigger via GitHub Actions
+# 1. Navigate to Actions → "Automated Model Deployment Pipeline"  
+# 2. Click "Run workflow"
+# 3. Configure deployment parameters:
+#    - Environment: staging/production
+#    - Model Version: latest or specific tag
+#    - A/B Testing: enabled
+#    - Traffic Split: 10%
+```
+
+**Automatic Deployment:**
+- Push to `main` → Triggers staging deployment with A/B testing
+- Create release → Triggers production deployment
+- Pull request → Runs quality assurance validation
+
+### 📋 Pipeline Workflow
+
+```mermaid
+graph LR
+    QA[🔍 Quality<br/>Assurance] --> Registry[📦 Model<br/>Registry]
+    Registry --> AB[🧪 A/B<br/>Testing] 
+    AB --> Deploy[🚀 Automated<br/>Deployment]
+    Deploy --> Monitor[📊 Production<br/>Monitoring]
+    
+    style QA fill:#e8f5e8
+    style AB fill:#e3f2fd  
+    style Deploy fill:#fff3e0
+    style Monitor fill:#f3e5f5
+```
+
+### 🔧 Configuration
+
+Key configuration files:
+- `deployment/configs/pipeline-config.yaml` - Pipeline settings
+- `.github/workflows/automated-deployment-pipeline.yml` - CI/CD workflow
+- `deployment/scripts/` - Core deployment automation scripts
+
+**Quality Thresholds:**
+```yaml
+quality_thresholds:
+  minimum_score: 80
+  performance:
+    max_latency_ms: 200
+    min_throughput_tokens_sec: 100
+  security:
+    require_authentication: true
+    require_rate_limiting: true
+```
+
+**A/B Testing:**
+```yaml
+ab_testing:
+  success_criteria:
+    max_error_rate_increase: 0.5%
+    max_latency_increase_percent: 20%
+  failure_criteria:
+    max_error_rate: 5.0%
+    auto_rollback: true
+```
+
+📚 **Documentation**: [Complete Deployment Pipeline Guide](deployment/DEPLOYMENT_PIPELINE.md)
+
+---
 
 ## 🏗️ System Architecture
 

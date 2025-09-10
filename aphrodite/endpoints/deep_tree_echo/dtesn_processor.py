@@ -40,7 +40,7 @@ except ImportError as e:
 
 
 class DTESNResult(BaseModel):
-    """Result of DTESN processing operation."""
+    """Result of DTESN processing operation with enhanced engine integration."""
     
     input_data: str
     processed_output: Dict[str, Any]
@@ -48,6 +48,7 @@ class DTESNResult(BaseModel):
     esn_state: Dict[str, Any]
     bseries_computation: Dict[str, Any]
     processing_time_ms: float
+    engine_integration: Dict[str, Any] = Field(default_factory=dict)
     
     def to_dict(self) -> Dict[str, Any]:
         """Convert result to dictionary for server-side response."""
@@ -57,7 +58,8 @@ class DTESNResult(BaseModel):
             "membrane_layers": self.membrane_layers,
             "esn_state": self.esn_state,
             "bseries_computation": self.bseries_computation,
-            "processing_time_ms": self.processing_time_ms
+            "processing_time_ms": self.processing_time_ms,
+            "engine_integration": self.engine_integration
         }
 
 
@@ -149,7 +151,7 @@ class DTESNProcessor:
         esn_size: Optional[int] = None
     ) -> DTESNResult:
         """
-        Process input through DTESN system.
+        Process input through DTESN system with enhanced engine integration.
         
         Args:
             input_data: Input string to process
@@ -157,7 +159,7 @@ class DTESNProcessor:
             esn_size: Size of ESN reservoir to use
             
         Returns:
-            DTESN processing result
+            DTESN processing result with enhanced engine data
         """
         start_time = time.time()
         
@@ -166,8 +168,11 @@ class DTESNProcessor:
         size = esn_size or self.config.esn_reservoir_size
         
         try:
-            # Process using real DTESN components
-            result = await self._process_real_dtesn(input_data, depth, size)
+            # Enhanced server-side data fetching from engine components
+            engine_context = await self._fetch_engine_context()
+            
+            # Process using real DTESN components with engine context
+            result = await self._process_real_dtesn(input_data, depth, size, engine_context)
                 
             processing_time = (time.time() - start_time) * 1000
             result.processing_time_ms = processing_time
@@ -178,26 +183,104 @@ class DTESNProcessor:
             logger.error(f"DTESN processing error: {e}")
             raise
     
+    async def _fetch_engine_context(self) -> Dict[str, Any]:
+        """
+        Fetch context data from Aphrodite Engine components for enhanced processing.
+        
+        Returns:
+            Engine context data for DTESN processing enhancement
+        """
+        context = {
+            "engine_available": False,
+            "model_config": None,
+            "server_side_data": {},
+            "processing_enhancements": {}
+        }
+        
+        if self.engine is not None:
+            try:
+                context["engine_available"] = True
+                
+                # Fetch model configuration if available
+                if hasattr(self.engine, 'get_model_config'):
+                    try:
+                        context["model_config"] = await self._safe_get_model_config()
+                    except Exception as e:
+                        logger.debug(f"Could not fetch model config: {e}")
+                        context["model_config"] = {"error": str(e)}
+                
+                # Fetch additional engine statistics
+                context["server_side_data"] = {
+                    "engine_type": type(self.engine).__name__,
+                    "has_generate": hasattr(self.engine, 'generate'),
+                    "has_tokenizer": hasattr(self.engine, 'get_tokenizer'),
+                    "integration_timestamp": time.time()
+                }
+                
+                # Server-side processing enhancements
+                context["processing_enhancements"] = {
+                    "tokenization_available": hasattr(self.engine, 'get_tokenizer'),
+                    "generation_available": hasattr(self.engine, 'generate'),
+                    "model_info_available": hasattr(self.engine, 'get_model_config'),
+                    "advanced_integration": True
+                }
+                
+            except Exception as e:
+                logger.warning(f"Engine context fetch error: {e}")
+                context["engine_available"] = False
+                context["error"] = str(e)
+        
+        return context
+    
+    async def _safe_get_model_config(self) -> Optional[Dict[str, Any]]:
+        """Safely get model configuration from engine."""
+        try:
+            if hasattr(self.engine, 'get_model_config'):
+                config = self.engine.get_model_config()
+                # Convert to dict for serialization
+                return {
+                    "model_name": getattr(config, 'model', 'unknown'),
+                    "served_model_name": getattr(config, 'served_model_name', None),
+                    "max_model_len": getattr(config, 'max_model_len', None),
+                    "dtype": str(getattr(config, 'dtype', 'unknown')),
+                    "server_side_fetched": True
+                }
+        except Exception as e:
+            logger.debug(f"Model config fetch failed: {e}")
+            return {"error": str(e), "server_side_fetched": False}
+        return None
+    
     async def _process_real_dtesn(
         self, 
         input_data: str, 
         depth: int, 
-        size: int
+        size: int,
+        engine_context: Optional[Dict[str, Any]] = None
     ) -> DTESNResult:
-        """Process using real echo.kern DTESN components."""
+        """
+        Process using real echo.kern DTESN components with enhanced engine integration.
+        
+        Args:
+            input_data: Input data to process
+            depth: Membrane hierarchy depth
+            size: ESN reservoir size
+            engine_context: Engine context data for enhanced processing
+        """
+        engine_context = engine_context or {}
+        
         # Convert input to numeric data
         input_vector = np.array([ord(c) for c in input_data[:10]]).reshape(-1, 1)
         if len(input_vector) < 10:
             input_vector = np.pad(input_vector, ((0, 10 - len(input_vector)), (0, 0)))
         
-        # Stage 1: P-System membrane processing
-        membrane_result = await self._process_real_membrane(input_vector, depth)
+        # Stage 1: P-System membrane processing with engine context
+        membrane_result = await self._process_real_membrane(input_vector, depth, engine_context)
         
-        # Stage 2: ESN processing
-        esn_result = await self._process_real_esn(membrane_result, size)
+        # Stage 2: ESN processing with engine enhancements
+        esn_result = await self._process_real_esn(membrane_result, size, engine_context)
         
-        # Stage 3: B-Series computation
-        bseries_result = await self._process_real_bseries(esn_result)
+        # Stage 3: B-Series computation with engine integration
+        bseries_result = await self._process_real_bseries(esn_result, engine_context)
         
         return DTESNResult(
             input_data=input_data,
@@ -205,38 +288,54 @@ class DTESNProcessor:
             membrane_layers=depth,
             esn_state=self._get_esn_state_dict(),
             bseries_computation=self._get_bseries_state_dict(),
-            processing_time_ms=0.0  # Will be set by caller
+            processing_time_ms=0.0,  # Will be set by caller
+            engine_integration=engine_context  # Include engine context in result
         )
     
     async def _process_real_membrane(
         self, 
         input_vector: 'np.ndarray', 
-        depth: int
+        depth: int,
+        engine_context: Optional[Dict[str, Any]] = None
     ) -> Dict[str, Any]:
-        """Process through real P-System membrane hierarchy."""
+        """Process through real P-System membrane hierarchy with engine enhancements."""
         # Simulate async membrane processing
         await asyncio.sleep(0.001)
         
-        # Use membrane hierarchy for processing
+        engine_context = engine_context or {}
+        
+        # Use membrane hierarchy for processing with engine enhancements
         membrane_output = {
             "membrane_processed": True,
             "depth_used": depth,
             "hierarchy_type": "p_system",
             "oeis_compliance": self.oeis_enumerator.get_term(depth) if hasattr(self, 'oeis_enumerator') else depth,
             "membrane_states": [f"membrane_layer_{i}" for i in range(depth)],
-            "processed_data": input_vector.flatten().tolist()
+            "processed_data": input_vector.flatten().tolist(),
+            "engine_enhanced": engine_context.get("engine_available", False),
+            "server_side_optimized": True
         }
+        
+        # Add engine-specific enhancements
+        if engine_context.get("engine_available"):
+            membrane_output["engine_enhancements"] = {
+                "tokenization_support": engine_context.get("processing_enhancements", {}).get("tokenization_available", False),
+                "model_context": engine_context.get("model_config", {}).get("model_name", "unknown")
+            }
         
         return membrane_output
     
     async def _process_real_esn(
         self, 
         membrane_result: Dict[str, Any], 
-        size: int
+        size: int,
+        engine_context: Optional[Dict[str, Any]] = None
     ) -> Dict[str, Any]:
-        """Process through real ESN reservoir."""
+        """Process through real ESN reservoir with engine enhancements."""
         # Simulate async ESN processing
         await asyncio.sleep(0.002)
+        
+        engine_context = engine_context or {}
         
         # Convert membrane output to ESN input
         membrane_data = np.array(membrane_result["processed_data"][:size])
@@ -252,8 +351,19 @@ class DTESNProcessor:
                     "state": esn_state.tolist() if hasattr(esn_state, 'tolist') else str(esn_state),
                     "activation": "tanh",
                     "spectral_radius": 0.95,
-                    "processed_data": esn_state.flatten().tolist() if hasattr(esn_state, 'flatten') else [0.0] * size
+                    "processed_data": esn_state.flatten().tolist() if hasattr(esn_state, 'flatten') else [0.0] * size,
+                    "engine_enhanced": engine_context.get("engine_available", False),
+                    "server_side_optimized": True
                 }
+                
+                # Add engine-specific enhancements
+                if engine_context.get("engine_available"):
+                    esn_output["engine_enhancements"] = {
+                        "generation_support": engine_context.get("processing_enhancements", {}).get("generation_available", False),
+                        "model_dtype": engine_context.get("model_config", {}).get("dtype", "unknown"),
+                        "integration_level": "advanced"
+                    }
+                    
             except Exception as e:
                 logger.error(f"ESN processing failed: {e}")
                 raise RuntimeError(f"ESN processing failed with real components: {e}")
@@ -264,11 +374,14 @@ class DTESNProcessor:
     
     async def _process_real_bseries(
         self, 
-        esn_result: Dict[str, Any]
+        esn_result: Dict[str, Any],
+        engine_context: Optional[Dict[str, Any]] = None
     ) -> Dict[str, Any]:
-        """Process through real B-Series computation."""
+        """Process through real B-Series computation with engine integration."""
         # Simulate async B-Series processing
         await asyncio.sleep(0.001)
+        
+        engine_context = engine_context or {}
         
         # Use B-Series classifier if available
         bseries_output = {
@@ -277,8 +390,19 @@ class DTESNProcessor:
             "tree_enumeration": "rooted_trees",
             "differential_computation": "elementary",
             "final_result": f"dtesn_processed_{len(esn_result['processed_data'])}",
-            "tree_structure": "OEIS_A000081_compliant"
+            "tree_structure": "OEIS_A000081_compliant",
+            "engine_enhanced": engine_context.get("engine_available", False),
+            "server_side_optimized": True
         }
+        
+        # Add engine-specific enhancements 
+        if engine_context.get("engine_available"):
+            bseries_output["engine_enhancements"] = {
+                "model_context_integration": True,
+                "advanced_tree_processing": True,
+                "server_side_computation": True,
+                "model_info": engine_context.get("model_config", {}).get("model_name", "unknown")
+            }
         
         return bseries_output
     

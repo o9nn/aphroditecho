@@ -210,6 +210,10 @@ async def process_dtesn(
             performance_metrics=performance_metrics
         )
 
+        # Add resource management context if available
+        if hasattr(request.state, 'resource_context'):
+            response_data.performance_metrics["resource_managed"] = request.state.resource_context.get("pool_available", False)
+
         if wants_html(request):
             return templates.TemplateResponse(
                 "process_result.html",

@@ -1,0 +1,18 @@
+Defaulting to user installation because normal site-packages is not writeable
+Collecting cmake
+  Downloading cmake-4.1.0-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (6.5 kB)
+Collecting ninja
+  Downloading ninja-1.13.0-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (5.1 kB)
+Requirement already satisfied: setuptools in /usr/lib/python3/dist-packages (68.1.2)
+Requirement already satisfied: wheel in /usr/lib/python3/dist-packages (0.42.0)
+Requirement already satisfied: packaging in /usr/lib/python3/dist-packages (24.0)
+Collecting setuptools-scm
+  Downloading setuptools_scm-9.2.0-py3-none-any.whl.metadata (7.7 kB)
+Downloading cmake-4.1.0-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (29.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 29.7/29.7 MB 120.3 MB/s eta 0:00:00
+Downloading ninja-1.13.0-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (180 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 180.7/180.7 kB 56.8 MB/s eta 0:00:00
+Downloading setuptools_scm-9.2.0-py3-none-any.whl (62 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 62.1/62.1 kB 21.6 MB/s eta 0:00:00
+Installing collected packages: setuptools-scm, ninja, cmake
+Successfully installed cmake-4.1.0 ninja-1.13.0 setuptools-scm-9.2.0

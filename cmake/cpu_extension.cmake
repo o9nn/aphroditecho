@@ -23,9 +23,9 @@ include_directories("${CMAKE_SOURCE_DIR}/kernels")
 #
 message(STATUS "Getting PyTorch library paths for CPU build...")
 
-# Get PyTorch include directories from Python
+# Get PyTorch include directories from Python, filter out non-existent paths
 execute_process(
-    COMMAND ${Python_EXECUTABLE} -c "import torch.utils.cpp_extension; print(';'.join(torch.utils.cpp_extension.include_paths()))"
+    COMMAND ${Python_EXECUTABLE} -c "import torch.utils.cpp_extension; import os; print(';'.join([p for p in torch.utils.cpp_extension.include_paths() if os.path.exists(p)]))"
     OUTPUT_VARIABLE TORCH_INCLUDE_DIRS
     OUTPUT_STRIP_TRAILING_WHITESPACE
     RESULT_VARIABLE TORCH_INCLUDE_RESULT

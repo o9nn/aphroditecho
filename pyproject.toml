@@ -16,7 +16,7 @@ build-backend = "setuptools.build_meta"
 name = "aphrodite-engine"
 readme = "README.md"
 description = "Aphrodite Engine: An extremely high-performance inference engine for at-scale LLM serving. Built as an OpenAI API drop-in replacement."
-license = "AGPL-3.0"
+license = {text = "AGPL-3.0"}
 maintainers = [
     {name = "PygmalionAI", email = "contact@pygmalion.chat"},
 ]

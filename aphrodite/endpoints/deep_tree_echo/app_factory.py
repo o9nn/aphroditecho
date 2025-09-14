@@ -27,6 +27,12 @@ from aphrodite.endpoints.deep_tree_echo.async_manager import (
     ConnectionPoolConfig
 )
 from aphrodite.endpoints.deep_tree_echo.routes import router
+from aphrodite.endpoints.security import (
+    InputValidationMiddleware,
+    OutputSanitizationMiddleware,
+    SecurityMiddleware,
+    RateLimitMiddleware
+)
 from aphrodite.engine.async_aphrodite import AsyncAphrodite
 
 logger = logging.getLogger(__name__)
@@ -105,6 +111,12 @@ def create_app(
         allow_methods=["GET", "POST", "PUT", "DELETE"],
         allow_headers=["*"],
     )
+
+    # Add security middleware stack (outermost to innermost)
+    app.add_middleware(OutputSanitizationMiddleware)  # Final output sanitization
+    app.add_middleware(SecurityMiddleware)  # IP blocking and monitoring  
+    app.add_middleware(RateLimitMiddleware)  # Rate limiting
+    app.add_middleware(InputValidationMiddleware)  # Input validation
 
     # Add async resource management middleware first (innermost)
     if enable_async_resources and connection_pool:

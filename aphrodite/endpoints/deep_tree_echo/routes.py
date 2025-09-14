@@ -19,6 +19,13 @@ from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel, Field
 
 from aphrodite.endpoints.deep_tree_echo.dtesn_processor import DTESNProcessor
+from aphrodite.endpoints.security import (
+    InputValidationMiddleware,
+    OutputSanitizationMiddleware,
+    SecurityMiddleware,
+    validate_request_input,
+    sanitize_response_output
+)
 
 logger = logging.getLogger(__name__)
 

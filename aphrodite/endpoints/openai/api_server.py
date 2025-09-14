@@ -47,6 +47,12 @@ from aphrodite.endpoints.chat_utils import (load_chat_template,
 from aphrodite.endpoints.logger import RequestLogger
 from aphrodite.endpoints.openai.args import (make_arg_parser,
                                              validate_parsed_serve_args)
+from aphrodite.endpoints.security import (
+    InputValidationMiddleware,
+    OutputSanitizationMiddleware, 
+    SecurityMiddleware,
+    RateLimitMiddleware
+)
 from aphrodite.endpoints.openai.protocol import (AnthropicMessagesRequest,
                                                  AnthropicMessagesResponse,
                                                  ChatCompletionRequest,
@@ -1919,6 +1925,13 @@ def build_app(args: Namespace) -> FastAPI:
         allow_methods=args.allowed_methods,
         allow_headers=args.allowed_headers,
     )
+
+    # Add comprehensive security middleware stack
+    # Order matters: outermost to innermost
+    app.add_middleware(OutputSanitizationMiddleware)  # Final response sanitization
+    app.add_middleware(SecurityMiddleware)  # IP blocking and monitoring
+    app.add_middleware(RateLimitMiddleware)  # Rate limiting 
+    app.add_middleware(InputValidationMiddleware)  # Input validation
 
     @app.exception_handler(HTTPException)
     async def http_exception_handler(_: Request, exc: HTTPException):

@@ -302,8 +302,22 @@ class ConcurrencyManager:
     
     async def _cleanup_rate_limit(self):
         """Clean up rate limiting state after request completion."""
-        # This could include additional cleanup logic if needed
-        pass
+        current_time = time.time()
+        
+        # Remove old request timestamps beyond the rate limit window
+        cutoff_time = current_time - (60.0 / self.max_requests_per_minute)
+        
+        # Clean up timestamps older than the rate limiting window
+        self._request_times = [
+            timestamp for timestamp in self._request_times
+            if current_time - timestamp < 60.0
+        ]
+        
+        # Log cleanup statistics for monitoring
+        if len(self._request_times) > 0:
+            logger.debug(
+                f"Rate limit cleanup: {len(self._request_times)} active timestamps remaining"
+            )
     
     def get_current_load(self) -> Dict[str, Any]:
         """Get current concurrency and rate limiting statistics."""

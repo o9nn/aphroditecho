@@ -342,7 +342,7 @@ The implementation integrates with echo.kern DTESN components when available:
 - **B-Series Computation**: Rooted tree enumeration and differential computation
 - **OEIS A000081**: Mathematical foundation compliance
 
-When echo.kern components are not available, mock implementations provide basic functionality.
+The implementation requires echo.kern components to be available for full DTESN functionality.
 
 ## Testing
 

@@ -86,6 +86,18 @@ from aphrodite.endpoints.openai.serving_classification import (
     ServingClassification)
 from aphrodite.endpoints.openai.serving_completions import (
     OpenAIServingCompletion)
+
+# Import DTESN integration routes
+try:
+    from aphrodite.endpoints.openai.dtesn_routes import (
+        router as dtesn_router,
+        initialize_dtesn_handler
+    )
+    DTESN_ROUTES_AVAILABLE = True
+    logger.info("DTESN OpenAI routes available")
+except ImportError as e:
+    logger.debug(f"DTESN routes not available: {e}")
+    DTESN_ROUTES_AVAILABLE = False
 from aphrodite.endpoints.openai.serving_embedding import OpenAIServingEmbedding
 from aphrodite.endpoints.openai.serving_engine import OpenAIServing
 from aphrodite.endpoints.openai.serving_messages import OpenAIServingMessages
@@ -1885,6 +1897,11 @@ def build_app(args: Namespace) -> FastAPI:
         app = FastAPI(lifespan=lifespan)
     app.include_router(router)
 
+    # Include DTESN-enhanced OpenAI routes if available
+    if DTESN_ROUTES_AVAILABLE:
+        app.include_router(dtesn_router)
+        logger.info("DTESN-enhanced OpenAI routes included")
+
     # Include KoboldAI API routes if enabled
     if envs.APHRODITE_KOBOLD_API:
         app.include_router(kai_api, prefix="/api/v1")
@@ -2106,6 +2123,20 @@ async def init_app_state(
         enable_prompt_tokens_details=args.enable_prompt_tokens_details,
         enable_force_include_usage=args.enable_force_include_usage,
     ) if "generate" in supported_tasks else None
+    
+    # Initialize DTESN handler for OpenAI integration if available
+    if DTESN_ROUTES_AVAILABLE and "generate" in supported_tasks:
+        try:
+            initialize_dtesn_handler(
+                engine_client=engine_client,
+                model_config=model_config,
+                models=state.openai_serving_models,
+                request_logger=request_logger
+            )
+            logger.info("DTESN handler initialized for OpenAI endpoints")
+        except Exception as e:
+            logger.warning(f"Could not initialize DTESN handler: {e}")
+    
     state.openai_serving_pooling = OpenAIServingPooling(
         engine_client,
         model_config,

@@ -1027,7 +1027,7 @@ class CognitiveArchitecture:
             # Since the monitoring system collects metrics automatically,
             # we can enhance it by updating the internal collection
             # This would be called from cognitive operations
-            self._log_activity(f"Cognitive performance recorded", {
+            self._log_activity("Cognitive performance recorded", {
                 'operation': operation,
                 'response_time_ms': response_time_ms,
                 'accuracy': accuracy,

@@ -7,7 +7,6 @@ cognitive learning system for enhanced online learning capabilities.
 
 import asyncio
 import logging
-import ctypes
 import numpy as np
 import torch
 from pathlib import Path

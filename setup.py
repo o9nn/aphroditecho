@@ -353,7 +353,6 @@ class cmake_build_ext(build_ext):
         subprocess.check_call(["cmake", *build_args], cwd=self.build_temp)
 
         import glob
-        import shutil
         import time
         import threading
         

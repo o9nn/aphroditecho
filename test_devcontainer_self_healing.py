@@ -4,10 +4,8 @@ Integration test for DevContainer and Self-Healing System
 Tests all components to ensure they work together correctly
 """
 
-import os
 import sys
 import json
-import yaml
 import subprocess
 from pathlib import Path
 
@@ -31,7 +29,7 @@ def test_devcontainer_config():
                 print(f"❌ Missing required key: {key}")
                 return False
         
-        print(f"✅ DevContainer configuration valid")
+        print("✅ DevContainer configuration valid")
         print(f"   - Name: {config['name']}")
         print(f"   - Ports: {len(config['forwardPorts'])} forwarded")
         print(f"   - Extensions: {len(config['customizations']['vscode']['extensions'])}")
@@ -69,9 +67,9 @@ def test_self_healing_workflow():
             print(f"❌ Missing workflow sections: {missing_sections}")
             return False
         
-        print(f"✅ Self-healing workflow valid")
+        print("✅ Self-healing workflow valid")
         print(f"   - Size: {len(content)} bytes")
-        print(f"   - Contains error detection and issue creation")
+        print("   - Contains error detection and issue creation")
         return True
         
     except Exception as e:
@@ -97,9 +95,9 @@ def test_self_healing_script():
         if result.returncode in [0, 1]:  # 0 = no errors, 1 = errors detected (expected)
             print("✅ Self-healing script runs successfully")
             if "🚨 Detected errors" in result.stdout:
-                print(f"   - Detected errors in dry-run mode (expected)")
+                print("   - Detected errors in dry-run mode (expected)")
             else:
-                print(f"   - No errors detected in current environment")
+                print("   - No errors detected in current environment")
             return True
         else:
             print(f"❌ Script failed with return code: {result.returncode}")

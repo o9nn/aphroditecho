@@ -228,9 +228,9 @@ def main():
         print("   ✅ Alert systems for degradation: IMPLEMENTED")
         print("   ✅ Comprehensive model monitoring: IMPLEMENTED")
         
-        print(f"\n🎉 Demo completed successfully!")
+        print("\n🎉 Demo completed successfully!")
         print(f"📁 Reports saved to: {report_dir}")
-        print(f"🔍 View detailed results in the exported JSON files")
+        print("🔍 View detailed results in the exported JSON files")
         
     except KeyboardInterrupt:
         print("\n⏹️  Demo interrupted by user")

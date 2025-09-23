@@ -33,7 +33,6 @@ class TestServerSideTemplates:
 
     def test_templates_directory_exists(self):
         """Test that templates directory is properly configured."""
-        from pathlib import Path
         from aphrodite.endpoints.deep_tree_echo.app_factory import TEMPLATES_DIR
         
         assert TEMPLATES_DIR.exists(), f"Templates directory should exist at {TEMPLATES_DIR}"

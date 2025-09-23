@@ -2,9 +2,8 @@
 Tests for input validation middleware.
 """
 
-import json
 import pytest
-from unittest.mock import Mock, AsyncMock
+from unittest.mock import Mock
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.testclient import TestClient
 

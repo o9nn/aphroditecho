@@ -16,10 +16,8 @@ import threading
 import json
 import psutil
 import statistics
-from datetime import datetime, timedelta
 from dataclasses import dataclass, field, asdict
-from typing import Dict, List, Optional, Callable, Any, Tuple
-from pathlib import Path
+from typing import Dict, List, Optional, Callable, Any
 from collections import deque
 from enum import Enum
 
@@ -543,7 +541,7 @@ if __name__ == "__main__":
         
         # Show summary
         summary = monitor.get_performance_summary()
-        print(f"\nPerformance Summary:")
+        print("\nPerformance Summary:")
         print(f"- Metrics collected: {summary['metrics_count']}")
         print(f"- Alerts generated: {summary['alerts_count']}")
         

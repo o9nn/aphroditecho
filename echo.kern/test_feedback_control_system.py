@@ -14,7 +14,6 @@ Test Acceptance Criteria: Agents maintain balance and correct movements
 import unittest
 import sys
 import time
-import threading
 from pathlib import Path
 
 # Add echo.kern to path for imports
@@ -136,7 +135,7 @@ class TestAcceptanceCriteria(unittest.TestCase):
         proprioceptive_info = results['proprioceptive_feedback']
         self.assertIn('joint_position_sense', proprioceptive_info)
         
-        print(f"✓ Agent maintained balance and applied corrections")
+        print("✓ Agent maintained balance and applied corrections")
         print(f"  Stability score: {stability_score:.3f}")
         print(f"  Corrections applied: {corrections_applied}")
         print(f"  Balance strategy: {results.get('balance_strategy', 'None')}")
@@ -192,7 +191,7 @@ class TestAcceptanceCriteria(unittest.TestCase):
         self.assertIn('total_corrections', performance)
         self.assertGreaterEqual(performance['total_corrections'], 0)
         
-        print(f"✓ Real-time feedback correction functional")
+        print("✓ Real-time feedback correction functional")
         print(f"  Corrections generated: {len(valid_corrections)}/5 attempts")
         print(f"  Total corrections: {performance['total_corrections']}")
     
@@ -264,7 +263,7 @@ class TestAcceptanceCriteria(unittest.TestCase):
         self.assertIn('adaptation_count', adaptation_perf)
         self.assertGreater(adaptation_perf['adaptation_count'], 0)
         
-        print(f"✓ Adaptive control based on proprioception functional")
+        print("✓ Adaptive control based on proprioception functional")
         print(f"  Parameter adaptations: {param_changes}")
         print(f"  Adaptation count: {adaptation_perf['adaptation_count']}")
     
@@ -327,7 +326,7 @@ class TestAcceptanceCriteria(unittest.TestCase):
         self.assertIn('total_stability_events', stability_perf)
         self.assertIn('average_stability_score', stability_perf)
         
-        print(f"✓ Balance and stability maintenance functional")
+        print("✓ Balance and stability maintenance functional")
         print(f"  Stable config stability: {stable_assessment['current_stability']:.3f}")
         print(f"  Unstable config stability: {unstable_assessment['current_stability']:.3f}")
         print(f"  Balance strategy for unstable: {balance_strategy}")
@@ -633,7 +632,7 @@ def run_performance_test():
     avg_latency = sum(processing_times) / len(processing_times)
     max_latency = max(processing_times)
     
-    print(f"Feedback Processing Performance:")
+    print("Feedback Processing Performance:")
     print(f"  Average latency: {avg_latency*1000:.2f}ms")
     print(f"  Maximum latency: {max_latency*1000:.2f}ms")
     print(f"  Real-time requirement (≤20ms): {'✓ PASS' if max_latency <= 0.020 else '✗ FAIL'}")
@@ -650,7 +649,7 @@ def run_performance_test():
     
     control_system.stop_real_time_control()
     
-    print(f"\nReal-time Control Loop Performance:")
+    print("\nReal-time Control Loop Performance:")
     print(f"  Target frequency: {target_frequency}Hz")
     print(f"  Actual frequency: {actual_frequency}Hz")
     print(f"  Performance ratio: {actual_frequency/target_frequency:.2f}")

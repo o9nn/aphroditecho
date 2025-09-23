@@ -5,11 +5,10 @@ Demonstrates server-side DTESN processing integration with OpenAI-compatible end
 """
 
 import asyncio
-import json
 import logging
 import sys
 import time
-from typing import Dict, Any, Optional
+from typing import Dict, Any
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -229,7 +228,7 @@ async def simulate_standard_processing(request_type: str, request: Dict[str, Any
     await asyncio.sleep(0.05)
     
     logger.info(f"  📊 Model inference for {request['model']}")
-    logger.info(f"  🔧 Token generation and response formatting")
+    logger.info("  🔧 Token generation and response formatting")
 
 
 async def test_integration_patterns():

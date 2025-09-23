@@ -6,11 +6,9 @@ real-time model switching capabilities with Aphrodite Engine.
 """
 
 import pytest
-import asyncio
 import time
 import torch
-from unittest.mock import Mock, patch, MagicMock
-from typing import Dict, Any
+from unittest.mock import Mock, patch
 
 # Test imports
 try:

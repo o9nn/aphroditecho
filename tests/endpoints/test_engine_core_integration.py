@@ -9,8 +9,7 @@ as required for Phase 5.2.2.
 import pytest
 import asyncio
 import time
-from unittest.mock import Mock, AsyncMock, patch, MagicMock
-from typing import Dict, Any, Optional
+from unittest.mock import AsyncMock, MagicMock
 
 from aphrodite.endpoints.deep_tree_echo.dtesn_processor import DTESNProcessor
 from aphrodite.endpoints.deep_tree_echo.config import DTESNConfig

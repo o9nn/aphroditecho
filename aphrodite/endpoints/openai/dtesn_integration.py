@@ -5,19 +5,15 @@ Provides server-side DTESN processing integration with existing OpenAI serving
 infrastructure, maintaining full compatibility while adding DTESN capabilities.
 """
 
-import asyncio
-import json
 import logging
 import time
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, Optional, Union
 from collections.abc import AsyncGenerator
 
 from fastapi import Request
 from pydantic import BaseModel, Field
 
 from aphrodite.common.config import ModelConfig
-from aphrodite.common.outputs import RequestOutput
-from aphrodite.common.sampling_params import SamplingParams, BeamSearchParams
 from aphrodite.endpoints.logger import RequestLogger
 from aphrodite.endpoints.openai.protocol import (
     ChatCompletionRequest,

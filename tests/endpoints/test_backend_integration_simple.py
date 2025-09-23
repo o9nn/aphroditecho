@@ -6,10 +6,8 @@ focusing on core backend integration validation for Phase 5.3.1.
 """
 
 import pytest
-import time
 import json
-from unittest.mock import Mock, AsyncMock, MagicMock
-from typing import Dict, Any
+from unittest.mock import AsyncMock, MagicMock
 
 
 def test_fastapi_imports():
@@ -331,7 +329,6 @@ class TestBasicIntegration:
 
     def test_error_handling(self):
         """Test error handling capabilities."""
-        from unittest.mock import Mock
         
         # Test that errors are caught and handled appropriately
         def failing_function():

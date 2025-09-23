@@ -10,28 +10,21 @@ Tests for Task 4.2.3: Build Multi-Agent Training
 
 import asyncio
 import logging
-import time
-import random
 import unittest
-from unittest.mock import Mock, patch, AsyncMock
-import tempfile
-import json
 
 # Import the components to test
 import sys
-import os
 sys.path.append('./echo.kern')
 
 from multi_agent_training_system import (
     MultiAgentTrainingSystem, TrainingConfiguration, TrainingMode, 
-    LearningStrategy, AgentPopulationMember
+    LearningStrategy
 )
 from population_based_training import (
     PopulationBasedTrainer, PopulationConfig, PopulationAlgorithm
 )
 from cooperative_competitive_learning import (
-    HybridLearningCoordinator, LearningConfiguration, LearningMode,
-    CooperativeLearningEngine, CompetitiveLearningEngine
+    HybridLearningCoordinator, LearningConfiguration, CooperativeLearningEngine, CompetitiveLearningEngine
 )
 from dtesn_multi_agent_training_integration import (
     DTESNMultiAgentTrainingSystem, DTESNTrainingConfiguration
@@ -662,7 +655,7 @@ class TestAcceptanceCriteria(unittest.TestCase):
                        f"recorded_improvements={has_recorded_improvements}")
         
         # Log detailed results
-        logger.info(f"Acceptance Criteria Test Results:")
+        logger.info("Acceptance Criteria Test Results:")
         logger.info(f"  - Initial avg fitness: {initial_avg_fitness:.4f}")
         logger.info(f"  - Final avg fitness: {final_avg_fitness:.4f}")
         logger.info(f"  - Population improved: {population_improved}")

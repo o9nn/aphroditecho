@@ -7,8 +7,7 @@ Tests Task 4.3.2: Implement Monitoring and Alerting (Automated Incident Response
 import pytest
 import time
 import tempfile
-import os
-from unittest.mock import Mock, patch, MagicMock
+from unittest.mock import Mock, patch
 from pathlib import Path
 
 # Import modules to test

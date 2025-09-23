@@ -4,7 +4,7 @@ Tests for security middleware functionality.
 
 import pytest
 import time
-from unittest.mock import Mock, patch
+from unittest.mock import Mock
 from fastapi import FastAPI, Request
 from fastapi.testclient import TestClient
 

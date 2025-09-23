@@ -240,7 +240,7 @@ async def main():
     passed = sum(1 for r in test_results if r is True)
     total = len(test_results)
     
-    print(f"\n=== Validation Results ===")
+    print("\n=== Validation Results ===")
     print(f"Passed: {passed}/{total}")
     
     if passed == total:

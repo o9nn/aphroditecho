@@ -14,8 +14,6 @@ from pathlib import Path
 
 # Import the monitoring and response systems
 from performance_monitor import (
-    create_default_monitor, 
-    PerformanceMetrics, 
     PerformanceAlert,
     AlertSeverity
 )
@@ -266,12 +264,12 @@ def main():
         
         # Final summary
         print("\n📋 Demo Summary:")
-        print(f"   🕒 Duration: ~45 seconds")
-        print(f"   🚨 Incidents simulated: 3")
+        print("   🕒 Duration: ~45 seconds")
+        print("   🚨 Incidents simulated: 3")
         print(f"   ✅ Successful responses: {response_stats['successful_responses']}")
         print(f"   🛠️  Maintenance tasks completed: {sum(1 for task in response_stats['maintenance_tasks'].values() if task['success_count'] > 0)}")
         print(f"   📊 Success rate: {response_stats['success_rate']:.1f}%")
-        print(f"   💾 Reports exported: 3 files")
+        print("   💾 Reports exported: 3 files")
         
         print(f"\n📁 All reports saved to: {stats_dir}")
         print("🔍 View detailed results in the exported JSON files")

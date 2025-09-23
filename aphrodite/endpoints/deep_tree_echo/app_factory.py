@@ -7,7 +7,6 @@ and enhanced async resource management.
 """
 
 import logging
-import asyncio
 from pathlib import Path
 from typing import Optional
 

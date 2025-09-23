@@ -54,8 +54,8 @@ async def validate_basic_functionality():
         from dtesn_multi_agent_training_integration import (
             DTESNMultiAgentTrainingSystem, DTESNTrainingConfiguration
         )
-        from multi_agent_training_system import TrainingConfiguration, TrainingMode
-        from population_based_training import PopulationConfig, PopulationAlgorithm
+        from multi_agent_training_system import TrainingConfiguration
+        from population_based_training import PopulationConfig
         from cooperative_competitive_learning import LearningConfiguration
         
         # Create minimal configuration

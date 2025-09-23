@@ -10,10 +10,8 @@ This script shows the curriculum learning system in action, including:
 """
 
 import sys
-import os
 import time
 import numpy as np
-import matplotlib.pyplot as plt
 from typing import Dict, List, Any
 
 # Add paths for imports
@@ -22,10 +20,7 @@ sys.path.insert(0, './echo.kern')
 
 from curriculum_learning import (
     create_default_curriculum,
-    CurriculumLearningSystem,
-    SkillObjective,
-    DifficultyLevel,
-    LearningStage
+    CurriculumLearningSystem
 )
 
 from dtesn_curriculum_integration import create_dtesn_curriculum_system
@@ -170,7 +165,7 @@ def demonstrate_curriculum_learning():
     
     # Show adaptation history
     adaptation_metrics = status['adaptation_metrics']
-    print(f"\nAdaptation Activity:")
+    print("\nAdaptation Activity:")
     print(f"  Total Adaptations: {adaptation_metrics['total_adaptations']}")
     print(f"  Recent Adaptations: {adaptation_metrics['recent_adaptations']}")
     

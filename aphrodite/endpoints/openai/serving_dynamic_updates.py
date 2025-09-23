@@ -5,10 +5,9 @@ Provides REST API for online model parameter updates, versioning,
 and rollback capabilities with zero service interruption.
 """
 
-import asyncio
 import logging
 from http import HTTPStatus
-from typing import Dict, Any, Optional
+from typing import Any, Optional
 
 import torch
 from fastapi import HTTPException

@@ -8,9 +8,8 @@ in the Aphrodite Engine's continuous learning system.
 import asyncio
 import logging
 from datetime import datetime
-import numpy as np
 import torch
-from typing import Dict, List
+from typing import List
 
 # Set up logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -190,7 +189,7 @@ async def demonstrate_continuous_learning():
         ewc_lambda=1000.0
     )
     
-    print(f"📋 Configuration:")
+    print("📋 Configuration:")
     print(f"   - Max experiences: {config.max_experiences}")
     print(f"   - Replay frequency: every {config.replay_frequency} interactions")
     print(f"   - Consolidation frequency: every {config.consolidation_frequency} interactions")
@@ -284,14 +283,14 @@ async def demonstrate_continuous_learning():
     # Performance statistics
     if 'performance_stats' in stats:
         perf_stats = stats['performance_stats']
-        print(f"\nPerformance Statistics:")
+        print("\nPerformance Statistics:")
         print(f"   Mean performance: {perf_stats['mean']:.3f}")
         print(f"   Performance std: {perf_stats['std']:.3f}")
         print(f"   Performance range: [{perf_stats['min']:.3f}, {perf_stats['max']:.3f}]")
         print(f"   Recent trend: {perf_stats['recent_trend']:+.3f}")
     
     # Show mock component statistics
-    print(f"\nComponent Activity:")
+    print("\nComponent Activity:")
     print(f"   Dynamic Manager updates: {dynamic_manager.update_count}")
     print(f"   DTESN adaptations: {dtesn_integration.adaptation_count}")
     

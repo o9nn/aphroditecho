@@ -10,7 +10,7 @@ capabilities to provide enhanced cognitive skill development.
 import time
 import logging
 import numpy as np
-from typing import Dict, List, Optional, Any, Tuple
+from typing import Dict, List, Optional, Any
 from dataclasses import dataclass
 
 # Import curriculum learning components
@@ -24,11 +24,7 @@ try:
     )
 except ImportError:
     from curriculum_learning import (
-        CurriculumLearningSystem, 
-        SkillObjective, 
-        DifficultyLevel, 
-        LearningStage,
-        CurriculumConfig
+        CurriculumLearningSystem
     )
 
 # Import existing DTESN integration

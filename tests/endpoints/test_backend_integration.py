@@ -7,16 +7,13 @@ performance testing for backend processing pipelines as required for Phase 5.3.1
 """
 
 import pytest
-import asyncio
 import time
 import json
-from unittest.mock import Mock, AsyncMock, patch, MagicMock
-from typing import Dict, Any, List
+from unittest.mock import AsyncMock, MagicMock
 from fastapi.testclient import TestClient
 
 from aphrodite.endpoints.deep_tree_echo import create_app
 from aphrodite.endpoints.deep_tree_echo.config import DTESNConfig
-from aphrodite.endpoints.deep_tree_echo.dtesn_processor import DTESNProcessor
 
 
 class TestBackendIntegration:
@@ -237,11 +234,10 @@ class TestBackendIntegration:
         Tests backend's ability to handle concurrent requests efficiently.
         """
         import concurrent.futures
-        import threading
         
         def make_request(request_id: int):
             """Make a test request with ID."""
-            response = backend_client.get(f"/deep_tree_echo/status")
+            response = backend_client.get("/deep_tree_echo/status")
             return {
                 'id': request_id,
                 'status_code': response.status_code,

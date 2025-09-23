@@ -5,13 +5,10 @@ Tests online parameter updates, incremental learning, model versioning,
 and rollback capabilities with zero service interruption.
 """
 
-import asyncio
-import json
 import pytest
 import tempfile
 import torch
-from pathlib import Path
-from unittest.mock import MagicMock, AsyncMock, patch
+from unittest.mock import MagicMock, AsyncMock
 
 from aphrodite.dynamic_model_manager import (
     DynamicModelManager,

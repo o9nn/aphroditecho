@@ -9,8 +9,6 @@ and AphroditeEngine/AsyncAphrodite for Task 5.2.2.
 import asyncio
 import logging
 import sys
-import os
-from typing import Dict, Any
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)

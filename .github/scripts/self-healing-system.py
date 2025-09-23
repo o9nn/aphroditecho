@@ -4,14 +4,13 @@ Self-Healing System for Aphrodite Engine
 Monitors system health and automatically creates issues for blocking errors
 """
 
-import os
 import sys
 import json
 import logging
 import argparse
 import traceback
-from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Tuple
+from datetime import datetime
+from typing import Dict, List, Optional
 from pathlib import Path
 
 # Import GitHub API if available
@@ -301,21 +300,21 @@ class IssueCreator:
             body += f"**Error Message**: `{error_data['error']}`\n"
         
         if error_data.get('failed_tests'):
-            body += f"**Failed Tests**:\n"
+            body += "**Failed Tests**:\n"
             for test in error_data['failed_tests'][:5]:
                 body += f"- `{test}`\n"
         
         if error_data.get('error_files'):
-            body += f"**Error Files**:\n"
+            body += "**Error Files**:\n"
             for file in error_data['error_files']:
                 body += f"- `{file}`\n"
         
         if error_data.get('missing_directories'):
-            body += f"**Missing Components**:\n"
+            body += "**Missing Components**:\n"
             for dir in error_data['missing_directories']:
                 body += f"- `{dir}`\n"
         
-        body += f"""
+        body += """
 ### 🛠️ Immediate Actions Required
 
 #### For @dtecho and @drzo:

@@ -11,7 +11,6 @@ This system fulfills Task 4.2.3 requirements:
 - Agent populations improve through interaction
 """
 
-import asyncio
 import logging
 import time
 import uuid

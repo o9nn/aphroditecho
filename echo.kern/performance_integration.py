@@ -8,7 +8,7 @@ import logging
 import time
 import json
 from pathlib import Path
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, Optional
 from dataclasses import asdict
 
 try:

@@ -83,10 +83,7 @@ from aphrodite.endpoints.openai.protocol import (AnthropicMessagesRequest,
                                                  UnloadLoRAAdapterRequest,
                                                  IncrementalUpdateRequest,
                                                  ModelVersionRequest,
-                                                 ModelRollbackRequest,
-                                                 DynamicUpdateResponse,
-                                                 ModelVersionListResponse,
-                                                 ModelStatusResponse)
+                                                 ModelRollbackRequest)
 from aphrodite.endpoints.openai.serving_chat import OpenAIServingChat
 from aphrodite.endpoints.openai.serving_classification import (
     ServingClassification)

@@ -18,14 +18,12 @@ import asyncio
 import time
 import logging
 import json
-import os
 import sys
-from typing import Dict, List, Any, Optional, Tuple
+from typing import Dict, List, Any, Optional
 from dataclasses import dataclass, field
 from enum import Enum
-import psutil
 import aioredis
-from aiohttp import ClientSession, ClientError
+from aiohttp import ClientSession
 
 # Add echo.kern to path for DTESN integration
 sys.path.append('/home/runner/work/aphroditecho/aphroditecho/echo.kern')

@@ -5,9 +5,7 @@ Direct validation of async management components without cascaded imports.
 Tests the async_manager.py module directly to validate the implementation.
 """
 
-import asyncio
 import sys
-import time
 from pathlib import Path
 
 def test_async_manager_file():
@@ -348,7 +346,7 @@ def main():
     total = len(results)
     
     print(f"\n{'='*60}")
-    print(f"=== FINAL VALIDATION RESULTS ===")
+    print("=== FINAL VALIDATION RESULTS ===")
     print(f"{'='*60}")
     print(f"Passed: {passed}/{total}")
     

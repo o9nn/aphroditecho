@@ -8,7 +8,7 @@ echo.kern DTESN components when available.
 import asyncio
 import sys
 import os
-from typing import Dict, Any
+from typing import Dict
 
 # Add echo.kern to path
 echo_kern_path = os.path.join(os.path.dirname(__file__), '..', 'echo.kern')

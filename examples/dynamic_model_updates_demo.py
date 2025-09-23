@@ -9,7 +9,6 @@ and model versioning capabilities with zero service interruption.
 import asyncio
 import json
 import torch
-from typing import Dict, Any
 
 from aphrodite.dynamic_model_manager import (
     DynamicModelManager,
@@ -151,7 +150,7 @@ async def demonstrate_basic_dynamic_updates():
             print(f"    Metrics: {version['performance_metrics']}")
     
     # 4. Demonstrate rollback
-    print(f"\n🔄 Rolling back to checkpoint...")
+    print("\n🔄 Rolling back to checkpoint...")
     rollback_result = await manager.rollback_to_version(checkpoint_version)
     if rollback_result["success"]:
         print(f"✅ Rolled back to: {rollback_result['rolled_back_to']}")
@@ -226,7 +225,7 @@ async def demonstrate_dtesn_integration():
         )
         
         if result["success"]:
-            print(f"  ✅ Enhanced update successful")
+            print("  ✅ Enhanced update successful")
             if "dtesn_metrics" in result["data"]:
                 metrics = result["data"]["dtesn_metrics"]
                 print(f"     Algorithm: {metrics.get('learning_type', 'N/A')}")
@@ -245,7 +244,7 @@ async def demonstrate_dtesn_integration():
         print(f"     Timestamp: {entry['timestamp']:.1f}")
     
     # Show integration status
-    print(f"\n🔧 Integration Status:")
+    print("\n🔧 Integration Status:")
     status = dtesn_integration.get_integration_status()
     print(f"  DTESN Available: {status['dtesn_available']}")
     print(f"  Total Learning Updates: {status['total_learning_updates']}")

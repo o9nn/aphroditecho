@@ -5,10 +5,8 @@ Tests the integration between DTESN processing and OpenAI serving infrastructure
 """
 
 import asyncio
-import json
 import logging
 import pytest
-from typing import Dict, Any, Optional
 from unittest.mock import AsyncMock, MagicMock, patch
 
 # Configure logging for tests

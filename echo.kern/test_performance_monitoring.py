@@ -8,7 +8,6 @@ import pytest
 import time
 import json
 import tempfile
-from unittest.mock import Mock, patch, MagicMock
 from pathlib import Path
 
 # Import the modules to test
@@ -17,7 +16,6 @@ from performance_monitor import (
     PerformanceMetrics, 
     PerformanceAlert, 
     AlertSeverity,
-    PerformanceThresholds,
     create_default_monitor
 )
 

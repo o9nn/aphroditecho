@@ -18,7 +18,6 @@ from pathlib import Path
 
 # Import the multi-agent training components
 import sys
-import os
 sys.path.append('./echo.kern')
 
 from dtesn_multi_agent_training_integration import (
@@ -171,7 +170,7 @@ class MultiAgentTrainingDemo:
         # Display system status
         status = self.training_system.get_system_status()
         
-        print(f"✓ System initialized with:")
+        print("✓ System initialized with:")
         print(f"  - Population size: {config.training_config.population_size}")
         print(f"  - Training mode: {config.training_config.training_mode.value}")
         print(f"  - Population algorithm: {config.population_config.algorithm_type.value}")
@@ -193,7 +192,7 @@ class MultiAgentTrainingDemo:
         # Initialize training population
         init_results = await self.training_system.initialize_training_population()
         
-        print(f"✓ Population initialized:")
+        print("✓ Population initialized:")
         print(f"  - Training agents: {init_results['training_population_size']}")
         print(f"  - Evolution members: {init_results['evolution_population_size']}")
         
@@ -202,7 +201,7 @@ class MultiAgentTrainingDemo:
         
         # Display sample agent genetic parameters
         sample_agents = list(population.values())[:3]
-        print(f"\n📊 Sample Agent Genetic Parameters:")
+        print("\n📊 Sample Agent Genetic Parameters:")
         
         for i, agent in enumerate(sample_agents, 1):
             print(f"  Agent {i}:")
@@ -298,7 +297,7 @@ class MultiAgentTrainingDemo:
             
             print(f"✓ ({competitive_episodes}C, {cooperative_episodes}Co)")
         
-        print(f"\n📈 Learning Mode Results:")
+        print("\n📈 Learning Mode Results:")
         print(f"  - Learning modes observed: {list(learning_modes_observed)}")
         print(f"  - Total competitive episodes: {total_competitive_episodes}")
         print(f"  - Total cooperative episodes: {total_cooperative_episodes}")
@@ -333,7 +332,7 @@ class MultiAgentTrainingDemo:
         pop_trainer = self.training_system.population_trainer
         pop_stats = pop_trainer.get_population_statistics()
         
-        print(f"✓ Population-based training active:")
+        print("✓ Population-based training active:")
         print(f"  - Algorithm: {pop_stats.get('algorithm_type', 'Unknown')}")
         print(f"  - Current generation: {pop_stats.get('current_generation', 0)}")
         print(f"  - Population size: {len(pop_trainer.population)}")
@@ -348,7 +347,7 @@ class MultiAgentTrainingDemo:
         print(f"  - Genetic diversity: {genetic_diversity:.3f}")
         
         # Run one more evolution step to show improvement
-        print(f"\n🔄 Demonstrating evolutionary improvement...")
+        print("\n🔄 Demonstrating evolutionary improvement...")
         
         # Create fitness function for evolution
         async def demo_fitness_function(parameters):
@@ -359,7 +358,7 @@ class MultiAgentTrainingDemo:
         
         evolution_stats = await pop_trainer.evolve_generation(demo_fitness_function)
         
-        print(f"✓ Evolution step completed:")
+        print("✓ Evolution step completed:")
         print(f"  - Generation: {evolution_stats['generation']}")
         print(f"  - Best fitness: {evolution_stats['best_fitness']:.3f}")
         print(f"  - Average fitness: {evolution_stats['average_fitness']:.3f}")
@@ -407,7 +406,7 @@ class MultiAgentTrainingDemo:
         final_avg = sum(final_fitness) / len(final_fitness)
         overall_improvement = final_avg - baseline_avg
         
-        print(f"\n📈 Final Results:")
+        print("\n📈 Final Results:")
         print(f"  - Final average fitness: {final_avg:.3f}")
         print(f"  - Overall improvement: {overall_improvement:+.4f}")
         
@@ -445,7 +444,7 @@ class MultiAgentTrainingDemo:
             'population_improvement': overall_improvement > 0 or interaction_benefit > 0 or len(improvement_history) > 0
         }
         
-        print(f"\n🎯 ACCEPTANCE CRITERIA VALIDATION:")
+        print("\n🎯 ACCEPTANCE CRITERIA VALIDATION:")
         print(f"  ✓ Distributed training across multiple agents: {criteria_met['distributed_training']}")
         print(f"  ✓ Competitive and cooperative learning: {criteria_met['competitive_cooperative']}")
         print(f"  ✓ Population-based training methods: {criteria_met['population_based_methods']}")
@@ -511,14 +510,14 @@ class MultiAgentTrainingDemo:
         # Display summary
         acceptance_criteria = self.demo_results['acceptance_criteria']
         
-        print(f"\n🎉 DEMONSTRATION SUMMARY:")
+        print("\n🎉 DEMONSTRATION SUMMARY:")
         print(f"  - Total training time: {system_report['training_summary']['total_duration']:.2f}s")
         print(f"  - Total epochs executed: {system_report['training_summary']['total_epochs']}")
         print(f"  - Total agent interactions: {system_report['training_summary']['total_interactions']}")
         print(f"  - Population improvement rate: {system_report['training_summary']['improvement_rate']:.1%}")
         print(f"  - Best fitness achieved: {system_report['performance_metrics']['best_fitness_achieved']:.3f}")
         
-        print(f"\n🏆 TASK 4.2.3 COMPLETION STATUS:")
+        print("\n🏆 TASK 4.2.3 COMPLETION STATUS:")
         criteria_met = acceptance_criteria['criteria_met']
         for criterion, met in criteria_met.items():
             status = "✅" if met else "❌"

@@ -5,7 +5,6 @@ Simple validation script for the Deep Tree Echo server-side template system.
 Validates the template structure and basic functionality without heavy dependencies.
 """
 
-import os
 import sys
 from pathlib import Path
 

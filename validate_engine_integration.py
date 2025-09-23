@@ -6,7 +6,6 @@ This script validates that the comprehensive engine integration changes
 are correctly implemented for Task 5.2.2 without requiring full dependencies.
 """
 
-import ast
 import logging
 import os
 import sys
@@ -87,7 +86,7 @@ def validate_dtesn_processor_enhancements():
             missing_features.append(f"{feature} ({description})")
     
     if missing_features:
-        raise ValueError(f"Missing key engine integration features:\n" + "\n".join(f"- {f}" for f in missing_features))
+        raise ValueError("Missing key engine integration features:\n" + "\n".join(f"- {f}" for f in missing_features))
     
     logger.info(f"✅ All {len(integration_features)} key engine integration features found")
     

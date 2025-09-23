@@ -7,7 +7,6 @@ endpoints without requiring the full Aphrodite engine setup.
 
 import asyncio
 import json
-from typing import Dict, Any
 
 
 async def demo_dtesn_processing():
@@ -22,7 +21,7 @@ async def demo_dtesn_processing():
         "bseries_max_order": 8
     }
     
-    print(f"📋 Configuration:")
+    print("📋 Configuration:")
     print(f"   • Max membrane depth: {config['max_membrane_depth']}")
     print(f"   • ESN reservoir size: {config['esn_reservoir_size']}")
     print(f"   • B-Series max order: {config['bseries_max_order']}")
@@ -43,7 +42,7 @@ async def demo_dtesn_processing():
         "oeis_compliance": "A000081"
     }
     print(f"   ✓ Processed through {membrane_result['depth_used']} membrane layers")
-    print(f"   ✓ OEIS A000081 compliance verified")
+    print("   ✓ OEIS A000081 compliance verified")
     
     # Stage 2: Echo State Network Processing
     print("🔄 Stage 2: Echo State Network Processing...")

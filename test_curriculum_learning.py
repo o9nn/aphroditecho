@@ -11,8 +11,7 @@ and performance-driven curriculum advancement.
 import pytest
 import time
 import numpy as np
-from typing import Dict, Any, Optional
-from unittest.mock import Mock, MagicMock
+from unittest.mock import Mock
 
 # Import curriculum learning components
 import sys

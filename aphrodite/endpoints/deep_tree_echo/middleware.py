@@ -15,8 +15,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 
 from aphrodite.endpoints.deep_tree_echo.async_manager import (
     AsyncConnectionPool,
-    ConcurrencyManager,
-    ConnectionPoolConfig
+    ConcurrencyManager
 )
 
 logger = logging.getLogger(__name__)

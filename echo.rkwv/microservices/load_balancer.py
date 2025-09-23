@@ -19,7 +19,7 @@ import logging
 import json
 import os
 from typing import Dict, List, Any, Optional, Tuple
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
 from aiohttp import web, ClientSession, ClientError
 import aioredis

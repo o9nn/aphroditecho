@@ -14,7 +14,6 @@ import time
 import sys
 import os
 import json
-from pathlib import Path
 
 # Add paths for imports
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'echo.kern'))
@@ -93,7 +92,7 @@ def demo_basic_self_monitoring():
         
         # Show error patterns learned
         if monitor.error_patterns:
-            print(f"\n5. Error patterns learned:")
+            print("\n5. Error patterns learned:")
             for error_type, count in monitor.error_patterns.items():
                 print(f"   - {error_type}: {count} occurrences")
         
@@ -133,7 +132,7 @@ def demo_cognitive_architecture_integration():
         if ca.has_self_monitoring():
             # Get monitoring status
             status = ca.get_self_monitoring_status()
-            print(f"3. Monitoring status:")
+            print("3. Monitoring status:")
             print(f"   - Agent ID: {status.get('agent_id', 'unknown')}")
             print(f"   - Monitoring level: {status.get('monitoring_level', 'unknown')}")
             print(f"   - Performance metrics: {status.get('performance_metrics_count', 0)}")

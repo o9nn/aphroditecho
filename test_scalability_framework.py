@@ -14,13 +14,9 @@ Tests all components of the scalability system including:
 import asyncio
 import time
 import logging
-import json
 import sys
 import pytest
-from typing import Dict, List, Any, Optional
 from unittest.mock import Mock, patch, AsyncMock
-import aiohttp
-from aiohttp.test_utils import AioHTTPTestCase, unittest_run_loop
 
 # Add project paths
 sys.path.append('/home/runner/work/aphroditecho/aphroditecho')
@@ -30,10 +26,10 @@ sys.path.append('/home/runner/work/aphroditecho/aphroditecho/aar_core/agents')
 
 # Import scalability components
 from load_balancer import LoadBalancerService, LoadBalancingStrategy, ServiceInstance, AutoScalingConfig
-from cache_service import CacheService, EvictionPolicy, CompressionType
+from cache_service import CacheService
 from cognitive_service import CognitiveService, ProcessingType, ProcessingRequest, SessionState
-from scalability_manager import ScalabilityManager, ResourceType, ScalingAction, ScalingPolicy
-from scaling_optimizer import ScalingOptimizer, ScalingMetrics, ScalingTrigger, PredictionModel
+from scalability_manager import ScalabilityManager, ResourceType
+from scaling_optimizer import ScalingOptimizer, ScalingMetrics, ScalingTrigger
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -749,7 +745,7 @@ async def run_load_test():
     
     # Get insights
     insights = optimizer.get_scaling_insights()
-    logger.info(f"\n📊 Load Test Results:")
+    logger.info("\n📊 Load Test Results:")
     logger.info(f"   Average utilization: {insights['avg_utilization']:.2f}")
     logger.info(f"   Average response time: {insights['avg_response_time']:.1f}ms")
     logger.info(f"   Scaling events: {insights['scaling_events_last_24h']}")

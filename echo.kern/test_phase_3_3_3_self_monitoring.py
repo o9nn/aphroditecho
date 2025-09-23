@@ -15,7 +15,6 @@ import time
 import tempfile
 import os
 import json
-from unittest.mock import Mock, patch
 from phase_3_3_3_self_monitoring import (
     SelfMonitoringSystem, MonitoringLevel, ErrorSeverity, 
     PerformanceMetrics, BodyStateMetrics, DetectedError,

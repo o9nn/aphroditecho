@@ -7,7 +7,6 @@ Tests the key components without requiring pytest framework.
 
 import asyncio
 import sys
-import os
 import time
 from pathlib import Path
 
@@ -203,7 +202,7 @@ async def main():
     passed = sum(1 for r in all_results if r is True)
     total = len(all_results)
     
-    print(f"\n=== Validation Results ===")
+    print("\n=== Validation Results ===")
     print(f"Passed: {passed}/{total}")
     
     if passed == total:

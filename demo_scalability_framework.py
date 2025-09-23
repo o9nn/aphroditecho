@@ -10,14 +10,13 @@ import asyncio
 import time
 import logging
 import sys
-from typing import Dict, List, Any
 
 # Add project paths
 sys.path.append('/home/runner/work/aphroditecho/aphroditecho')
 sys.path.append('/home/runner/work/aphroditecho/aphroditecho/echo.kern')
 sys.path.append('/home/runner/work/aphroditecho/aphroditecho/aar_core/agents')
 
-from scaling_optimizer import ScalingOptimizer, ScalingMetrics, ScalingTrigger, PredictionModel
+from scaling_optimizer import ScalingOptimizer, ScalingMetrics
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -138,7 +137,7 @@ async def demo_scaling_optimizer():
     
     prediction = optimizer._get_predictive_scaling_recommendation(current_predictive_metrics)
     if prediction:
-        logger.info(f"   🔮 Predictive analysis available")
+        logger.info("   🔮 Predictive analysis available")
         logger.info(f"   📊 Predicted demand: {prediction.predicted_demand:.2f}")
         logger.info(f"   🎯 Recommended agents: {prediction.recommended_agents}")
         logger.info(f"   📈 Confidence: {prediction.confidence:.1%}")
@@ -196,16 +195,16 @@ async def demo_scaling_optimizer():
     logger.info(f"   Average agent count: {insights['avg_agent_count']:.1f}")
     logger.info(f"   Scaling events: {insights['scaling_events_last_24h']}")
     
-    logger.info(f"\n   💰 Cost Efficiency:")
+    logger.info("\n   💰 Cost Efficiency:")
     logger.info(f"   Average cost/hour: ${insights['cost_efficiency']['avg_cost_per_hour']:.2f}")
     logger.info(f"   Average efficiency: {insights['cost_efficiency']['avg_efficiency_score']:.1%}")
     
-    logger.info(f"\n   📈 Performance Trends:")
+    logger.info("\n   📈 Performance Trends:")
     logger.info(f"   Utilization trend: {insights['performance_trends']['utilization_trend']}")
     logger.info(f"   Response time trend: {insights['performance_trends']['response_time_trend']}")
     
     if insights['recommendations']:
-        logger.info(f"\n   💡 Optimization Recommendations:")
+        logger.info("\n   💡 Optimization Recommendations:")
         for i, rec in enumerate(insights['recommendations'], 1):
             logger.info(f"   {i}. {rec}")
 
@@ -227,12 +226,12 @@ async def demo_load_balancing_concepts():
         logger.info(f"   🔄 {strategy}: {description}")
     
     # Demonstrate auto-scaling thresholds
-    logger.info(f"\n   📊 Auto-scaling Configuration:")
-    logger.info(f"   Scale Up: >80% average utilization")
-    logger.info(f"   Scale Down: <30% average utilization")
-    logger.info(f"   Min Instances: 1")
-    logger.info(f"   Max Instances: 10")
-    logger.info(f"   Health Check Interval: 30s")
+    logger.info("\n   📊 Auto-scaling Configuration:")
+    logger.info("   Scale Up: >80% average utilization")
+    logger.info("   Scale Down: <30% average utilization")
+    logger.info("   Min Instances: 1")
+    logger.info("   Max Instances: 10")
+    logger.info("   Health Check Interval: 30s")
 
 
 async def demo_caching_strategies():
@@ -257,7 +256,7 @@ async def demo_caching_strategies():
         'TTL': 'Time To Live - removes expired items first'
     }
     
-    logger.info(f"\n   🔄 Eviction Policies:")
+    logger.info("\n   🔄 Eviction Policies:")
     for policy, description in eviction_policies.items():
         logger.info(f"   • {policy}: {description}")
 

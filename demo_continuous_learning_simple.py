@@ -6,7 +6,6 @@ Demonstrates the structure and interfaces without requiring external dependencie
 
 import sys
 import os
-from datetime import datetime
 
 print("🧠 Continuous Learning System - Simplified Demo")
 print("=" * 60)

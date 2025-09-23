@@ -6,12 +6,11 @@ as required for Phase 5.3.1 acceptance criteria validation.
 """
 
 import pytest
-import asyncio
 import time
 import statistics
 import concurrent.futures
-from typing import List, Dict, Any
-from unittest.mock import Mock, AsyncMock, patch, MagicMock
+from typing import Dict, Any
+from unittest.mock import AsyncMock, MagicMock
 from fastapi.testclient import TestClient
 
 from aphrodite.endpoints.deep_tree_echo import create_app

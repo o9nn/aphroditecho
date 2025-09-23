@@ -194,7 +194,7 @@ def demonstrate_acceptance_criteria(body_state_system):
     # Test the primary acceptance criteria
     is_valid, validation = body_state_system.validate_body_state_awareness()
     
-    print(f"Acceptance Criteria: \"Agents maintain accurate body state awareness\"")
+    print("Acceptance Criteria: \"Agents maintain accurate body state awareness\"")
     print(f"Result: {'✓ PASSED' if is_valid else '✗ FAILED'}")
     
     if is_valid:
@@ -229,7 +229,7 @@ def demonstrate_real_time_performance(body_state_system):
     elapsed = time.time() - start_time
     update_rate = update_count / elapsed
     
-    print(f"Performance Results:")
+    print("Performance Results:")
     print(f"  Updates: {update_count}")
     print(f"  Duration: {elapsed:.2f}s")
     print(f"  Update Rate: {update_rate:.1f} Hz")
@@ -254,7 +254,7 @@ def demonstrate_dtesn_integration(body_state_system):
         body_state_data = body_state_system.get_comprehensive_body_state()
         dtesn_data = dtesn_integration.convert_to_dtesn_format(body_state_data)
         
-        print(f"DTESN Data Conversion:")
+        print("DTESN Data Conversion:")
         print(f"  Node ID: {dtesn_data.node_id}")
         print(f"  Joint Angles: {len(dtesn_data.joint_angle_data)} joints")
         print(f"  Joint Velocities: {len(dtesn_data.joint_velocity_data)} joints")
@@ -295,7 +295,7 @@ def demonstrate_temporal_consistency(body_state_system):
     score_variance = np.var(awareness_scores)
     score_std = np.std(awareness_scores)
     
-    print(f"\nTemporal Consistency Analysis:")
+    print("\nTemporal Consistency Analysis:")
     print(f"  Mean Awareness: {mean_score:.3f}")
     print(f"  Standard Deviation: {score_std:.3f}")
     print(f"  Variance: {score_variance:.3f}")
@@ -346,11 +346,11 @@ def main():
             print(f"{component:.<30} {status}")
         
         if acceptance_passed and update_rate >= 30:
-            print(f"\n🎉 SUCCESS: Task 3.3.1 Body State Awareness fully implemented!")
-            print(f"   All acceptance criteria met: 'Agents maintain accurate body state awareness'")
+            print("\n🎉 SUCCESS: Task 3.3.1 Body State Awareness fully implemented!")
+            print("   All acceptance criteria met: 'Agents maintain accurate body state awareness'")
             return 0
         else:
-            print(f"\n⚠ PARTIAL SUCCESS: Some components may need refinement")
+            print("\n⚠ PARTIAL SUCCESS: Some components may need refinement")
             return 1
             
     except Exception as e:

@@ -58,7 +58,7 @@ async def test_interaction_tracking():
     final_interactions = [agent.interaction_count for agent in system.training_system.population.values()]
     total_final = sum(final_interactions)
     
-    print(f"✓ Training epoch completed")
+    print("✓ Training epoch completed")
     print(f"  Final interaction counts: {total_final} total")
     print(f"  Interactions per agent: {[f'{agent_id}:{agent.interaction_count}' for agent_id, agent in list(system.training_system.population.items())[:3]]}")
     

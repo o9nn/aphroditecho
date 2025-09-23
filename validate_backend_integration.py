@@ -37,19 +37,9 @@ class BackendIntegrationValidator:
     def test_python_environment(self):
         """Test Python environment and basic imports."""
         assert sys.version_info >= (3, 9), f"Python 3.9+ required, got {sys.version}"
-        import asyncio
-        import json
-        import time
-        from pathlib import Path
-        from unittest.mock import Mock, AsyncMock
 
     def test_fastapi_availability(self):
         """Test FastAPI and related components."""
-        from fastapi import FastAPI, Request, Depends
-        from fastapi.middleware.cors import CORSMiddleware
-        from fastapi.templating import Jinja2Templates
-        from fastapi.testclient import TestClient
-        from pydantic import BaseModel
 
     def test_deep_tree_echo_structure(self):
         """Test Deep Tree Echo module structure."""
@@ -363,11 +353,11 @@ class BackendIntegrationValidator:
             print(f"   Please address {self.failed} failed test(s) before proceeding.")
         
         print("\n🔗 Integration Status:")
-        print(f"   • Backend tests implemented: test_backend_integration.py")
-        print(f"   • Engine integration tests: test_engine_core_integration.py") 
-        print(f"   • Performance tests: test_performance_integration.py")
-        print(f"   • FastAPI endpoints: /deep_tree_echo/* routes available")
-        print(f"   • Engine integration: AsyncAphrodite integration ready")
+        print("   • Backend tests implemented: test_backend_integration.py")
+        print("   • Engine integration tests: test_engine_core_integration.py") 
+        print("   • Performance tests: test_performance_integration.py")
+        print("   • FastAPI endpoints: /deep_tree_echo/* routes available")
+        print("   • Engine integration: AsyncAphrodite integration ready")
 
 
 def main():

@@ -9,12 +9,10 @@ including quality assurance, A/B testing, and deployment orchestration.
 
 import os
 import sys
-import json
 import pytest
 import tempfile
-import subprocess
 from pathlib import Path
-from unittest.mock import Mock, patch, MagicMock
+from unittest.mock import patch
 
 # Add deployment scripts to path
 sys.path.append(str(Path(__file__).parent.parent / "deployment" / "scripts"))

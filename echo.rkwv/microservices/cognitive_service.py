@@ -21,13 +21,12 @@ import logging
 import json
 import os
 import sys
-from typing import Dict, List, Any, Optional, Tuple
+from typing import Dict, List, Any, Optional
 from dataclasses import dataclass, field
 from enum import Enum
-from aiohttp import web, ClientSession, ClientError
+from aiohttp import web, ClientSession
 import aioredis
 import psutil
-from collections import defaultdict
 import hashlib
 
 # Add echo.kern to path for DTESN integration

@@ -8,9 +8,7 @@ Phase 5.1.1 FastAPI Application Architecture task.
 
 import os
 import sys
-import asyncio
-import importlib.util
-from typing import Dict, List, Any
+from typing import List
 
 
 class ValidationResult:
@@ -257,7 +255,7 @@ class DeepTreeEchoValidator:
                 "DTESN Integration",
                 True,
                 f"Complete echo.kern integration with {len(present_features)} features",
-                f"Includes: real processing only, membrane processing, ESN, B-Series"
+                "Includes: real processing only, membrane processing, ESN, B-Series"
             ))
         else:
             self.results.append(ValidationResult(

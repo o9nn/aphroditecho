@@ -14,11 +14,9 @@ import logging
 import subprocess
 import threading
 import json
-import shutil
 import psutil
-from datetime import datetime, timedelta
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Callable, Any, Tuple
+from typing import Dict, List, Optional, Callable, Any
 from pathlib import Path
 from enum import Enum
 
@@ -821,7 +819,7 @@ if __name__ == "__main__":
         
         # Get statistics
         stats = response_system.get_response_statistics()
-        print(f"\n📊 Statistics:")
+        print("\n📊 Statistics:")
         print(f"   Total responses: {stats['total_responses']}")
         print(f"   Success rate: {stats['success_rate']:.1f}%")
         print(f"   Maintenance tasks: {len(stats['maintenance_tasks'])}")

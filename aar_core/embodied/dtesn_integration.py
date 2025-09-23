@@ -9,7 +9,6 @@ for processing and decision making.
 """
 
 import time
-import numpy as np
 from typing import Dict, Any, Optional, List, Tuple
 from dataclasses import dataclass, field
 

@@ -12,16 +12,13 @@ This module extends the existing agent management with:
 - Integration with the central ScalabilityManager
 """
 
-import asyncio
 import time
 import logging
-import json
-import os
-from typing import Dict, List, Any, Optional, Tuple, Set
+from typing import Dict, List, Any, Optional, Tuple
 from dataclasses import dataclass, field
 from enum import Enum
 import statistics
-from collections import deque, defaultdict
+from collections import deque
 
 logger = logging.getLogger(__name__)
 

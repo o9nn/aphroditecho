@@ -52,7 +52,8 @@ class RoadmapParser:
             
             # Check for task items
             if line.startswith('- [ ] **Task'):
-                task_match = re.match(r'- \[ \] \*\*Task ([^*]+)\*\*: (.+)', line)
+                task_match = re.match(
+                    r'- \[ \] \*\*Task ([^*]+)\*\*: (.+)', line)
                 if task_match:
                     task_id = task_match.group(1)
                     task_title = task_match.group(2)
@@ -75,12 +76,15 @@ class RoadmapParser:
                             
                         # Handle acceptance criteria
                         if '**Acceptance Criteria**:' in current_line:
-                            acceptance_criteria.append(current_line.split(':', 1)[-1].strip())
+                            acceptance_criteria.append(
+                                current_line.split(':', 1)[-1].strip())
                         # Handle bullet points in description
-                        elif current_line.startswith('- ') and not current_line.startswith('- [ ]'):
+                        elif (current_line.startswith('- ') and 
+                              not current_line.startswith('- [ ]')):
                             description_lines.append(current_line[2:])
                         # Handle regular description lines
-                        elif current_line and not current_line.startswith('- [ ]'):
+                        elif (current_line and 
+                              not current_line.startswith('- [ ]')):
                             description_lines.append(current_line)
                         
                         i += 1
@@ -92,7 +96,8 @@ class RoadmapParser:
                         'description': '\n'.join(description_lines),
                         'acceptance_criteria': '\n'.join(acceptance_criteria),
                         'phase': current_phase['id'] if current_phase else 'Unknown',
-                        'phase_title': current_phase['title'] if current_phase else 'Unknown',
+                        'phase_title': (current_phase['title'] 
+                                       if current_phase else 'Unknown'),
                         'timeline': current_phase['timeline'] if current_phase else 'TBD',
                         'labels': self._generate_labels(current_phase, task_id)
                     }

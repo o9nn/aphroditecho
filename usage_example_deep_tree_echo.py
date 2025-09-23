@@ -5,9 +5,7 @@ Demonstrates how to use the server-side DTESN processing endpoints
 with the Aphrodite Engine FastAPI application.
 """
 
-import asyncio
 import json
-from typing import Dict, Any
 
 
 class DTESNUsageExample:
@@ -102,14 +100,14 @@ class DTESNUsageExample:
             
             if 'request_example' in info:
                 print("   Request Example:")
-                print(f"   ```json")
+                print("   ```json")
                 print(f"   {json.dumps(info['request_example'], indent=4)}")
-                print(f"   ```")
+                print("   ```")
             
             print("   Response Example:")
-            print(f"   ```json")
+            print("   ```json")
             print(f"   {json.dumps(info['response_example'], indent=4)}")
-            print(f"   ```")
+            print("   ```")
             print()
     
     def show_curl_examples(self):

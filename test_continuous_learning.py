@@ -7,9 +7,8 @@ and integration with DTESN components.
 
 import asyncio
 import unittest
-from unittest.mock import Mock, AsyncMock, patch
+from unittest.mock import Mock, AsyncMock
 from datetime import datetime
-import numpy as np
 import torch
 
 # Import the components we're testing
@@ -18,7 +17,7 @@ from aphrodite.continuous_learning import (
     ContinuousLearningConfig, 
     InteractionData
 )
-from aphrodite.dtesn_integration import DTESNDynamicIntegration, DTESNLearningConfig
+from aphrodite.dtesn_integration import DTESNDynamicIntegration
 from aphrodite.dynamic_model_manager import DynamicModelManager
 from echo_self.meta_learning.meta_optimizer import ExperienceReplay
 

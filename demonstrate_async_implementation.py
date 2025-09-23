@@ -6,7 +6,6 @@ Shows how the enhanced async processing components work together to meet
 Task 5.2.3 acceptance criteria: "Server handles concurrent requests efficiently"
 """
 
-from pathlib import Path
 
 def demonstrate_implementation():
     """Demonstrate the key features of the async server-side processing implementation."""

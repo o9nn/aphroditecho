@@ -26,7 +26,8 @@ except ImportError:
                 setattr(self, k, v)
         
         def dict(self):
-            return {k: v for k, v in self.__dict__.items() if not k.startswith('_')}
+            items = self.__dict__.items()
+            return {k: v for k, v in items if not k.startswith('_')}
     
     def Field(**kwargs):
         return kwargs.get('default', None)
@@ -221,7 +222,8 @@ class DTESNProcessor:
         """
         Initialize comprehensive engine integration for DTESN processing.
         
-        This method sets up deep integration with AphroditeEngine/AsyncAphrodite:
+        This method sets up deep integration with AphroditeEngine and
+        AsyncAphrodite:
         - Fetches and caches engine configuration
         - Establishes model loading integration
         - Sets up backend processing pipelines
@@ -233,15 +235,15 @@ class DTESNProcessor:
             # Fetch complete engine configuration
             if hasattr(self.engine, "get_aphrodite_config"):
                 self.engine_config = await self.engine.get_aphrodite_config()
-                logger.info(
-                    f"Engine config loaded: model={getattr(self.engine_config.model_config, 'model', 'unknown')}"
+                model_name = getattr(
+                    self.engine_config.model_config, 'model', 'unknown'
                 )
+                logger.info(f"Engine config loaded: model={model_name}")
 
             if hasattr(self.engine, "get_model_config"):
                 self.model_config = await self.engine.get_model_config()
-                logger.info(
-                    f"Model config loaded: max_len={getattr(self.model_config, 'max_model_len', 'unknown')}"
-                )
+                max_len = getattr(self.model_config, 'max_model_len', 'unknown')
+                logger.info(f"Model config loaded: max_len={max_len}")
 
             # Fetch additional configurations
             if hasattr(self.engine, "get_parallel_config"):
@@ -272,7 +274,8 @@ class DTESNProcessor:
 
     async def _setup_engine_aware_pipelines(self):
         """
-        Set up backend processing pipelines that integrate with engine operations.
+        Set up backend processing pipelines that integrate with engine
+        operations.
 
         This creates processing pipelines that:
         - Use engine configuration for DTESN parameter optimization
@@ -286,9 +289,10 @@ class DTESNProcessor:
                 # Adjust DTESN configuration based on model capabilities
                 max_len = getattr(self.model_config, "max_model_len", None)
                 if max_len and max_len < self.config.esn_reservoir_size:
-                    logger.info(
-                        f"Adjusting ESN reservoir size from {self.config.esn_reservoir_size} to {max_len} based on model config"
-                    )
+                    msg = (f"Adjusting ESN reservoir size from "
+                           f"{self.config.esn_reservoir_size} to {max_len} "
+                           f"based on model config")
+                    logger.info(msg)
                     self.config.esn_reservoir_size = min(
                         self.config.esn_reservoir_size, max_len // 2
                     )
@@ -299,9 +303,10 @@ class DTESNProcessor:
                     self.config.max_membrane_depth = max(
                         6, self.config.max_membrane_depth
                     )
-                    logger.info(
-                        f"Increased membrane depth to {self.config.max_membrane_depth} for large model"
-                    )
+                    depth_msg = (f"Increased membrane depth to "
+                                f"{self.config.max_membrane_depth} "
+                                f"for large model")
+                    logger.info(depth_msg)
 
             # Set up engine-aware error handling
             self._setup_engine_error_handlers()
@@ -309,9 +314,9 @@ class DTESNProcessor:
             logger.info("Engine-aware processing pipelines configured")
 
         except Exception as e:
-            logger.warning(
-                f"Pipeline setup had issues: {e}, continuing with default configuration"
-            )
+            warning_msg = (f"Pipeline setup had issues: {e}, "
+                          f"continuing with default configuration")
+            logger.warning(warning_msg)
 
     def _setup_engine_error_handlers(self):
         """Set up engine-aware error handling and recovery mechanisms."""
@@ -344,7 +349,8 @@ class DTESNProcessor:
                 current_config = await self.engine.get_model_config()
                 if current_config != self.model_config:
                     logger.info(
-                        "Engine configuration changed, updating DTESN integration"
+                        "Engine configuration changed, updating DTESN "
+                        "integration"
                     )
                     self.model_config = current_config
                     await self._setup_engine_aware_pipelines()
@@ -366,8 +372,8 @@ class DTESNProcessor:
         Process input through DTESN system with comprehensive engine integration
         and enhanced concurrent processing capabilities.
 
-        This method implements the complete backend processing pipeline that routes
-        DTESN operations through the Aphrodite Engine backend, ensuring full
+        This method implements the complete backend processing pipeline that
+        routes DTESN operations through the Aphrodite Engine backend, ensuring full
         integration with server-side model loading and management.
 
         Args:

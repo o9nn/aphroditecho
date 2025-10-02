@@ -26,7 +26,7 @@ SECURITY_PATTERNS = {
         r'(?i)(select.*from|union.*select)',
         r'(?i)(exec\s*\(|execute\s*\()',
         r'(?i)(script\s*:|javascript\s*:|vbscript\s*:)',
-        r'["\'][\s]*(?:or|and)[\s]*["\']?[\s]*[=<>]',
+        r'(?i)["\'].*?(?:or|and).*?[=<>]',
     ],
     'xss': [
         r'<\s*script[^>]*>.*?</\s*script\s*>',

@@ -120,6 +120,19 @@ export APHRODITE_TARGET_DEVICE=cpu
 python -c "from aphrodite import LLM, SamplingParams; print('✅ Ready for development')"
 ```
 
+### Comprehensive Validation
+Use the dedicated validation script to perform comprehensive build system checks:
+```bash
+# Run complete CPU build system validation
+python validate_cpu_build_system.py
+```
+
+This script validates:
+- NUMA headers availability (`/usr/include/numa.h`)
+- C++ extension build status (`aphrodite/_C.abi3.so`)
+- Core Aphrodite imports functionality
+- Build system integration tests
+
 ## Files Modified
 
 1. **pyproject.toml**: Fixed dynamic dependencies declaration and license format

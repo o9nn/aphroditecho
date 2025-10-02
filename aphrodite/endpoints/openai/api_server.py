@@ -49,7 +49,8 @@ from aphrodite.endpoints.openai.args import (make_arg_parser,
                                              validate_parsed_serve_args)
 from aphrodite.endpoints.security import (
     InputValidationMiddleware,
-    OutputSanitizationMiddleware, 
+    OutputSanitizationMiddleware,
+    ErrorSanitizationMiddleware, 
     SecurityMiddleware,
     RateLimitMiddleware
 )
@@ -1925,6 +1926,7 @@ def build_app(args: Namespace) -> FastAPI:
 
     # Add comprehensive security middleware stack
     # Order matters: outermost to innermost
+    app.add_middleware(ErrorSanitizationMiddleware)  # Error message sanitization (outermost)
     app.add_middleware(OutputSanitizationMiddleware)  # Final response sanitization
     app.add_middleware(SecurityMiddleware)  # IP blocking and monitoring
     app.add_middleware(RateLimitMiddleware)  # Rate limiting 

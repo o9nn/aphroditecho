@@ -10,7 +10,8 @@ from .input_validation import (
     validate_request_input
 )
 from .output_sanitization import (
-    OutputSanitizationMiddleware, 
+    OutputSanitizationMiddleware,
+    ErrorSanitizationMiddleware, 
     sanitize_response_output
 )
 from .security_middleware import (
@@ -20,7 +21,8 @@ from .security_middleware import (
 
 __all__ = [
     "InputValidationMiddleware",
-    "OutputSanitizationMiddleware", 
+    "OutputSanitizationMiddleware",
+    "ErrorSanitizationMiddleware", 
     "SecurityMiddleware",
     "RateLimitMiddleware",
     "validate_request_input",

@@ -378,6 +378,18 @@ async def stream_process_dtesn(
             if buffer_size > max_buffer_size // 2:
                 await asyncio.sleep(0.1)  # Brief pause to allow client to catch up
 
+            # Send pre-processing heartbeat for long operations
+            if len(request.input_data) > 50000:  # 50KB threshold for heartbeat
+                heartbeat_message = {
+                    "status": "processing_heartbeat",
+                    "request_id": request_id,
+                    "timestamp": time.time(),
+                    "message": "Long-running operation in progress",
+                    "estimated_completion_sec": len(request.input_data) / 10000,
+                    "server_rendered": True
+                }
+                yield f'data: {json.dumps(heartbeat_message)}\n\n'
+            
             # Process through DTESN with enhanced concurrent processing
             result = await processor.process(
                 input_data=request.input_data,
@@ -551,6 +563,8 @@ async def priority_process_dtesn(
 async def stream_chunks_dtesn(
     request: DTESNRequest,
     chunk_size: int = Field(default=1024, ge=128, le=8192, description="Processing chunk size"),
+    enable_compression: bool = Field(default=True, description="Enable response compression"),
+    timeout_prevention: bool = Field(default=True, description="Enable timeout prevention"),
     processor: DTESNProcessor = Depends(get_dtesn_processor)
 ) -> StreamingResponse:
     """
@@ -574,13 +588,16 @@ async def stream_chunks_dtesn(
                 input_data=request.input_data,
                 membrane_depth=request.membrane_depth,
                 esn_size=request.esn_size,
-                chunk_size=chunk_size
+                chunk_size=chunk_size,
+                enable_compression=enable_compression,
+                timeout_prevention=timeout_prevention
             ):
                 message = f'data: {json.dumps(chunk)}\n\n'
                 yield message
                 
-                # Add small delay between chunks for streaming effect
-                await asyncio.sleep(0.005)
+                # Adaptive delay based on chunk type
+                delay = 0.001 if chunk.get("type") == "heartbeat" else 0.005
+                await asyncio.sleep(delay)
                 
         except Exception as e:
             logger.error(f"Chunk streaming error: {e}")
@@ -603,6 +620,88 @@ async def stream_chunks_dtesn(
             "X-Backpressure-Enabled": "true",
             "X-Async-Processing": "enhanced"
         }
+    )
+
+
+@router.post("/stream_large_dataset")
+async def stream_large_dataset_dtesn(
+    request: DTESNRequest,
+    max_chunk_size: int = Field(default=4096, ge=512, le=16384, description="Maximum chunk size for large datasets"),
+    compression_level: int = Field(default=1, ge=0, le=3, description="Compression level (0=none, 3=max)"),
+    processor: DTESNProcessor = Depends(get_dtesn_processor)
+) -> StreamingResponse:
+    """
+    Optimized streaming endpoint for large datasets with advanced compression and timeout prevention.
+    
+    Specifically designed for datasets larger than 1MB with aggressive optimization techniques:
+    - Adaptive chunking based on dataset size
+    - Configurable compression levels
+    - Enhanced timeout prevention with 20-second heartbeats
+    - Minimal serialization overhead
+    - Throughput-optimized processing
+    
+    Args:
+        request: DTESN processing request with large input data
+        max_chunk_size: Maximum size for processing chunks
+        compression_level: Response compression level (0-3)
+        processor: DTESN processor instance
+        
+    Returns:
+        Highly optimized streaming response for large datasets
+    """
+    
+    async def generate_large_dataset_stream():
+        try:
+            async for chunk in processor.process_large_dataset_stream(
+                input_data=request.input_data,
+                membrane_depth=request.membrane_depth,
+                esn_size=request.esn_size,
+                max_chunk_size=max_chunk_size,
+                compression_level=compression_level
+            ):
+                # Format as SSE with minimal overhead
+                if chunk.get("type") == "compressed_metadata":
+                    message = f'event: metadata\ndata: {json.dumps(chunk)}\n\n'
+                elif chunk.get("type") == "compressed_chunk":
+                    message = f'event: chunk\ndata: {json.dumps(chunk)}\n\n'
+                elif chunk.get("type") == "large_dataset_heartbeat":
+                    message = f'event: heartbeat\ndata: {json.dumps(chunk)}\n\n'
+                elif chunk.get("type") == "compressed_completion":
+                    message = f'event: completion\ndata: {json.dumps(chunk)}\n\n'
+                else:
+                    message = f'data: {json.dumps(chunk)}\n\n'
+                
+                yield message
+                
+                # Minimal delay for maximum throughput
+                await asyncio.sleep(0.001)
+                
+        except Exception as e:
+            logger.error(f"Large dataset streaming error: {e}")
+            error_chunk = {
+                "type": "large_dataset_error",
+                "error": str(e),
+                "timestamp": time.time(),
+                "recoverable": False
+            }
+            yield f'event: error\ndata: {json.dumps(error_chunk)}\n\n'
+    
+    # Enhanced headers for large dataset streaming
+    headers = {
+        "Cache-Control": "no-cache",
+        "Connection": "keep-alive", 
+        "X-Server-Rendered": "true",
+        "X-Large-Dataset-Optimized": "true",
+        "X-Max-Chunk-Size": str(max_chunk_size),
+        "X-Compression-Level": str(compression_level),
+        "X-Timeout-Prevention": "enhanced",
+        "X-Stream-Type": "large-dataset"
+    }
+    
+    return StreamingResponse(
+        generate_large_dataset_stream(),
+        media_type="text/event-stream",
+        headers=headers
     )
 
 
@@ -744,10 +843,9 @@ async def get_load_balancer_status(request: Request) -> Dict[str, Any]:
         return {
             "status": "error",
             "error": str(e),
-            "timestamp": current_time
+            "timestamp": current_time,
             "X-Concurrent-Processing": "true"
         }
-    )
 
 
 @router.get("/engine_integration")

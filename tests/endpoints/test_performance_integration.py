@@ -321,9 +321,10 @@ class TestBackendPerformance:
 
     def test_streaming_performance(self, performance_client):
         """
-        Test 5: Streaming Response Performance
+        Test 5: Enhanced Streaming Response Performance
         
-        Tests performance of server-sent events streaming.
+        Tests performance of server-sent events streaming with new timeout prevention
+        and compression features.
         """
         stream_request = {
             "input_data": "streaming performance test with longer input data to simulate realistic workload",
@@ -342,6 +343,11 @@ class TestBackendPerformance:
             assert response.status_code == 200
             assert response.headers["content-type"] == "text/event-stream; charset=utf-8"
             
+            # Verify enhanced streaming headers
+            assert response.headers.get("X-Server-Rendered") == "true"
+            assert response.headers.get("X-Stream-Enhanced") == "true"
+            assert response.headers.get("X-Backpressure-Enabled") == "true"
+            
             # Read streaming content
             content_length = len(response.text)
             end_time = time.time()
@@ -356,7 +362,7 @@ class TestBackendPerformance:
         avg_first_byte = statistics.mean([t["time_to_first_byte_ms"] for t in streaming_times])
         avg_streaming_rate = statistics.mean([t["streaming_rate_bytes_per_sec"] for t in streaming_times])
         
-        # Verify streaming performance
+        # Verify enhanced streaming performance
         assert avg_first_byte < 500, f"Time to first byte too slow: {avg_first_byte}ms"
         assert avg_streaming_rate > 1000, f"Streaming rate too slow: {avg_streaming_rate} bytes/sec"
 
@@ -473,6 +479,137 @@ class TestBackendPerformance:
         # Cached requests should be faster (or at least not slower)
         cache_improvement = avg_first_time / avg_cached_time if avg_cached_time > 0 else 1.0
         assert cache_improvement >= 0.8, f"Caching not providing expected performance benefit: {cache_improvement}"
+
+    def test_enhanced_chunked_streaming_performance(self, performance_client):
+        """
+        Test 9: Enhanced Chunked Streaming Performance
+        
+        Tests the new chunked streaming endpoint with compression and timeout prevention.
+        """
+        import json
+        
+        chunk_stream_request = {
+            "input_data": "A" * 10000,  # 10KB test data
+            "membrane_depth": 3,
+            "esn_size": 256,
+            "processing_mode": "streaming"
+        }
+        
+        # Test with compression enabled
+        response = performance_client.post(
+            "/deep_tree_echo/stream_chunks",
+            json=chunk_stream_request,
+            params={"chunk_size": 1024, "enable_compression": True, "timeout_prevention": True}
+        )
+        
+        assert response.status_code == 200
+        assert response.headers["content-type"] == "text/event-stream; charset=utf-8"
+        
+        # Verify enhanced headers
+        assert response.headers.get("X-Server-Rendered") == "true"
+        assert response.headers.get("X-Chunk-Streaming") == "true"
+        assert response.headers.get("X-Backpressure-Enabled") == "true"
+        
+        # Parse SSE events to verify structure
+        events = response.text.split("\n\n")
+        data_events = [e for e in events if e.startswith("data: ")]
+        
+        assert len(data_events) > 5, "Should have multiple streaming chunks"
+        
+        # Verify event structure includes new features
+        for event in data_events[:3]:  # Check first few events
+            if event.startswith("data: "):
+                event_data = json.loads(event[6:])  # Remove "data: " prefix
+                if event_data.get("type") == "metadata":
+                    assert "timeout_prevention_enabled" in event_data
+                    assert "compression_enabled" in event_data
+                    assert "large_dataset_mode" in event_data
+
+    def test_large_dataset_streaming_performance(self, performance_client):
+        """
+        Test 10: Large Dataset Streaming Performance
+        
+        Tests the new large dataset streaming endpoint with aggressive optimization.
+        """
+        large_dataset_request = {
+            "input_data": "Large dataset test: " + "X" * 100000,  # 100KB+ test data
+            "membrane_depth": 4,
+            "esn_size": 512,
+            "processing_mode": "streaming"
+        }
+        
+        start_time = time.time()
+        response = performance_client.post(
+            "/deep_tree_echo/stream_large_dataset",
+            json=large_dataset_request,
+            params={"max_chunk_size": 4096, "compression_level": 2}
+        )
+        first_byte_time = time.time()
+        
+        assert response.status_code == 200
+        assert response.headers["content-type"] == "text/event-stream; charset=utf-8"
+        
+        # Verify large dataset optimization headers
+        assert response.headers.get("X-Large-Dataset-Optimized") == "true"
+        assert response.headers.get("X-Compression-Level") == "2"
+        assert response.headers.get("X-Timeout-Prevention") == "enhanced"
+        
+        content_length = len(response.text)
+        end_time = time.time()
+        
+        # Performance assertions for large datasets
+        time_to_first_byte = (first_byte_time - start_time) * 1000
+        total_time = (end_time - start_time) * 1000
+        throughput = len(large_dataset_request["input_data"]) / max((end_time - start_time), 0.001)
+        
+        assert time_to_first_byte < 1000, f"Large dataset first byte too slow: {time_to_first_byte}ms"
+        assert throughput > 50000, f"Large dataset throughput too low: {throughput} bytes/sec"
+        
+        # Parse events to verify compression and heartbeat features
+        events = response.text.split("\n\n")
+        event_lines = [e for e in events if e.strip()]
+        
+        # Should have heartbeat events for timeout prevention
+        heartbeat_events = [e for e in event_lines if "heartbeat" in e]
+        assert len(heartbeat_events) >= 1, "Should have heartbeat events for timeout prevention"
+
+    def test_streaming_timeout_prevention(self, performance_client):
+        """
+        Test 11: Streaming Timeout Prevention
+        
+        Tests that heartbeat and timeout prevention mechanisms work correctly.
+        """
+        import json
+        
+        # Simulate large enough data to trigger heartbeat mechanism
+        timeout_test_request = {
+            "input_data": "Timeout prevention test: " + "Y" * 60000,  # 60KB to trigger heartbeat
+            "membrane_depth": 5,
+            "esn_size": 1024,
+            "processing_mode": "streaming"
+        }
+        
+        response = performance_client.post("/deep_tree_echo/stream_process", json=timeout_test_request)
+        
+        assert response.status_code == 200
+        
+        # Parse response to look for heartbeat messages
+        events = response.text.split("\n\n")
+        data_events = [e for e in events if e.startswith("data: ")]
+        
+        heartbeat_found = False
+        for event in data_events:
+            if event.startswith("data: "):
+                try:
+                    event_data = json.loads(event[6:])
+                    if "heartbeat" in event_data.get("status", ""):
+                        heartbeat_found = True
+                        assert "estimated_completion_sec" in event_data
+                        break
+                except json.JSONDecodeError:
+                    continue
+                    
+        assert heartbeat_found, "Should have heartbeat message for large dataset processing"
 
 
 class TestLoadTesting:

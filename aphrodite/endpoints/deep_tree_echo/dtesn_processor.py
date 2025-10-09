@@ -42,6 +42,11 @@ from aphrodite.common.config import (
 )
 from aphrodite.endpoints.deep_tree_echo.config import DTESNConfig
 from aphrodite.engine.async_aphrodite import AsyncAphrodite
+from aphrodite.endpoints.deep_tree_echo.batch_manager import (
+    DynamicBatchManager, 
+    BatchConfiguration,
+    BatchingMetrics
+)
 
 logger = logging.getLogger(__name__)
 
@@ -115,19 +120,26 @@ class DTESNProcessor:
         config: Optional[DTESNConfig] = None,
         engine: Optional[AsyncAphrodite] = None,
         max_concurrent_processes: int = 10,
+        enable_dynamic_batching: bool = True,
+        batch_config: Optional[BatchConfiguration] = None,
+        server_load_tracker: Optional[callable] = None,
     ):
         """
-        Initialize DTESN processor with enhanced engine integration
-        and async processing.
+        Initialize DTESN processor with enhanced engine integration,
+        async processing, and dynamic batching.
 
         Args:
             config: DTESN configuration
             engine: Aphrodite engine for comprehensive model integration
             max_concurrent_processes: Maximum concurrent processing operations
+            enable_dynamic_batching: Enable intelligent request batching
+            batch_config: Configuration for batch processing behavior
+            server_load_tracker: Function to get current server load (0.0-1.0)
         """
         self.config = config or DTESNConfig()
         self.engine = engine
         self.max_concurrent_processes = max_concurrent_processes
+        self.enable_dynamic_batching = enable_dynamic_batching
 
         # Initialize concurrent processing resources
         self._processing_semaphore = asyncio.Semaphore(max_concurrent_processes)
@@ -151,6 +163,17 @@ class DTESNProcessor:
         self.engine_ready = False
         self.last_engine_sync = 0.0
 
+        # Initialize dynamic batch management
+        if enable_dynamic_batching:
+            self._batch_manager = DynamicBatchManager(
+                config=batch_config,
+                load_tracker=server_load_tracker
+            )
+            self._batch_manager.set_dtesn_processor(self)
+            self._batch_manager_started = False
+        else:
+            self._batch_manager = None
+
         # Initialize DTESN components
         self._initialize_dtesn_components()
 
@@ -159,7 +182,8 @@ class DTESNProcessor:
             asyncio.create_task(self._initialize_engine_integration())
 
         logger.info(
-            f"Enhanced DTESN processor initialized with engine integration "
+            f"Enhanced DTESN processor initialized with engine integration, "
+            f"dynamic batching {'enabled' if enable_dynamic_batching else 'disabled'}, "
             f"and {max_concurrent_processes} max concurrent processes"
         )
     
@@ -996,6 +1020,126 @@ class DTESNProcessor:
             "tree_enumeration": "rooted_trees",
             "status": "ready",
         }
+    
+    async def start_batch_manager(self):
+        """Start the dynamic batch manager if enabled."""
+        if self._batch_manager and not self._batch_manager_started:
+            await self._batch_manager.start()
+            self._batch_manager_started = True
+            logger.info("Dynamic batch manager started")
+    
+    async def stop_batch_manager(self):
+        """Stop the dynamic batch manager if running."""
+        if self._batch_manager and self._batch_manager_started:
+            await self._batch_manager.stop()
+            self._batch_manager_started = False
+            logger.info("Dynamic batch manager stopped")
+    
+    async def process_with_dynamic_batching(
+        self,
+        input_data: str,
+        membrane_depth: Optional[int] = None,
+        esn_size: Optional[int] = None,
+        priority: int = 1,
+        timeout: Optional[float] = None,
+    ) -> DTESNResult:
+        """
+        Process input using dynamic batching for optimal throughput.
+        
+        This method leverages intelligent request aggregation to maximize
+        throughput while maintaining responsiveness. Requests are automatically
+        batched based on server load and performance metrics.
+        
+        Args:
+            input_data: Input string to process
+            membrane_depth: Depth of membrane hierarchy to use
+            esn_size: Size of ESN reservoir to use
+            priority: Request priority (0=highest, 2=lowest)
+            timeout: Optional timeout for processing
+            
+        Returns:
+            DTESN processing result with batching performance data
+        """
+        if not self._batch_manager:
+            # Fallback to regular processing if batching disabled
+            return await self.process(
+                input_data=input_data,
+                membrane_depth=membrane_depth,
+                esn_size=esn_size,
+                enable_concurrent=True,
+            )
+        
+        # Ensure batch manager is started
+        if not self._batch_manager_started:
+            await self.start_batch_manager()
+        
+        # Prepare request data
+        request_data = {
+            "input_data": input_data,
+            "membrane_depth": membrane_depth,
+            "esn_size": esn_size,
+            "processing_params": {
+                "enable_concurrent": True,
+                "priority": priority
+            }
+        }
+        
+        # Submit to batch manager
+        logger.debug(f"Submitting request for dynamic batching (priority {priority})")
+        
+        try:
+            result = await self._batch_manager.submit_request(
+                request_data=request_data,
+                priority=priority,
+                timeout=timeout
+            )
+            
+            # Convert result to DTESNResult if needed
+            if isinstance(result, dict) and "batch_processed" in result:
+                return DTESNResult(
+                    input_data=result["input_data"],
+                    processed_output=result["processed_output"],
+                    membrane_layers=membrane_depth or self.config.max_membrane_depth,
+                    esn_state=self._get_esn_state_dict(),
+                    bseries_computation=self._get_bseries_state_dict(),
+                    processing_time_ms=result["processing_time_ms"],
+                    engine_integration={
+                        "batch_processed": True,
+                        "batch_manager_active": True,
+                        "dynamic_batching": True
+                    }
+                )
+            
+            return result
+            
+        except Exception as e:
+            logger.error(f"Dynamic batching failed, falling back to direct processing: {e}")
+            
+            # Fallback to direct processing
+            return await self.process(
+                input_data=input_data,
+                membrane_depth=membrane_depth,
+                esn_size=esn_size,
+                enable_concurrent=True,
+            )
+    
+    def get_batching_metrics(self) -> Optional[BatchingMetrics]:
+        """Get current batching performance metrics."""
+        if self._batch_manager:
+            return self._batch_manager.get_metrics()
+        return None
+    
+    def get_current_batch_size(self) -> Optional[int]:
+        """Get current dynamic batch size."""
+        if self._batch_manager:
+            return self._batch_manager.get_current_batch_size()
+        return None
+    
+    async def get_pending_batch_count(self) -> int:
+        """Get number of requests pending in batch queue."""
+        if self._batch_manager:
+            return await self._batch_manager.get_pending_count()
+        return 0
 
     async def process_batch(
         self,
@@ -1003,68 +1147,186 @@ class DTESNProcessor:
         membrane_depth: Optional[int] = None,
         esn_size: Optional[int] = None,
         max_concurrent: Optional[int] = None,
+        enable_load_balancing: bool = True,
     ) -> List[DTESNResult]:
         """
-        Process multiple inputs concurrently with optimized resource management.
+        Process multiple inputs concurrently with optimized resource management
+        and adaptive load balancing.
 
         Args:
             inputs: List of input strings to process
             membrane_depth: Depth of membrane hierarchy to use
             esn_size: Size of ESN reservoir to use
             max_concurrent: Maximum concurrent processes (defaults to configured max)
+            enable_load_balancing: Enable adaptive load balancing based on system metrics
 
         Returns:
-            List of DTESN processing results
+            List of DTESN processing results with performance metadata
         """
         if not inputs:
             return []
 
-        max_concurrent = min(
-            max_concurrent or self.max_concurrent_processes,
-            len(inputs),
-            self.max_concurrent_processes,
-        )
-
-        # Create processing tasks with concurrency control
-        semaphore = asyncio.Semaphore(max_concurrent)
-
-        async def process_single(input_data: str) -> DTESNResult:
-            async with semaphore:
-                return await self.process(
-                    input_data=input_data,
-                    membrane_depth=membrane_depth,
-                    esn_size=esn_size,
-                    enable_concurrent=True,
-                )
-
-        # Execute all tasks concurrently
-        start_time = time.time()
-        tasks = [process_single(input_data) for input_data in inputs]
-        results = await asyncio.gather(*tasks, return_exceptions=True)
-
-        # Process results and handle exceptions
-        processed_results = []
-        for i, result in enumerate(results):
-            if isinstance(result, Exception):
-                logger.error(f"Batch processing failed for input {i}: {result}")
-                # Create error result
-                error_result = DTESNResult(
-                    output="",
-                    membrane_layers=0,
-                    processing_time_ms=0.0,
-                    metadata={"error": str(result), "input_index": i}
-                )
-                processed_results.append(error_result)
+        batch_size = len(inputs)
+        batch_start_time = time.time()
+        
+        # Adaptive concurrency based on batch size and system load
+        if enable_load_balancing and hasattr(self, '_batch_manager') and self._batch_manager:
+            # Get current server load to adjust concurrency
+            current_load = self._batch_manager._get_current_load()
+            
+            # Adjust max concurrent based on load
+            if current_load < 0.3:
+                # Low load - can handle more concurrency
+                load_factor = 1.5
+            elif current_load > 0.7:
+                # High load - reduce concurrency to prevent overload
+                load_factor = 0.7
             else:
-                processed_results.append(result)
+                # Normal load
+                load_factor = 1.0
+            
+            optimal_concurrent = int(
+                min(
+                    max_concurrent or self.max_concurrent_processes,
+                    batch_size,
+                    max(1, int(self.max_concurrent_processes * load_factor))
+                )
+            )
+            
+            logger.debug(
+                f"Adaptive concurrency: {optimal_concurrent} "
+                f"(load: {current_load:.3f}, factor: {load_factor:.2f})"
+            )
+        else:
+            optimal_concurrent = min(
+                max_concurrent or self.max_concurrent_processes,
+                batch_size,
+                self.max_concurrent_processes,
+            )
 
-        batch_time = (time.time() - start_time) * 1000
+        # Create processing tasks with adaptive concurrency control
+        semaphore = asyncio.Semaphore(optimal_concurrent)
+        
+        # Divide batch into smaller chunks for better memory management
+        chunk_size = min(batch_size, optimal_concurrent * 2)
+        
+        async def process_single_with_metrics(input_data: str, index: int) -> Tuple[int, DTESNResult]:
+            async with semaphore:
+                item_start_time = time.time()
+                
+                try:
+                    result = await self.process(
+                        input_data=input_data,
+                        membrane_depth=membrane_depth,
+                        esn_size=esn_size,
+                        enable_concurrent=True,
+                    )
+                    
+                    # Add batch processing metadata
+                    if hasattr(result, 'engine_integration'):
+                        result.engine_integration.update({
+                            "batch_processed": True,
+                            "batch_size": batch_size,
+                            "batch_index": index,
+                            "adaptive_concurrency": optimal_concurrent,
+                            "item_processing_time_ms": (time.time() - item_start_time) * 1000
+                        })
+                    
+                    return (index, result)
+                    
+                except Exception as e:
+                    logger.error(f"Batch item {index} processing failed: {e}")
+                    
+                    # Create error result with proper structure
+                    error_result = DTESNResult(
+                        input_data=input_data,
+                        processed_output={"error": str(e)},
+                        membrane_layers=0,
+                        esn_state={"status": "error"},
+                        bseries_computation={"status": "error"},
+                        processing_time_ms=(time.time() - item_start_time) * 1000,
+                        engine_integration={
+                            "batch_processed": True,
+                            "batch_error": True,
+                            "error": str(e),
+                            "input_index": index
+                        }
+                    )
+                    
+                    return (index, error_result)
+
+        # Process in chunks for memory efficiency
+        all_results = [None] * batch_size
+        
+        for chunk_start in range(0, batch_size, chunk_size):
+            chunk_end = min(chunk_start + chunk_size, batch_size)
+            chunk_inputs = inputs[chunk_start:chunk_end]
+            
+            # Create tasks for this chunk
+            chunk_tasks = [
+                process_single_with_metrics(input_data, chunk_start + i)
+                for i, input_data in enumerate(chunk_inputs)
+            ]
+            
+            # Execute chunk
+            chunk_results = await asyncio.gather(*chunk_tasks, return_exceptions=True)
+            
+            # Process chunk results
+            for result in chunk_results:
+                if isinstance(result, Exception):
+                    logger.error(f"Chunk processing exception: {result}")
+                    continue
+                
+                index, dtesn_result = result
+                all_results[index] = dtesn_result
+
+        # Fill any None results with error results
+        final_results = []
+        for i, result in enumerate(all_results):
+            if result is None:
+                error_result = DTESNResult(
+                    input_data=inputs[i] if i < len(inputs) else "",
+                    processed_output={"error": "Processing failed"},
+                    membrane_layers=0,
+                    esn_state={"status": "failed"},
+                    bseries_computation={"status": "failed"},
+                    processing_time_ms=0.0,
+                    engine_integration={"batch_error": True, "input_index": i}
+                )
+                final_results.append(error_result)
+            else:
+                final_results.append(result)
+
+        # Calculate batch performance metrics
+        batch_time = (time.time() - batch_start_time) * 1000
+        throughput = batch_size / (batch_time / 1000.0) if batch_time > 0 else 0.0
+        
+        # Update processing stats
+        self._processing_stats["total_requests"] += batch_size
+        
+        # Calculate average processing time
+        valid_results = [r for r in final_results if hasattr(r, 'processing_time_ms')]
+        if valid_results:
+            avg_item_time = sum(r.processing_time_ms for r in valid_results) / len(valid_results)
+            
+            # Update running average
+            if self._processing_stats["avg_processing_time"] == 0.0:
+                self._processing_stats["avg_processing_time"] = avg_item_time
+            else:
+                # Exponential moving average
+                alpha = 0.1
+                self._processing_stats["avg_processing_time"] = (
+                    alpha * avg_item_time + 
+                    (1 - alpha) * self._processing_stats["avg_processing_time"]
+                )
+
         logger.info(
-            f"Batch processing completed: {len(inputs)} inputs processed "
-            f"in {batch_time:.2f}ms with {max_concurrent} concurrent workers"
+            f"Enhanced batch processing completed: {batch_size} inputs processed "
+            f"in {batch_time:.2f}ms with {optimal_concurrent} concurrent workers "
+            f"(throughput: {throughput:.1f} req/s, avg item time: {avg_item_time:.2f}ms)"
         )
 
-        return processed_results
+        return final_results
 
     async def process_with_priority_queue(
         self,

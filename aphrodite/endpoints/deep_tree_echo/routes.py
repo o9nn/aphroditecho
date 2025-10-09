@@ -19,6 +19,8 @@ from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel, Field
 
 from aphrodite.endpoints.deep_tree_echo.dtesn_processor import DTESNProcessor
+from aphrodite.endpoints.deep_tree_echo.batch_manager import BatchConfiguration
+from aphrodite.endpoints.deep_tree_echo.load_integration import get_batch_load_function
 
 logger = logging.getLogger(__name__)
 
@@ -1009,3 +1011,245 @@ async def async_processing_status(
         )
     else:
         return JSONResponse(data)
+
+
+# Dynamic Batching Endpoints
+
+class DynamicBatchRequest(BaseModel):
+    """Request model for dynamic batch processing."""
+    
+    input_data: str
+    membrane_depth: Optional[int] = Field(default=4, ge=1, le=16)
+    esn_size: Optional[int] = Field(default=512, ge=32, le=4096)
+    priority: int = Field(default=1, ge=0, le=2, description="Request priority (0=highest, 2=lowest)")
+    timeout: Optional[float] = Field(default=None, ge=1.0, le=300.0)
+    enable_batching: bool = Field(default=True, description="Enable dynamic batching")
+
+
+class BatchMetricsResponse(BaseModel):
+    """Response model for batch processing metrics."""
+    
+    status: str
+    batching_enabled: bool
+    current_batch_size: Optional[int]
+    pending_requests: int
+    metrics: Dict[str, Any]
+    server_load: Dict[str, Any]
+    performance_stats: Dict[str, Any]
+
+
+@router.post("/process_with_batching", response_model=DTESNResponse)
+async def process_with_dynamic_batching(
+    request_data: DynamicBatchRequest,
+    request: Request,
+    processor: DTESNProcessor = Depends(get_dtesn_processor)
+) -> Union[DTESNResponse, HTMLResponse]:
+    """
+    Process input using intelligent dynamic batching for optimal throughput.
+    
+    Automatically batches requests based on server load, request patterns,
+    and performance metrics to maximize throughput while maintaining responsiveness.
+    Features adaptive batch sizing and load-aware processing optimization.
+    """
+    start_time = time.time()
+    
+    try:
+        # Ensure batch manager is configured
+        if not hasattr(processor, '_batch_manager') or not processor._batch_manager:
+            # Configure batch manager if not already done
+            load_tracker = get_batch_load_function(request.app.state)
+            batch_config = BatchConfiguration(
+                target_batch_size=8,
+                max_batch_size=32,
+                max_batch_wait_ms=50.0,
+                enable_adaptive_sizing=True
+            )
+            
+            # Reinitialize processor with batching
+            processor._batch_manager = DynamicBatchManager(
+                config=batch_config,
+                load_tracker=load_tracker
+            )
+            processor._batch_manager.set_dtesn_processor(processor)
+            processor._batch_manager_started = False
+
+        if request_data.enable_batching:
+            # Process using dynamic batching
+            result = await processor.process_with_dynamic_batching(
+                input_data=request_data.input_data,
+                membrane_depth=request_data.membrane_depth,
+                esn_size=request_data.esn_size,
+                priority=request_data.priority,
+                timeout=request_data.timeout
+            )
+        else:
+            # Process directly without batching
+            result = await processor.process(
+                input_data=request_data.input_data,
+                membrane_depth=request_data.membrane_depth,
+                esn_size=request_data.esn_size,
+                enable_concurrent=True
+            )
+
+        processing_time = time.time() - start_time
+
+        # Get batching metrics
+        batch_metrics = processor.get_batching_metrics()
+        current_batch_size = processor.get_current_batch_size()
+        pending_count = await processor.get_pending_batch_count()
+
+        # Prepare performance metrics
+        performance_metrics = {
+            "total_processing_time_ms": processing_time * 1000,
+            "dtesn_processing_time_ms": result.processing_time_ms,
+            "overhead_ms": (processing_time * 1000) - result.processing_time_ms,
+            "throughput_chars_per_second": len(request_data.input_data) / processing_time if processing_time > 0 else 0,
+            "batching_enabled": request_data.enable_batching,
+            "current_batch_size": current_batch_size,
+            "pending_requests": pending_count
+        }
+
+        # Add batch metrics if available
+        if batch_metrics:
+            performance_metrics.update({
+                "batch_throughput_improvement": batch_metrics.throughput_improvement,
+                "avg_batch_size": batch_metrics.avg_batch_size,
+                "avg_server_load": batch_metrics.avg_server_load,
+                "requests_processed": batch_metrics.requests_processed
+            })
+
+        response_data = DTESNResponse(
+            status="success",
+            result=result.to_dict(),
+            processing_time_ms=result.processing_time_ms,
+            membrane_layers=result.membrane_layers,
+            server_rendered=True,
+            engine_integration=result.engine_integration,
+            performance_metrics=performance_metrics
+        )
+
+        if wants_html(request):
+            return templates.TemplateResponse(
+                "batch_process_result.html",
+                {
+                    "request": request,
+                    "data": response_data.dict(),
+                    "input_data": request_data.input_data,
+                    "batching_enabled": request_data.enable_batching,
+                    "timestamp": datetime.now().isoformat()
+                }
+            )
+        else:
+            return response_data
+
+    except Exception as e:
+        logger.error(f"Dynamic batch processing error: {e}")
+        error_time = time.time() - start_time
+        error_detail = {
+            "error": f"Dynamic batch processing failed: {e}",
+            "processing_time_ms": error_time * 1000,
+            "batching_enabled": request_data.enable_batching,
+            "server_rendered": True
+        }
+
+        if wants_html(request):
+            return templates.TemplateResponse(
+                "batch_process_result.html",
+                {
+                    "request": request,
+                    "data": {"status": "error", "error": str(e)},
+                    "input_data": request_data.input_data,
+                    "batching_enabled": request_data.enable_batching,
+                    "timestamp": datetime.now().isoformat()
+                },
+                status_code=500
+            )
+        else:
+            raise HTTPException(status_code=500, detail=error_detail)
+
+
+@router.get("/batch_metrics", response_model=BatchMetricsResponse)
+async def get_batch_metrics(
+    request: Request,
+    processor: DTESNProcessor = Depends(get_dtesn_processor)
+) -> Union[BatchMetricsResponse, HTMLResponse]:
+    """
+    Get current dynamic batching metrics and performance statistics.
+    
+    Provides comprehensive metrics about batch processing performance,
+    server load, throughput improvements, and system optimization status.
+    """
+    try:
+        # Get batch metrics
+        batch_metrics = processor.get_batching_metrics()
+        current_batch_size = processor.get_current_batch_size()
+        pending_count = await processor.get_pending_batch_count()
+        
+        # Get server load information
+        server_load = {}
+        if hasattr(request.app.state, 'server_load_metrics'):
+            server_load["active_requests"] = request.app.state.server_load_metrics
+        
+        # Prepare metrics data
+        metrics_data = {}
+        if batch_metrics:
+            metrics_data = {
+                "requests_processed": batch_metrics.requests_processed,
+                "avg_batch_size": batch_metrics.avg_batch_size,
+                "avg_processing_time_ms": batch_metrics.avg_processing_time_ms,
+                "throughput_improvement": batch_metrics.throughput_improvement,
+                "avg_server_load": batch_metrics.avg_server_load,
+                "batch_utilization": batch_metrics.batch_utilization,
+                "avg_batch_wait_time": batch_metrics.avg_batch_wait_time,
+                "last_updated": batch_metrics.last_updated
+            }
+
+        # Get processing stats
+        performance_stats = processor.get_processing_stats() if hasattr(processor, 'get_processing_stats') else {}
+
+        response_data = BatchMetricsResponse(
+            status="success",
+            batching_enabled=processor._batch_manager is not None,
+            current_batch_size=current_batch_size,
+            pending_requests=pending_count,
+            metrics=metrics_data,
+            server_load=server_load,
+            performance_stats=performance_stats
+        )
+
+        if wants_html(request):
+            return templates.TemplateResponse(
+                "batch_metrics.html",
+                {
+                    "request": request,
+                    "data": response_data.dict(),
+                    "timestamp": datetime.now().isoformat()
+                }
+            )
+        else:
+            return response_data
+
+    except Exception as e:
+        logger.error(f"Batch metrics retrieval error: {e}")
+        error_response = BatchMetricsResponse(
+            status="error",
+            batching_enabled=False,
+            current_batch_size=None,
+            pending_requests=0,
+            metrics={"error": str(e)},
+            server_load={},
+            performance_stats={}
+        )
+
+        if wants_html(request):
+            return templates.TemplateResponse(
+                "batch_metrics.html",
+                {
+                    "request": request,
+                    "data": error_response.dict(),
+                    "timestamp": datetime.now().isoformat()
+                },
+                status_code=500
+            )
+        else:
+            raise HTTPException(status_code=500, detail=error_response.dict())

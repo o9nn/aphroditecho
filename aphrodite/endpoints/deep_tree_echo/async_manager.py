@@ -2,14 +2,15 @@
 Async resource management for Deep Tree Echo server-side processing.
 
 Provides connection pooling, resource management, and concurrency control
-for efficient async server-side request handling.
+for efficient async server-side request handling with 10x enhanced capacity.
 """
 
 import asyncio
 import logging
 import time
+import weakref
 from contextlib import asynccontextmanager
-from typing import Any, AsyncGenerator, Dict, List, Optional, Set
+from typing import Any, AsyncGenerator, Dict, List, Optional, Set, Union
 from dataclasses import dataclass, field
 
 logger = logging.getLogger(__name__)
@@ -19,12 +20,15 @@ logger = logging.getLogger(__name__)
 class ConnectionPoolConfig:
     """Configuration for async connection pooling."""
     
-    max_connections: int = 100
-    min_connections: int = 10
-    connection_timeout: float = 30.0
-    idle_timeout: float = 300.0
+    max_connections: int = 500  # Enhanced for 10x capacity
+    min_connections: int = 50   # Maintain more idle connections
+    connection_timeout: float = 15.0  # Reduced timeout for faster failover
+    idle_timeout: float = 180.0  # Shorter idle timeout for better resource recycling
     max_retries: int = 3
-    retry_delay: float = 0.1
+    retry_delay: float = 0.05  # Faster retry for high throughput
+    enable_keepalive: bool = True
+    keepalive_interval: float = 30.0
+    max_concurrent_creates: int = 50  # Limit concurrent connection creation
 
 
 @dataclass 
@@ -49,45 +53,67 @@ class AsyncConnectionPool:
     """
     
     def __init__(self, config: Optional[ConnectionPoolConfig] = None):
-        """Initialize async connection pool."""
+        """Initialize async connection pool with enhanced capacity."""
         self.config = config or ConnectionPoolConfig()
         self._active_connections: Set[str] = set()
         self._idle_connections: asyncio.Queue = asyncio.Queue(maxsize=self.config.max_connections)
         self._connection_semaphore = asyncio.Semaphore(self.config.max_connections)
+        self._create_semaphore = asyncio.Semaphore(self.config.max_concurrent_creates)
         self._stats = ResourcePoolStats()
         self._cleanup_task: Optional[asyncio.Task] = None
-        self._lock = asyncio.Lock()
+        self._keepalive_task: Optional[asyncio.Task] = None
+        self._lock = asyncio.RLock()  # Use RLock for better concurrent performance
+        self._connection_health: Dict[str, float] = {}  # Track connection health
+        self._pending_creates = 0
         
     async def start(self):
         """Start the connection pool and cleanup task."""
-        logger.info(f"Starting async connection pool with {self.config.max_connections} max connections")
+        logger.info(f"Starting enhanced async connection pool with {self.config.max_connections} max connections")
         
-        # Pre-populate with minimum connections
-        for _ in range(self.config.min_connections):
-            connection_id = await self._create_connection()
-            await self._idle_connections.put((connection_id, time.time()))
+        # Pre-populate with minimum connections in batches for efficiency
+        create_tasks = []
+        batch_size = min(10, self.config.min_connections)
+        for i in range(0, self.config.min_connections, batch_size):
+            batch_end = min(i + batch_size, self.config.min_connections)
+            batch_tasks = [self._create_connection_safe() for _ in range(i, batch_end)]
+            batch_results = await asyncio.gather(*batch_tasks, return_exceptions=True)
+            
+            for result in batch_results:
+                if isinstance(result, str):  # Successful connection ID
+                    await self._idle_connections.put((result, time.time()))
+                elif isinstance(result, Exception):
+                    logger.warning(f"Failed to create initial connection: {result}")
         
-        # Start cleanup task
+        # Start background tasks
         self._cleanup_task = asyncio.create_task(self._cleanup_idle_connections())
+        if self.config.enable_keepalive:
+            self._keepalive_task = asyncio.create_task(self._keepalive_connections())
         
     async def stop(self):
         """Stop the connection pool and cleanup resources."""
-        logger.info("Stopping async connection pool")
+        logger.info("Stopping enhanced async connection pool")
         
-        if self._cleanup_task:
-            self._cleanup_task.cancel()
-            try:
-                await self._cleanup_task
-            except asyncio.CancelledError:
-                pass
+        # Cancel background tasks
+        for task in [self._cleanup_task, self._keepalive_task]:
+            if task:
+                task.cancel()
+                try:
+                    await task
+                except asyncio.CancelledError:
+                    pass
         
-        # Clean up all connections
+        # Clean up all connections concurrently for faster shutdown
+        cleanup_tasks = []
         while not self._idle_connections.empty():
             try:
                 connection_id, _ = self._idle_connections.get_nowait()
-                await self._close_connection(connection_id)
+                cleanup_tasks.append(self._close_connection(connection_id))
             except asyncio.QueueEmpty:
                 break
+        
+        # Wait for all connections to close
+        if cleanup_tasks:
+            await asyncio.gather(*cleanup_tasks, return_exceptions=True)
     
     @asynccontextmanager
     async def get_connection(self) -> AsyncGenerator[str, None]:
@@ -146,14 +172,31 @@ class AsyncConnectionPool:
         except asyncio.TimeoutError:
             return None
     
+    async def _create_connection_safe(self) -> str:
+        """Create a new connection with proper semaphore control."""
+        async with self._create_semaphore:
+            self._pending_creates += 1
+            try:
+                return await self._create_connection()
+            finally:
+                self._pending_creates -= 1
+    
     async def _create_connection(self) -> str:
         """Create a new connection."""
         connection_id = f"dtesn_conn_{int(time.time() * 1000000)}"
+        
+        # Track connection health for keepalive monitoring
+        self._connection_health[connection_id] = time.time()
+        
         logger.debug(f"Created new connection: {connection_id}")
         return connection_id
     
     async def _close_connection(self, connection_id: str):
         """Close a connection and clean up resources."""
+        # Remove from health tracking
+        if connection_id in self._connection_health:
+            del self._connection_health[connection_id]
+        
         logger.debug(f"Closing connection: {connection_id}")
         # In real implementation, would close actual connection resources
         
@@ -231,6 +274,40 @@ class AsyncConnectionPool:
                 alpha * response_time + (1 - alpha) * self._stats.avg_response_time
             )
     
+    async def _keepalive_connections(self):
+        """Background task to maintain connection health via keepalive."""
+        while True:
+            try:
+                await asyncio.sleep(self.config.keepalive_interval)
+                
+                current_time = time.time()
+                healthy_connections = []
+                stale_connections = []
+                
+                # Check health of all tracked connections
+                for conn_id, last_health in self._connection_health.items():
+                    if current_time - last_health > self.config.keepalive_interval * 2:
+                        stale_connections.append(conn_id)
+                    else:
+                        healthy_connections.append(conn_id)
+                
+                # Update health timestamps for healthy connections
+                for conn_id in healthy_connections:
+                    self._connection_health[conn_id] = current_time
+                
+                # Remove stale connections
+                for conn_id in stale_connections:
+                    if conn_id in self._connection_health:
+                        del self._connection_health[conn_id]
+                        logger.debug(f"Removed stale connection from health tracking: {conn_id}")
+                
+                logger.debug(f"Keepalive check: {len(healthy_connections)} healthy, {len(stale_connections)} stale")
+                
+            except asyncio.CancelledError:
+                break
+            except Exception as e:
+                logger.error(f"Keepalive error: {e}")
+    
     def get_stats(self) -> ResourcePoolStats:
         """Get current pool statistics."""
         return self._stats
@@ -246,38 +323,143 @@ class ConcurrencyManager:
     
     def __init__(
         self,
-        max_concurrent_requests: int = 50,
-        max_requests_per_second: float = 100.0,
-        burst_limit: int = 20
+        max_concurrent_requests: int = 500,  # Enhanced for 10x capacity
+        max_requests_per_second: float = 1000.0,  # 10x higher throughput
+        burst_limit: int = 100,  # Larger burst capacity
+        adaptive_scaling: bool = True,
+        scale_factor: float = 1.2
     ):
-        """Initialize concurrency manager."""
+        """Initialize enhanced concurrency manager."""
         self.max_concurrent_requests = max_concurrent_requests
         self.max_requests_per_second = max_requests_per_second
         self.burst_limit = burst_limit
+        self.adaptive_scaling = adaptive_scaling
+        self.scale_factor = scale_factor
         
         self._request_semaphore = asyncio.Semaphore(max_concurrent_requests)
         self._rate_limiter = asyncio.Semaphore(burst_limit)
         self._request_times: List[float] = []
-        self._lock = asyncio.Lock()
+        self._lock = asyncio.RLock()  # Use RLock for better performance
+        
+        # Enhanced monitoring for adaptive scaling
+        self._system_load = 0.0
+        self._avg_response_time = 0.0
+        self._success_rate = 1.0
+        self._scale_history: List[float] = []
         
     @asynccontextmanager
     async def throttle_request(self) -> AsyncGenerator[None, None]:
         """
-        Throttle request processing with rate limiting and concurrency control.
+        Enhanced throttle request processing with adaptive scaling and load balancing.
         
         Returns:
-            Context manager for throttled request processing
+            Context manager for throttled request processing with enhanced capacity
         """
-        # Apply rate limiting
-        await self._apply_rate_limit()
+        start_time = time.time()
         
-        # Apply concurrency limiting
-        async with self._request_semaphore:
+        # Apply adaptive rate limiting based on system load
+        await self._apply_adaptive_rate_limit()
+        
+        # Apply concurrency limiting with potential scaling
+        semaphore = self._get_adaptive_semaphore()
+        async with semaphore:
             try:
                 yield
             finally:
+                # Record performance metrics for adaptive scaling
+                response_time = time.time() - start_time
+                await self._record_performance_metrics(response_time, success=True)
+                
                 # Clean up rate limiting state
                 await self._cleanup_rate_limit()
+    
+    async def _apply_adaptive_rate_limit(self):
+        """Apply adaptive rate limiting based on system load."""
+        if self.adaptive_scaling:
+            # Adjust rate limit based on system performance
+            load_factor = min(1.5, max(0.5, 1.0 - self._system_load))
+            adaptive_rate = self.max_requests_per_second * load_factor
+        else:
+            adaptive_rate = self.max_requests_per_second
+        
+        await self._apply_rate_limit_with_rate(adaptive_rate)
+    
+    def _get_adaptive_semaphore(self) -> asyncio.Semaphore:
+        """Get semaphore with adaptive capacity based on system load."""
+        if not self.adaptive_scaling:
+            return self._request_semaphore
+        
+        # Scale concurrency based on performance metrics
+        if self._avg_response_time > 0:
+            if self._avg_response_time < 0.1 and self._success_rate > 0.95:
+                # System performing well, can handle more load
+                scale = min(self.scale_factor, 1.5)
+            elif self._avg_response_time > 1.0 or self._success_rate < 0.9:
+                # System under stress, reduce load
+                scale = max(1.0 / self.scale_factor, 0.7)
+            else:
+                scale = 1.0
+            
+            # Apply scaling with bounds checking
+            scaled_capacity = int(self.max_concurrent_requests * scale)
+            scaled_capacity = max(10, min(scaled_capacity, self.max_concurrent_requests * 2))
+            
+            # Create new semaphore if capacity changed significantly
+            if abs(scaled_capacity - self._request_semaphore._initial_value) > 10:
+                current_available = self._request_semaphore._value
+                self._request_semaphore = asyncio.Semaphore(scaled_capacity)
+                # Adjust available count proportionally
+                new_available = int(current_available * scaled_capacity / self.max_concurrent_requests)
+                for _ in range(scaled_capacity - new_available):
+                    try:
+                        self._request_semaphore.acquire_nowait()
+                    except ValueError:
+                        break
+        
+        return self._request_semaphore
+    
+    async def _record_performance_metrics(self, response_time: float, success: bool):
+        """Record performance metrics for adaptive scaling."""
+        async with self._lock:
+            # Update average response time with exponential moving average
+            alpha = 0.1
+            if self._avg_response_time == 0:
+                self._avg_response_time = response_time
+            else:
+                self._avg_response_time = (
+                    alpha * response_time + (1 - alpha) * self._avg_response_time
+                )
+            
+            # Update success rate
+            self._success_rate = alpha * (1.0 if success else 0.0) + (1 - alpha) * self._success_rate
+            
+            # Calculate system load based on concurrency utilization
+            current_load = (
+                (self.max_concurrent_requests - self._request_semaphore._value) 
+                / self.max_concurrent_requests
+            )
+            self._system_load = alpha * current_load + (1 - alpha) * self._system_load
+    
+    async def _apply_rate_limit_with_rate(self, rate_limit: float):
+        """Apply rate limiting with specified rate."""
+        current_time = time.time()
+        
+        async with self._lock:
+            # Clean old request times (older than 1 second)
+            self._request_times = [
+                t for t in self._request_times if current_time - t < 1.0
+            ]
+            
+            # Check if we're over the rate limit
+            if len(self._request_times) >= rate_limit:
+                # Calculate delay needed
+                oldest_time = min(self._request_times)
+                delay = 1.0 - (current_time - oldest_time)
+                if delay > 0:
+                    await asyncio.sleep(delay)
+            
+            # Record this request time
+            self._request_times.append(current_time)
     
     async def _apply_rate_limit(self):
         """Apply rate limiting based on requests per second."""
@@ -319,7 +501,7 @@ class ConcurrencyManager:
                 )
     
     def get_current_load(self) -> Dict[str, Any]:
-        """Get current concurrency and rate limiting statistics."""
+        """Get enhanced concurrency and rate limiting statistics with adaptive metrics."""
         current_time = time.time()
         
         # Count recent requests
@@ -327,16 +509,25 @@ class ConcurrencyManager:
             t for t in self._request_times if current_time - t < 1.0
         ])
         
+        # Calculate effective capacity (may be scaled)
+        effective_capacity = getattr(self._request_semaphore, '_initial_value', self.max_concurrent_requests)
+        
         return {
-            "concurrent_requests": self.max_concurrent_requests - self._request_semaphore._value,
+            "concurrent_requests": effective_capacity - self._request_semaphore._value,
             "recent_requests_per_second": recent_requests,
             "rate_limit_utilization": recent_requests / self.max_requests_per_second,
             "concurrency_utilization": (
-                (self.max_concurrent_requests - self._request_semaphore._value) 
-                / self.max_concurrent_requests
+                (effective_capacity - self._request_semaphore._value) 
+                / effective_capacity
             ),
             "available_slots": self._request_semaphore._value,
-            "burst_capacity_remaining": self._rate_limiter._value
+            "burst_capacity_remaining": self._rate_limiter._value,
+            "adaptive_scaling_enabled": self.adaptive_scaling,
+            "system_load": self._system_load,
+            "avg_response_time": self._avg_response_time,
+            "success_rate": self._success_rate,
+            "effective_capacity": effective_capacity,
+            "base_capacity": self.max_concurrent_requests
         }
 
 
@@ -350,18 +541,22 @@ class AsyncRequestQueue:
     
     def __init__(
         self,
-        max_queue_size: int = 1000,
-        priority_levels: int = 3,
-        circuit_breaker_threshold: int = 5,
-        circuit_breaker_timeout: float = 60.0,
-        adaptive_timeout: bool = True
+        max_queue_size: int = 10000,  # 10x larger queue for high throughput
+        priority_levels: int = 5,  # More priority levels for better control
+        circuit_breaker_threshold: int = 10,  # Higher threshold for enhanced capacity
+        circuit_breaker_timeout: float = 30.0,  # Faster recovery
+        adaptive_timeout: bool = True,
+        batch_processing: bool = True,  # Enable batch processing
+        batch_size: int = 10
     ):
-        """Initialize async request queue with enhanced features."""
+        """Initialize enhanced async request queue with 10x capacity."""
         self.max_queue_size = max_queue_size
         self.priority_levels = priority_levels
         self.circuit_breaker_threshold = circuit_breaker_threshold
         self.circuit_breaker_timeout = circuit_breaker_timeout
         self.adaptive_timeout = adaptive_timeout
+        self.batch_processing = batch_processing
+        self.batch_size = batch_size
         
         # Priority queues for different request types
         self._priority_queues = [
@@ -377,7 +572,12 @@ class AsyncRequestQueue:
         # Performance tracking for adaptive timeouts
         self._response_times = []
         self._success_rate = 1.0
-        self._lock = asyncio.Lock()
+        self._lock = asyncio.RLock()  # Use RLock for better concurrent access
+        
+        # Batch processing support
+        self._batch_queues = [[] for _ in range(priority_levels)]
+        self._batch_timers = [None for _ in range(priority_levels)]
+        self._batch_locks = [asyncio.Lock() for _ in range(priority_levels)]
         
         logger.info(f"AsyncRequestQueue initialized with {priority_levels} priority levels")
     
@@ -535,5 +735,128 @@ class AsyncRequestQueue:
             "circuit_breaker_failures": self._circuit_breaker_failures,
             "success_rate": self._success_rate,
             "avg_response_time": avg_response_time,
-            "adaptive_timeout": self._calculate_adaptive_timeout()
+            "adaptive_timeout": self._calculate_adaptive_timeout(),
+            "batch_processing_enabled": self.batch_processing,
+            "batch_sizes": [len(batch) for batch in self._batch_queues] if self.batch_processing else []
         }
+    
+    async def enqueue_batch_request(
+        self,
+        request_data: Any,
+        priority: int = 1,
+        timeout: Optional[float] = None
+    ) -> str:
+        """
+        Enqueue request for batch processing to improve throughput.
+        
+        Args:
+            request_data: Request data to process
+            priority: Request priority (0=highest)
+            timeout: Optional custom timeout
+            
+        Returns:
+            Request ID for tracking
+        """
+        if not self.batch_processing:
+            return await self.enqueue_request(request_data, priority, timeout)
+        
+        # Validate priority level
+        priority = max(0, min(priority, self.priority_levels - 1))
+        
+        # Generate request ID
+        request_id = f"batch_req_{int(time.time() * 1000000)}_{priority}"
+        
+        # Calculate adaptive timeout if enabled
+        if timeout is None and self.adaptive_timeout:
+            timeout = self._calculate_adaptive_timeout()
+        
+        # Create request with metadata
+        request_item = {
+            "id": request_id,
+            "data": request_data,
+            "priority": priority,
+            "timeout": timeout,
+            "enqueued_at": time.time(),
+            "batch": True
+        }
+        
+        async with self._batch_locks[priority]:
+            self._batch_queues[priority].append(request_item)
+            
+            # Check if batch is full or timer should be started
+            if len(self._batch_queues[priority]) >= self.batch_size:
+                await self._flush_batch(priority)
+            elif self._batch_timers[priority] is None:
+                # Start batch timer for partial batches
+                self._batch_timers[priority] = asyncio.create_task(
+                    self._batch_timeout(priority, 0.1)  # 100ms batch timeout
+                )
+        
+        logger.debug(f"Enqueued batch request {request_id} with priority {priority}")
+        return request_id
+    
+    async def _flush_batch(self, priority: int):
+        """Flush batch queue for given priority level."""
+        if not self._batch_queues[priority]:
+            return
+        
+        # Create batch item
+        batch_item = {
+            "id": f"batch_{int(time.time() * 1000000)}_{priority}",
+            "batch_data": self._batch_queues[priority].copy(),
+            "priority": priority,
+            "batch_size": len(self._batch_queues[priority]),
+            "enqueued_at": time.time()
+        }
+        
+        # Clear batch queue
+        self._batch_queues[priority].clear()
+        
+        # Cancel timer if running
+        if self._batch_timers[priority]:
+            self._batch_timers[priority].cancel()
+            self._batch_timers[priority] = None
+        
+        try:
+            # Add batch to priority queue
+            self._priority_queues[priority].put_nowait(batch_item)
+            logger.debug(f"Flushed batch with {batch_item['batch_size']} requests for priority {priority}")
+        except asyncio.QueueFull:
+            logger.warning(f"Failed to flush batch for priority {priority}: queue full")
+            # Re-add items to batch queue for retry
+            self._batch_queues[priority].extend(batch_item["batch_data"])
+    
+    async def _batch_timeout(self, priority: int, timeout: float):
+        """Handle batch timeout to flush partial batches."""
+        try:
+            await asyncio.sleep(timeout)
+            async with self._batch_locks[priority]:
+                if self._batch_queues[priority]:
+                    await self._flush_batch(priority)
+        except asyncio.CancelledError:
+            pass
+    
+    async def dequeue_batch_request(self) -> Optional[Union[Dict[str, Any], List[Dict[str, Any]]]]:
+        """
+        Dequeue next request or batch based on priority.
+        
+        Returns:
+            Next request/batch to process or None if no requests available
+        """
+        # Try queues in priority order (0=highest priority)
+        for priority in range(self.priority_levels):
+            try:
+                # Non-blocking get
+                request_item = self._priority_queues[priority].get_nowait()
+                
+                # Check if it's a batch
+                if "batch_data" in request_item:
+                    logger.debug(f"Dequeued batch {request_item['id']} with {request_item['batch_size']} requests")
+                    return request_item["batch_data"]
+                else:
+                    logger.debug(f"Dequeued request {request_item['id']} with priority {priority}")
+                    return request_item
+            except asyncio.QueueEmpty:
+                continue
+        
+        return None

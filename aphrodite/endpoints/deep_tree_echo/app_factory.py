@@ -84,20 +84,24 @@ def create_app(
     concurrency_manager = None
     
     if enable_async_resources:
-        # Configure connection pool for async resource management
+        # Configure enhanced connection pool for 10x capacity
         pool_config = ConnectionPoolConfig(
-            max_connections=100,
-            min_connections=10,
-            connection_timeout=30.0,
-            idle_timeout=300.0
+            max_connections=500,  # 5x more connections
+            min_connections=50,   # Higher minimum for ready capacity
+            connection_timeout=15.0,  # Faster timeout for high throughput
+            idle_timeout=180.0,  # Shorter idle timeout for resource efficiency
+            enable_keepalive=True,
+            max_concurrent_creates=50
         )
         connection_pool = AsyncConnectionPool(pool_config)
         
-        # Configure concurrency manager for request throttling
+        # Configure enhanced concurrency manager for 10x throughput
         concurrency_manager = ConcurrencyManager(
-            max_concurrent_requests=50,
-            max_requests_per_second=100.0,
-            burst_limit=20
+            max_concurrent_requests=500,  # 10x more concurrent requests
+            max_requests_per_second=1000.0,  # 10x higher RPS
+            burst_limit=100,  # 5x higher burst capacity
+            adaptive_scaling=True,  # Enable adaptive scaling
+            scale_factor=1.2
         )
         
         logger.info("Async resource management enabled with connection pooling and concurrency control")

@@ -118,6 +118,12 @@ from aphrodite.endpoints.openai.serving_transcription import (
 from aphrodite.endpoints.openai.serving_dynamic_updates import (
     OpenAIServingDynamicUpdates)
 from aphrodite.endpoints.openai.tool_parsers import ToolParserManager
+from aphrodite.endpoints.route_optimizer import (
+    create_optimized_app, 
+    RouteOptimizationConfig,
+    get_high_performance_config,
+    get_balanced_config
+)
 from aphrodite.endpoints.tool_server import DemoToolServer, ToolServer
 from aphrodite.endpoints.utils import (cli_env_setup, load_aware_call,
                                        log_non_default_args, with_cancellation)
@@ -1931,6 +1937,24 @@ def build_app(args: Namespace) -> FastAPI:
     app.add_middleware(SecurityMiddleware)  # IP blocking and monitoring
     app.add_middleware(RateLimitMiddleware)  # Rate limiting 
     app.add_middleware(InputValidationMiddleware)  # Input validation
+    
+    # Apply advanced route optimizations for sub-100ms response times
+    # Configure optimization based on environment or args
+    optimization_level = getattr(args, 'optimization_level', 'balanced')
+    
+    if optimization_level == 'high':
+        optimization_config = get_high_performance_config()
+        logger.info("Applying high-performance route optimizations")
+    elif optimization_level == 'minimal':
+        from aphrodite.endpoints.route_optimizer import get_minimal_config
+        optimization_config = get_minimal_config()
+        logger.info("Applying minimal route optimizations")
+    else:  # balanced (default)
+        optimization_config = get_balanced_config()
+        logger.info("Applying balanced route optimizations")
+    
+    # Apply the optimizations
+    app = create_optimized_app(app, optimization_config)
 
     @app.exception_handler(HTTPException)
     async def http_exception_handler(_: Request, exc: HTTPException):

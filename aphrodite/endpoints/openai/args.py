@@ -161,6 +161,10 @@ schema. Example: `[{"type": "text", "text": "Hello world!"}]`"""
     enable_tokenizer_info_endpoint: bool = False
     """Enable the /get_tokenizer_info endpoint. May expose chat
     templates and other tokenizer configuration."""
+    optimization_level: Literal["minimal", "balanced", "high"] = "balanced"
+    """Route optimization level for sub-100ms response times. 
+    'minimal': Basic compression only, 'balanced': Caching + compression + preprocessing, 
+    'high': Aggressive optimization with larger cache and shorter timeouts."""
 
     @staticmethod
     def add_cli_args(parser: FlexibleArgumentParser) -> FlexibleArgumentParser:

@@ -8,6 +8,7 @@ from aphrodite.common.config import (CacheConfig, DeviceConfig, ModelConfig,
                                      ParallelConfig)
 from aphrodite.utils import (STR_DTYPE_TO_TORCH_DTYPE, LayerBlockType,
                                     get_dtype_size, is_pin_memory_available)
+from aphrodite.worker.memory_pool import get_memory_pool
 
 
 class CacheEngine:
@@ -57,17 +58,31 @@ class CacheEngine:
                                              model_config.is_attention_free,
                                              use_mla=model_config.use_mla)
 
-        # Initialize the cache.
+        # Initialize memory pool for optimized allocation
+        # Estimate total cache size for pool sizing
+        total_cache_size = self._estimate_total_cache_size()
+        self.memory_pool = get_memory_pool(
+            max_pool_size=max(total_cache_size * 2, 1024 * 1024 * 1024),  # At least 1GB
+            enable_dtesn=True
+        )
+
+        # Initialize the cache with memory pool optimization.
         self.gpu_cache = self._allocate_kv_cache(
             self.num_gpu_blocks, self.device_config.device_type)
         self.cpu_cache = self._allocate_kv_cache(self.num_cpu_blocks, "cpu")
+        
+        # Track allocated tensors for cleanup
+        self._allocated_tensors = []
 
     def _allocate_kv_cache(
         self,
         num_blocks: int,
         device: str,
     ) -> List[torch.Tensor]:
-        """Allocates KV cache on the specified device."""
+        """Allocates KV cache on the specified device using optimized memory pool."""
+        if num_blocks == 0:
+            return []
+            
         kv_cache_generic_shape = self.attn_backend.get_kv_cache_shape(
             num_blocks, self.block_size, self.num_kv_heads, self.head_size)
         pin_memory = is_pin_memory_available() if device == "cpu" else False
@@ -85,20 +100,59 @@ class CacheEngine:
         kv_cache_allocation_shape = tuple(kv_cache_generic_shape[i]
                                           for i in kv_cache_stride_order)
 
-        for _ in range(self.num_attention_layers):
-            # null block in CpuGpuBlockAllocator requires at least that
-            # block to be zeroed-out.
-            # We zero-out everything for simplicity.
-            layer_kv_cache = torch.zeros(
-                kv_cache_allocation_shape,
-                dtype=self.dtype,
-                pin_memory=pin_memory,
-                device=device).permute(*kv_cache_stride_order)
+        # Calculate total elements needed
+        total_elements = 1
+        for dim in kv_cache_allocation_shape:
+            total_elements *= dim
 
-            # view back to (TOTAL_PAGES, PAGE_SIZE, entry_shape...) for cases
-            # when entry_shape is higher than 1D
+        for layer_idx in range(self.num_attention_layers):
+            # Use memory pool for allocation to enable reuse
+            try:
+                layer_kv_cache = self.memory_pool.allocate(
+                    size=total_elements,
+                    dtype=self.dtype,
+                    device=device,
+                    requires_grad=False
+                )
+                
+                # Reshape to required shape and apply stride order
+                layer_kv_cache = layer_kv_cache.view(kv_cache_allocation_shape)
+                layer_kv_cache = layer_kv_cache.permute(*kv_cache_stride_order)
+                
+                # Pin memory if required and supported
+                if pin_memory and device == "cpu":
+                    layer_kv_cache = layer_kv_cache.pin_memory()
+                
+                # Initialize with zeros (null block requirement)
+                layer_kv_cache.zero_()
+                
+            except Exception as e:
+                # Fallback to standard allocation if memory pool fails
+                layer_kv_cache = torch.zeros(
+                    kv_cache_allocation_shape,
+                    dtype=self.dtype,
+                    pin_memory=pin_memory,
+                    device=device).permute(*kv_cache_stride_order)
+
             kv_cache.append(layer_kv_cache)
+            self._allocated_tensors.append(layer_kv_cache)
+            
         return kv_cache
+    
+    def _estimate_total_cache_size(self) -> int:
+        """Estimate total cache size in bytes for memory pool sizing."""
+        if not hasattr(self, 'head_size'):
+            return 1024 * 1024 * 1024  # 1GB default
+            
+        # Calculate single block size
+        single_block_size = self.get_cache_block_size(
+            self.cache_config, self.model_config, self.parallel_config)
+        
+        # Total size = (GPU blocks + CPU blocks) * block size + overhead
+        total_blocks = (self.num_gpu_blocks or 0) + (self.num_cpu_blocks or 0)
+        overhead_factor = 1.5  # 50% overhead for fragmentation and pooling
+        
+        return int(total_blocks * single_block_size * overhead_factor)
 
     def swap_in(self, src_to_dst: torch.Tensor) -> None:
         for i in range(self.num_attention_layers):
@@ -112,6 +166,42 @@ class CacheEngine:
 
     def copy(self, src_to_dsts: torch.Tensor) -> None:
         self.attn_backend.copy_blocks(self.gpu_cache, src_to_dsts)
+
+    def get_memory_usage_stats(self) -> dict:
+        """Get detailed memory usage statistics."""
+        stats = {
+            'cache_engine': {
+                'gpu_blocks': self.num_gpu_blocks,
+                'cpu_blocks': self.num_cpu_blocks,
+                'block_size': self.block_size,
+                'dtype': str(self.dtype),
+                'attention_layers': self.num_attention_layers,
+                'allocated_tensors': len(self._allocated_tensors)
+            }
+        }
+        
+        # Add memory pool stats if available
+        if hasattr(self, 'memory_pool'):
+            stats['memory_pool'] = self.memory_pool.get_memory_stats()
+        
+        return stats
+    
+    def cleanup_cache(self):
+        """Clean up allocated cache tensors through memory pool."""
+        if hasattr(self, 'memory_pool'):
+            for tensor in self._allocated_tensors:
+                try:
+                    self.memory_pool.deallocate(tensor)
+                except Exception:
+                    # Ignore errors during cleanup
+                    pass
+        
+        self._allocated_tensors.clear()
+    
+    def __del__(self):
+        """Cleanup when cache engine is destroyed."""
+        if hasattr(self, '_allocated_tensors'):
+            self.cleanup_cache()
 
     @staticmethod
     def get_cache_block_size(

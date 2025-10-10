@@ -20,7 +20,7 @@ from dataclasses import asdict
 import logging
 
 from fastapi import HTTPException
-from pydantic import BaseModel, Field, validator, root_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 logger = logging.getLogger(__name__)
 
@@ -75,7 +75,8 @@ class ESNReservoirConfigSchema(BaseModel):
     input_scaling: float = Field(ge=0.0, le=10.0, description="Input scaling factor")
     noise_level: float = Field(ge=0.0, le=1.0, description="Noise level in reservoir")
     
-    @validator('spectral_radius')
+    @field_validator('spectral_radius')
+    @classmethod
     def validate_spectral_radius(cls, v):
         """Ensure spectral radius is within valid range for stability."""
         if v >= 1.0:
@@ -86,13 +87,14 @@ class ESNReservoirConfigSchema(BaseModel):
 class PSystemMembraneSchema(BaseModel):
     """Schema for P-System membrane configuration validation."""
     
-    membrane_id: str = Field(regex=r'^[a-zA-Z0-9_-]+$', description="Membrane identifier")
+    membrane_id: str = Field(pattern=r'^[a-zA-Z0-9_-]+$', description="Membrane identifier")
     parent_id: Optional[str] = Field(default=None, description="Parent membrane ID")
     depth: int = Field(ge=0, le=10, description="Membrane depth in hierarchy")
     capacity: int = Field(ge=1, le=1000000, description="Membrane object capacity")
     rules: List[Dict[str, Any]] = Field(description="Membrane evolution rules")
     
-    @validator('rules')
+    @field_validator('rules')
+    @classmethod
     def validate_rules(cls, v):
         """Validate membrane evolution rules structure."""
         for rule in v:
@@ -108,17 +110,18 @@ class BSeriesParametersSchema(BaseModel):
     
     order: int = Field(ge=1, le=10, description="B-Series expansion order")
     timestep: float = Field(ge=1e-6, le=1.0, description="Integration timestep")
-    method: str = Field(regex=r'^(euler|rk2|rk4|dopri)$', description="Integration method")
+    method: str = Field(pattern=r'^(euler|rk2|rk4|dopri)$', description="Integration method")
     tolerance: float = Field(ge=1e-12, le=1e-3, description="Integration tolerance")
     coefficients: List[float] = Field(description="B-Series coefficients")
     
-    @validator('coefficients')
-    def validate_coefficients(cls, v, values):
+    @field_validator('coefficients')
+    @classmethod
+    def validate_coefficients(cls, v, info):
         """Validate B-Series coefficients match the specified order."""
-        if 'order' in values:
-            expected_length = sum(range(1, values['order'] + 1))
+        if info.data and 'order' in info.data:
+            expected_length = sum(range(1, info.data['order'] + 1))
             if len(v) != expected_length:
-                raise ValueError(f"Coefficients length {len(v)} doesn't match order {values['order']}")
+                raise ValueError(f"Coefficients length {len(v)} doesn't match order {info.data['order']}")
         return v
 
 
@@ -129,7 +132,8 @@ class OEISTopologySchema(BaseModel):
     max_depth: int = Field(ge=1, le=10, description="Maximum tree depth")
     branching_factor: List[int] = Field(description="Branching factors per level")
     
-    @validator('topology_sequence')
+    @field_validator('topology_sequence')
+    @classmethod
     def validate_oeis_sequence(cls, v):
         """Validate sequence follows OEIS A000081 pattern."""
         # OEIS A000081: 1, 1, 2, 4, 9, 20, 48, 115, 286, 719, 1842, ...
@@ -145,7 +149,7 @@ class OEISTopologySchema(BaseModel):
 class DTESNIntegrationConfigSchema(BaseModel):
     """Schema for DTESN integration configuration validation."""
     
-    integration_mode: str = Field(regex=r'^(standalone|membrane_coupled|full_dtesn)$')
+    integration_mode: str = Field(pattern=r'^(standalone|membrane_coupled|full_dtesn)$')
     coupling_strength: float = Field(ge=0.0, le=1.0, description="Coupling strength between components")
     update_synchronization: bool = Field(description="Whether to synchronize component updates")
     performance_monitoring: bool = Field(default=True, description="Enable performance monitoring")
@@ -155,19 +159,21 @@ class DTESNIntegrationConfigSchema(BaseModel):
     bseries_config: BSeriesParametersSchema = Field(description="B-Series integration parameters")
     oeis_topology: OEISTopologySchema = Field(description="OEIS topology configuration")
     
-    @root_validator
+    @model_validator(mode='before')
+    @classmethod
     def validate_integration_consistency(cls, values):
         """Validate consistency between integration components."""
-        mode = values.get('integration_mode')
-        
-        if mode == 'standalone' and values.get('coupling_strength', 0) > 0:
-            raise ValueError("Standalone mode should have zero coupling strength")
+        if isinstance(values, dict):
+            mode = values.get('integration_mode')
             
-        if mode == 'full_dtesn':
-            required_fields = ['esn_config', 'membrane_configs', 'bseries_config', 'oeis_topology']
-            for field in required_fields:
-                if not values.get(field):
-                    raise ValueError(f"Full DTESN mode requires {field} configuration")
+            if mode == 'standalone' and values.get('coupling_strength', 0) > 0:
+                raise ValueError("Standalone mode should have zero coupling strength")
+                
+            if mode == 'full_dtesn':
+                required_fields = ['esn_config', 'membrane_configs', 'bseries_config', 'oeis_topology']
+                for field in required_fields:
+                    if not values.get(field):
+                        raise ValueError(f"Full DTESN mode requires {field} configuration")
         
         return values
 
@@ -216,7 +222,7 @@ def validate_dtesn_data_structure(
         
         # Validate against schema
         validated_model = schema_class(**data)
-        validated_data = validated_model.dict()
+        validated_data = validated_model.model_dump()
         
         # Performance check
         validation_time = (time.perf_counter() - start_time) * 1000

@@ -26,6 +26,8 @@ from aphrodite.endpoints.deep_tree_echo.async_manager import (
     ConnectionPoolConfig
 )
 from aphrodite.endpoints.deep_tree_echo.routes import router
+from aphrodite.endpoints.deep_tree_echo.template_engine_advanced import AdvancedTemplateEngine
+from aphrodite.endpoints.deep_tree_echo.template_cache_manager import DTESNTemplateCacheManager
 from aphrodite.endpoints.security import (
     InputValidationMiddleware,
     OutputSanitizationMiddleware,
@@ -76,8 +78,21 @@ def create_app(
     # Initialize Jinja2 templates for server-side rendering
     templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
     
-    # Store templates in app state for route handlers
+    # Initialize Phase 7.2.1 Advanced Template Engine 
+    advanced_template_engine = AdvancedTemplateEngine(TEMPLATES_DIR)
+    
+    # Initialize Template Cache Manager with optimization
+    template_cache_manager = DTESNTemplateCacheManager(
+        max_template_cache_size=100,
+        max_rendered_cache_size=500,
+        enable_compression=True
+    )
+    
+    # Store template components in app state for route handlers
     app.state.templates = templates
+    app.state.templates_dir = TEMPLATES_DIR
+    app.state.advanced_template_engine = advanced_template_engine
+    app.state.template_cache_manager = template_cache_manager
 
     # Initialize async resource management if enabled
     connection_pool = None

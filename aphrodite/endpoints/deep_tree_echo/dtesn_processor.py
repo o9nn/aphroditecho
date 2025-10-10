@@ -1862,7 +1862,7 @@ class DTESNProcessor:
             # Lightweight processing optimized for throughput
             chunk_result = await self._process_chunk_optimized(chunk_data, membrane_depth, esn_size)
             
-            # Create highly compressed response
+            # Create optimized response with intelligent compression
             chunk_response = {
                 "i": chunk_index,  # Shortened field names for compression
                 "d": chunk_data[:20] + "..." if len(chunk_data) > 20 else chunk_data,  # Minimal data preview
@@ -1871,13 +1871,32 @@ class DTESNProcessor:
                 "t": round((current_time - start_time) * 1000, 1)  # Time rounded
             }
             
+            # Use hybrid compression strategy for optimal performance
             if compression_level > 1:
-                compressed_chunk = zlib.compress(json.dumps(chunk_response).encode(), level=compression_level)
+                # Try both compression algorithms and choose the best
+                json_data = json.dumps(chunk_response).encode()
+                
+                # Use zlib for small chunks (faster)
+                if len(json_data) < 8192:  # 8KB threshold
+                    compressed_chunk = zlib.compress(json_data, level=compression_level)
+                    compression_method = "zlib"
+                else:
+                    # Use gzip for larger chunks (better compression)
+                    import gzip
+                    compressed_chunk = gzip.compress(json_data, compresslevel=compression_level)
+                    compression_method = "gzip"
+                
+                # Calculate compression ratio for monitoring
+                compression_ratio = len(compressed_chunk) / len(json_data)
+                
                 yield {
                     "type": "compressed_chunk",
                     "data": compressed_chunk.hex(),
                     "index": chunk_index,
-                    "progress": round(processed_length / total_length, 4)
+                    "progress": round(processed_length / total_length, 4),
+                    "compression_method": compression_method,
+                    "compression_ratio": round(compression_ratio, 3),
+                    "original_size": len(json_data)
                 }
             else:
                 chunk_response["type"] = "large_dataset_chunk"

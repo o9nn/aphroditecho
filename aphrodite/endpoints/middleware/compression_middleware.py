@@ -36,7 +36,8 @@ class CompressionConfig:
         "application/javascript",
         "text/css",
         "application/xml",
-        "text/xml"
+        "text/xml",
+        "text/event-stream"  # Added for SSE streaming support
     })
     
     # Routes to exclude from compression
@@ -44,6 +45,15 @@ class CompressionConfig:
     
     # Enable streaming compression
     enable_streaming: bool = True
+    
+    # Enhanced compression settings for large datasets
+    large_dataset_threshold: int = 1024 * 1024  # 1MB
+    adaptive_compression: bool = True
+    
+    # Content-aware compression levels
+    json_compression_level: int = 7  # Higher for JSON (better compression)
+    text_compression_level: int = 6  # Balanced for text
+    binary_compression_level: int = 3  # Lower for binary (faster)
 
 
 class CompressionMiddleware(BaseHTTPMiddleware):
@@ -140,7 +150,7 @@ class CompressionMiddleware(BaseHTTPMiddleware):
         return True
     
     async def _compress_response(self, response: Response, algorithm: str) -> Response:
-        """Compress response using specified algorithm."""
+        """Compress response using specified algorithm with content-aware optimization."""
         
         # Read response body
         body = await self._read_response_body(response)
@@ -149,13 +159,19 @@ class CompressionMiddleware(BaseHTTPMiddleware):
         if len(body) < self.config.min_size:
             return response
         
-        # Compress the body
+        # Determine optimal compression level based on content type and size
+        compression_level = self._get_optimal_compression_level(response, len(body))
+        
+        # Compress the body with optimized settings
         if algorithm == "gzip":
-            compressed_body = self._gzip_compress(body)
+            compressed_body = self._gzip_compress(body, compression_level)
         elif algorithm == "deflate":
-            compressed_body = self._deflate_compress(body)
+            compressed_body = self._deflate_compress(body, compression_level)
         else:
             return response  # Unsupported algorithm
+        
+        # Calculate compression ratio for monitoring
+        compression_ratio = len(compressed_body) / len(body)
         
         # Create new response with compressed body
         new_response = Response(
@@ -165,9 +181,12 @@ class CompressionMiddleware(BaseHTTPMiddleware):
             media_type=response.media_type
         )
         
-        # Update headers
+        # Update headers with enhanced information
         new_response.headers["content-encoding"] = algorithm
         new_response.headers["content-length"] = str(len(compressed_body))
+        new_response.headers["x-compression-ratio"] = f"{compression_ratio:.3f}"
+        new_response.headers["x-original-size"] = str(len(body))
+        new_response.headers["x-compression-level"] = str(compression_level)
         
         # Add vary header to indicate compression varies by encoding
         vary_header = response.headers.get("vary", "")
@@ -179,6 +198,31 @@ class CompressionMiddleware(BaseHTTPMiddleware):
             new_response.headers["vary"] = vary_header
         
         return new_response
+    
+    def _get_optimal_compression_level(self, response: Response, size: int) -> int:
+        """Determine optimal compression level based on content type and size."""
+        if not self.config.adaptive_compression:
+            return self.config.compression_level
+        
+        content_type = response.headers.get("content-type", "")
+        
+        # For large datasets, use more aggressive compression
+        if size >= self.config.large_dataset_threshold:
+            if "json" in content_type.lower():
+                return min(self.config.json_compression_level + 1, 9)
+            else:
+                return min(self.config.compression_level + 1, 9)
+        
+        # Content-type specific optimization
+        if "json" in content_type.lower():
+            return self.config.json_compression_level
+        elif "text/" in content_type.lower():
+            return self.config.text_compression_level
+        elif "event-stream" in content_type.lower():
+            # Streaming responses need faster compression
+            return max(self.config.compression_level - 2, 1)
+        else:
+            return self.config.compression_level
     
     async def _read_response_body(self, response: Response) -> bytes:
         """Read response body as bytes."""
@@ -197,15 +241,27 @@ class CompressionMiddleware(BaseHTTPMiddleware):
         
         return b""
     
-    def _gzip_compress(self, data: bytes) -> bytes:
-        """Compress data using gzip."""
+    def _gzip_compress(self, data: bytes, compression_level: Optional[int] = None) -> bytes:
+        """Compress data using gzip with optimized settings."""
+        level = compression_level or self.config.compression_level
         buffer = io.BytesIO()
-        with gzip.GzipFile(fileobj=buffer, mode='wb', 
-                          compresslevel=self.config.compression_level) as gz_file:
+        with gzip.GzipFile(fileobj=buffer, mode='wb', compresslevel=level) as gz_file:
             gz_file.write(data)
         return buffer.getvalue()
     
-    def _deflate_compress(self, data: bytes) -> bytes:
-        """Compress data using deflate (zlib)."""
+    def _deflate_compress(self, data: bytes, compression_level: Optional[int] = None) -> bytes:
+        """Compress data using deflate (zlib) with optimized settings."""
         import zlib
-        return zlib.compress(data, level=self.config.compression_level)
+        level = compression_level or self.config.compression_level
+        return zlib.compress(data, level=level)
+        
+    def get_compression_stats(self) -> Dict[str, Any]:
+        """Get compression statistics for monitoring."""
+        return {
+            "config": {
+                "min_size": self.config.min_size,
+                "default_level": self.config.compression_level,
+                "adaptive": self.config.adaptive_compression,
+                "large_threshold": self.config.large_dataset_threshold
+            }
+        }

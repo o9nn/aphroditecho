@@ -154,6 +154,14 @@ def create_app(
 
     # Include DTESN route handlers
     app.include_router(router, prefix="/deep_tree_echo")
+    
+    # Include configuration management routes
+    try:
+        from .config_routes import config_router
+        app.include_router(config_router)
+        logger.info("Configuration management endpoints enabled")
+    except ImportError as e:
+        logger.warning(f"Configuration management not available: {e}")
 
     # Enhanced health check endpoint with async resource status
     @app.get("/health")

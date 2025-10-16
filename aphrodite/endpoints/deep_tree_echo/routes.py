@@ -43,6 +43,9 @@ logger = logging.getLogger(__name__)
 # Create API router for DTESN endpoints
 router = APIRouter(tags=["deep_tree_echo"])
 
+# Import configuration routes
+from .config_routes import config_router
+
 
 class DTESNRequest(BaseModel):
     """Request model for DTESN processing."""

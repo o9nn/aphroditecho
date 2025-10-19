@@ -90,6 +90,7 @@ from aphrodite.endpoints.openai.serving_classification import (
     ServingClassification)
 from aphrodite.endpoints.openai.serving_completions import (
     OpenAIServingCompletion)
+from aphrodite.endpoints.openai.serving_ab_testing import router as ab_testing_router
 
 # Import DTESN integration routes
 try:
@@ -98,6 +99,14 @@ try:
         initialize_dtesn_handler
     )
     DTESN_ROUTES_AVAILABLE = True
+except ImportError:
+    logger.warning("DTESN routes not available")
+    DTESN_ROUTES_AVAILABLE = False
+
+# Import A/B testing middleware
+from aphrodite.endpoints.middleware.ab_testing_middleware import (
+    ABTestingMiddleware, get_ab_testing_manager
+)
     logger.info("DTESN OpenAI routes available")
 except ImportError as e:
     logger.debug(f"DTESN routes not available: {e}")
@@ -1907,6 +1916,10 @@ def build_app(args: Namespace) -> FastAPI:
         app = FastAPI(lifespan=lifespan)
     app.include_router(router)
 
+    # Include A/B testing routes
+    app.include_router(ab_testing_router)
+    logger.info("A/B testing API routes included")
+
     # Include DTESN-enhanced OpenAI routes if available
     if DTESN_ROUTES_AVAILABLE:
         app.include_router(dtesn_router)
@@ -1929,6 +1942,11 @@ def build_app(args: Namespace) -> FastAPI:
         allow_methods=args.allowed_methods,
         allow_headers=args.allowed_headers,
     )
+
+    # Add A/B testing middleware (before security middlewares for proper routing)
+    ab_manager = get_ab_testing_manager()
+    app.add_middleware(ABTestingMiddleware, ab_manager=ab_manager)
+    logger.info("A/B testing middleware enabled")
 
     # Add comprehensive security middleware stack
     # Order matters: outermost to innermost

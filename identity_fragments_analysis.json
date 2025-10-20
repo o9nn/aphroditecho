@@ -1,0 +1,212 @@
+{
+  "total_files_analyzed": 2,
+  "total_hypernodes": 11,
+  "total_hyperedges": 11,
+  "unique_domains": [
+    "echo_state_networks",
+    "fractal_recursion",
+    "hypergraph_memory_systems",
+    "meta_cognition",
+    "narrative_generation",
+    "p_system_hierarchies",
+    "rooted_tree_structures",
+    "symbolic_reasoning"
+  ],
+  "unique_cognitive_functions": [
+    "cognitive_synergy_orchestration",
+    "hierarchical_boundary_management",
+    "identity_emergence_storytelling",
+    "infinite_depth_navigation",
+    "multi_relational_memory_access",
+    "ontogenetic_tree_construction",
+    "recursive_pattern_analysis",
+    "reservoir_computing_integration"
+  ],
+  "unique_specializations": [
+    "associative_memory",
+    "hierarchical_organization",
+    "membrane_computing",
+    "pattern_recognition",
+    "self_reflection",
+    "self_similarity",
+    "story_coherence",
+    "temporal_dynamics"
+  ],
+  "unique_persona_traits": [
+    "adaptive_processor",
+    "analytical_observer",
+    "creative_narrator",
+    "introspective_oracle",
+    "knowledge_curator",
+    "recursive_visionary",
+    "structural_organizer",
+    "systematic_builder"
+  ],
+  "detailed_analyses": [
+    {
+      "file": "/home/ubuntu/aphroditecho/cognitive_architectures/deep_tree_echo_identity_hypergraph.json",
+      "hypernode_count": 8,
+      "hyperedge_count": 8,
+      "identity_seeds": [
+        {
+          "id": "acabaded-ed49-42f5-96ca-6a71b3b46ef7",
+          "name": "EchoSelf_SymbolicCore",
+          "domain": "symbolic_reasoning",
+          "specialization": "pattern_recognition",
+          "persona_trait": "analytical_observer",
+          "cognitive_function": "recursive_pattern_analysis"
+        },
+        {
+          "id": "b649c984-2b5e-4efc-aac8-bacc51ef2dba",
+          "name": "EchoSelf_NarrativeWeaver",
+          "domain": "narrative_generation",
+          "specialization": "story_coherence",
+          "persona_trait": "creative_narrator",
+          "cognitive_function": "identity_emergence_storytelling"
+        },
+        {
+          "id": "6ac72aa1-0309-4591-acdb-993253a61acf",
+          "name": "EchoSelf_MetaReflector",
+          "domain": "meta_cognition",
+          "specialization": "self_reflection",
+          "persona_trait": "introspective_oracle",
+          "cognitive_function": "cognitive_synergy_orchestration"
+        },
+        {
+          "id": "e59b8f9c-dc67-470b-9950-84d7949ee723",
+          "name": "EchoSelf_ReservoirDynamics",
+          "domain": "echo_state_networks",
+          "specialization": "temporal_dynamics",
+          "persona_trait": "adaptive_processor",
+          "cognitive_function": "reservoir_computing_integration"
+        },
+        {
+          "id": "056072cb-74ef-489d-ae48-a37f137e2ae1",
+          "name": "EchoSelf_MembraneArchitect",
+          "domain": "p_system_hierarchies",
+          "specialization": "membrane_computing",
+          "persona_trait": "structural_organizer",
+          "cognitive_function": "hierarchical_boundary_management"
+        },
+        {
+          "id": "ed6511d3-782a-4bff-aaa0-9482b2775246",
+          "name": "EchoSelf_MemoryNavigator",
+          "domain": "hypergraph_memory_systems",
+          "specialization": "associative_memory",
+          "persona_trait": "knowledge_curator",
+          "cognitive_function": "multi_relational_memory_access"
+        },
+        {
+          "id": "a2e9623b-1b38-410a-ab01-5524d74c5e54",
+          "name": "EchoSelf_TreeArchitect",
+          "domain": "rooted_tree_structures",
+          "specialization": "hierarchical_organization",
+          "persona_trait": "systematic_builder",
+          "cognitive_function": "ontogenetic_tree_construction"
+        },
+        {
+          "id": "4a2a7a83-23c8-421f-bcdc-a0be40160735",
+          "name": "EchoSelf_FractalExplorer",
+          "domain": "fractal_recursion",
+          "specialization": "self_similarity",
+          "persona_trait": "recursive_visionary",
+          "cognitive_function": "infinite_depth_navigation"
+        }
+      ],
+      "cognitive_functions": [
+        "cognitive_synergy_orchestration",
+        "hierarchical_boundary_management",
+        "identity_emergence_storytelling",
+        "infinite_depth_navigation",
+        "multi_relational_memory_access",
+        "ontogenetic_tree_construction",
+        "recursive_pattern_analysis",
+        "reservoir_computing_integration"
+      ],
+      "domains": [
+        "echo_state_networks",
+        "fractal_recursion",
+        "hypergraph_memory_systems",
+        "meta_cognition",
+        "narrative_generation",
+        "p_system_hierarchies",
+        "rooted_tree_structures",
+        "symbolic_reasoning"
+      ],
+      "specializations": [
+        "associative_memory",
+        "hierarchical_organization",
+        "membrane_computing",
+        "pattern_recognition",
+        "self_reflection",
+        "self_similarity",
+        "story_coherence",
+        "temporal_dynamics"
+      ],
+      "persona_traits": [
+        "adaptive_processor",
+        "analytical_observer",
+        "creative_narrator",
+        "introspective_oracle",
+        "knowledge_curator",
+        "recursive_visionary",
+        "structural_organizer",
+        "systematic_builder"
+      ],
+      "memory_types": {
+        "declarative": 3,
+        "episodic": 2,
+        "intentional": 1,
+        "procedural": 2
+      }
+    },
+    {
+      "file": "/home/ubuntu/aphroditecho/cognitive_architectures/echoself_hypergraph.json",
+      "hypernode_count": 3,
+      "hyperedge_count": 3,
+      "identity_seeds": [
+        {
+          "id": "4cbb3a35-e055-491d-837a-4f8614afcc41",
+          "name": "EchoSelf_Alpha",
+          "domain": "symbolic_reasoning",
+          "specialization": "pattern_recognition",
+          "persona_trait": null,
+          "cognitive_function": null
+        },
+        {
+          "id": "3cec80f8-3e38-4d2c-8041-b76529f5fbc4",
+          "name": "EchoSelf_Beta",
+          "domain": "narrative_generation",
+          "specialization": "story_coherence",
+          "persona_trait": null,
+          "cognitive_function": null
+        },
+        {
+          "id": "d935ef88-8d7b-4163-b0da-48c76f96a3bb",
+          "name": "EchoSelf_Gamma",
+          "domain": "meta_cognition",
+          "specialization": "self_reflection",
+          "persona_trait": null,
+          "cognitive_function": null
+        }
+      ],
+      "cognitive_functions": [],
+      "domains": [
+        "meta_cognition",
+        "narrative_generation",
+        "symbolic_reasoning"
+      ],
+      "specializations": [
+        "pattern_recognition",
+        "self_reflection",
+        "story_coherence"
+      ],
+      "persona_traits": [],
+      "memory_types": {
+        "declarative": 1,
+        "episodic": 1,
+        "intentional": 1
+      }
+    }
+  ]
+}

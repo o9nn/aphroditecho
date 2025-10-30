@@ -152,8 +152,21 @@ def create_app(
     app.state.connection_pool = connection_pool
     app.state.concurrency_manager = concurrency_manager
 
+    # Initialize Model Serving Manager (Task 8.1.1)
+    from .model_serving_manager import ModelServingManager
+    from .model_serving_routes import create_model_serving_routes
+    
+    model_serving_manager = ModelServingManager(engine=engine)
+    app.state.model_serving_manager = model_serving_manager
+    logger.info("Model Serving Manager initialized for Task 8.1.1")
+
     # Include DTESN route handlers
     app.include_router(router, prefix="/deep_tree_echo")
+    
+    # Include Model Serving routes (Task 8.1.1)
+    model_serving_router = create_model_serving_routes(model_serving_manager)
+    app.include_router(model_serving_router, prefix="/api/v1", tags=["Model Serving"])
+    logger.info("Model Serving routes integrated (Task 8.1.1)")
     
     # Include configuration management routes
     try:
@@ -163,10 +176,10 @@ def create_app(
     except ImportError as e:
         logger.warning(f"Configuration management not available: {e}")
 
-    # Enhanced health check endpoint with async resource status
+    # Enhanced health check endpoint with async resource status and model serving
     @app.get("/health")
     async def health_check():
-        """Enhanced server-side health check endpoint with async resource status."""
+        """Enhanced server-side health check endpoint with async resource status and model serving."""
         health_data = {
             "status": "healthy",
             "service": "Deep Tree Echo API",
@@ -193,6 +206,19 @@ def create_app(
         if concurrency_manager:
             load_stats = concurrency_manager.get_current_load()
             health_data["concurrency_stats"] = load_stats
+        
+        # Add model serving status (Task 8.1.1)
+        if model_serving_manager:
+            serving_status = model_serving_manager.get_model_serving_status()
+            health_data["model_serving"] = {
+                "enabled": True,
+                "cached_models": serving_status["overview"]["cached_models"],
+                "active_versions": serving_status["overview"]["active_versions"],
+                "healthy_models": serving_status["health_summary"]["healthy_models"],
+                "total_loads": serving_status["performance_metrics"]["total_loads"],
+                "cache_hit_rate": serving_status["performance_metrics"]["cache_hit_rate"],
+                "engine_integrated": serving_status["engine_integration"]["engine_available"]
+            }
         
         return health_data
 

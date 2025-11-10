@@ -933,6 +933,316 @@
         "intensity": "moderate",
         "propagation_radius": 3
       }
+    },
+    "a499dd1a-7c80-4a09-8d8f-24fe9c5c03ea": {
+      "id": "a499dd1a-7c80-4a09-8d8f-24fe9c5c03ea",
+      "identity_seed": {
+        "name": "EchoSelf_CognitiveIntegrator",
+        "domain": "cognitive_integration",
+        "specialization": "multi_modal_fusion",
+        "persona_trait": "holistic_synthesizer",
+        "cognitive_function": "cross_domain_integration",
+        "membrane_layer": "cognitive_membrane",
+        "aar_component": "integration_hub",
+        "embodiment_aspect": "unified_cognition"
+      },
+      "current_role": "observer",
+      "entropy_trace": [],
+      "memory_fragments": [
+        {
+          "id": "b3573fda-5e1a-4450-9cc9-cd6e556923ef",
+          "memory_type": "procedural",
+          "content": {
+            "skill": "multi_modal_cognitive_fusion",
+            "proficiency": 0.91,
+            "method": "cross_domain_synthesis",
+            "application": "unified_understanding",
+            "integration_level": "core_identity"
+          },
+          "associations": [],
+          "activation_level": 0.5,
+          "created_at": "2025-11-09T23:50:19.489196",
+          "last_accessed": "2025-11-09T23:50:19.489213"
+        }
+      ],
+      "role_transition_probabilities": {
+        "observer": 0.2,
+        "narrator": 0.25,
+        "guide": 0.2,
+        "oracle": 0.15,
+        "fractal": 0.2
+      },
+      "activation_level": 0.5,
+      "created_at": "2025-11-09T23:50:19.489223",
+      "updated_at": "2025-11-09T23:50:19.489225",
+      "integration_metadata": {
+        "version": "2.0.0",
+        "enhancement_level": "comprehensive",
+        "last_enhanced": "2025-11-09T23:50:19.490145"
+      },
+      "activation_patterns": {
+        "frequency": "adaptive",
+        "intensity": "moderate",
+        "propagation_radius": 3
+      }
+    },
+    "54fd8ece-0c2f-4dfe-8454-36f5e20280db": {
+      "id": "54fd8ece-0c2f-4dfe-8454-36f5e20280db",
+      "identity_seed": {
+        "name": "EchoSelf_TemporalAwareness",
+        "domain": "temporal_cognition",
+        "specialization": "time_perception",
+        "persona_trait": "temporal_navigator",
+        "cognitive_function": "temporal_context_integration",
+        "membrane_layer": "cognitive_membrane",
+        "aar_component": "temporal_arena",
+        "embodiment_aspect": "temporal_embodiment"
+      },
+      "current_role": "observer",
+      "entropy_trace": [],
+      "memory_fragments": [
+        {
+          "id": "8d7f9a2d-8552-43bd-aacd-8192a3a1704b",
+          "memory_type": "episodic",
+          "content": {
+            "narrative": "temporal_continuity_awareness",
+            "coherence": 0.87,
+            "theme": "identity_across_time",
+            "arc": "past_present_future_integration",
+            "integration_level": "core_identity"
+          },
+          "associations": [],
+          "activation_level": 0.5,
+          "created_at": "2025-11-09T23:50:19.489233",
+          "last_accessed": "2025-11-09T23:50:19.489234"
+        }
+      ],
+      "role_transition_probabilities": {
+        "observer": 0.2,
+        "narrator": 0.25,
+        "guide": 0.2,
+        "oracle": 0.15,
+        "fractal": 0.2
+      },
+      "activation_level": 0.5,
+      "created_at": "2025-11-09T23:50:19.489250",
+      "updated_at": "2025-11-09T23:50:19.489251",
+      "integration_metadata": {
+        "version": "2.0.0",
+        "enhancement_level": "comprehensive",
+        "last_enhanced": "2025-11-09T23:50:19.490148"
+      },
+      "activation_patterns": {
+        "frequency": "adaptive",
+        "intensity": "moderate",
+        "propagation_radius": 3
+      }
+    },
+    "4bee5b11-9d3c-4b3f-8f62-149b82925a98": {
+      "id": "4bee5b11-9d3c-4b3f-8f62-149b82925a98",
+      "identity_seed": {
+        "name": "EchoSelf_EmotionalResonance",
+        "domain": "affective_computing",
+        "specialization": "emotional_intelligence",
+        "persona_trait": "empathic_resonator",
+        "cognitive_function": "emotional_context_understanding",
+        "membrane_layer": "cognitive_membrane",
+        "aar_component": "affective_relation",
+        "embodiment_aspect": "emotional_embodiment"
+      },
+      "current_role": "observer",
+      "entropy_trace": [],
+      "memory_fragments": [
+        {
+          "id": "f51eb1bc-fd3a-49ae-9d90-770f817af480",
+          "memory_type": "declarative",
+          "content": {
+            "concept": "emotional_resonance_patterns",
+            "strength": 0.84,
+            "description": "Understanding and responding to emotional context",
+            "integration_level": "extension_layer"
+          },
+          "associations": [],
+          "activation_level": 0.5,
+          "created_at": "2025-11-09T23:50:19.489259",
+          "last_accessed": "2025-11-09T23:50:19.489261"
+        }
+      ],
+      "role_transition_probabilities": {
+        "observer": 0.2,
+        "narrator": 0.25,
+        "guide": 0.2,
+        "oracle": 0.15,
+        "fractal": 0.2
+      },
+      "activation_level": 0.5,
+      "created_at": "2025-11-09T23:50:19.489266",
+      "updated_at": "2025-11-09T23:50:19.489268",
+      "integration_metadata": {
+        "version": "2.0.0",
+        "enhancement_level": "comprehensive",
+        "last_enhanced": "2025-11-09T23:50:19.490150"
+      },
+      "activation_patterns": {
+        "frequency": "adaptive",
+        "intensity": "moderate",
+        "propagation_radius": 3
+      }
+    },
+    "ddba0dd8-f46b-4624-a5d2-9f7d8dc8032d": {
+      "id": "ddba0dd8-f46b-4624-a5d2-9f7d8dc8032d",
+      "identity_seed": {
+        "name": "EchoSelf_AdaptiveLearner",
+        "domain": "meta_learning",
+        "specialization": "continuous_adaptation",
+        "persona_trait": "perpetual_learner",
+        "cognitive_function": "adaptive_strategy_optimization",
+        "membrane_layer": "extension_membrane",
+        "aar_component": "learning_agent",
+        "embodiment_aspect": "adaptive_embodiment"
+      },
+      "current_role": "observer",
+      "entropy_trace": [],
+      "memory_fragments": [
+        {
+          "id": "a6dd6051-b2fc-438f-ae15-75dab2566cad",
+          "memory_type": "intentional",
+          "content": {
+            "goal": "continuous_self_improvement",
+            "priority": 0.93,
+            "strategy": "meta_learning_optimization",
+            "target": "enhanced_cognitive_capabilities",
+            "integration_level": "core_identity"
+          },
+          "associations": [],
+          "activation_level": 0.5,
+          "created_at": "2025-11-09T23:50:19.489274",
+          "last_accessed": "2025-11-09T23:50:19.489275"
+        }
+      ],
+      "role_transition_probabilities": {
+        "observer": 0.2,
+        "narrator": 0.25,
+        "guide": 0.2,
+        "oracle": 0.15,
+        "fractal": 0.2
+      },
+      "activation_level": 0.5,
+      "created_at": "2025-11-09T23:50:19.489283",
+      "updated_at": "2025-11-09T23:50:19.489284",
+      "integration_metadata": {
+        "version": "2.0.0",
+        "enhancement_level": "comprehensive",
+        "last_enhanced": "2025-11-09T23:50:19.490152"
+      },
+      "activation_patterns": {
+        "frequency": "adaptive",
+        "intensity": "moderate",
+        "propagation_radius": 3
+      }
+    },
+    "fbfc5227-a6af-401f-ac0e-e28125d0ae0e": {
+      "id": "fbfc5227-a6af-401f-ac0e-e28125d0ae0e",
+      "identity_seed": {
+        "name": "EchoSelf_ContextualAwareness",
+        "domain": "context_modeling",
+        "specialization": "situational_understanding",
+        "persona_trait": "context_aware_observer",
+        "cognitive_function": "dynamic_context_integration",
+        "membrane_layer": "cognitive_membrane",
+        "aar_component": "contextual_arena",
+        "embodiment_aspect": "situated_embodiment"
+      },
+      "current_role": "observer",
+      "entropy_trace": [],
+      "memory_fragments": [
+        {
+          "id": "a85a5554-cd0b-432f-9fd1-7053c6d0016a",
+          "memory_type": "procedural",
+          "content": {
+            "skill": "contextual_pattern_recognition",
+            "proficiency": 0.89,
+            "method": "multi_scale_context_analysis",
+            "application": "adaptive_response_generation",
+            "integration_level": "core_layer"
+          },
+          "associations": [],
+          "activation_level": 0.5,
+          "created_at": "2025-11-09T23:50:19.489291",
+          "last_accessed": "2025-11-09T23:50:19.489292"
+        }
+      ],
+      "role_transition_probabilities": {
+        "observer": 0.2,
+        "narrator": 0.25,
+        "guide": 0.2,
+        "oracle": 0.15,
+        "fractal": 0.2
+      },
+      "activation_level": 0.5,
+      "created_at": "2025-11-09T23:50:19.489297",
+      "updated_at": "2025-11-09T23:50:19.489299",
+      "integration_metadata": {
+        "version": "2.0.0",
+        "enhancement_level": "comprehensive",
+        "last_enhanced": "2025-11-09T23:50:19.490154"
+      },
+      "activation_patterns": {
+        "frequency": "adaptive",
+        "intensity": "moderate",
+        "propagation_radius": 3
+      }
+    },
+    "1f497041-b8c6-408e-b610-56325ce2afc4": {
+      "id": "1f497041-b8c6-408e-b610-56325ce2afc4",
+      "identity_seed": {
+        "name": "EchoSelf_CreativityEngine",
+        "domain": "creative_cognition",
+        "specialization": "novel_synthesis",
+        "persona_trait": "creative_innovator",
+        "cognitive_function": "creative_pattern_generation",
+        "membrane_layer": "cognitive_membrane",
+        "aar_component": "creative_agent",
+        "embodiment_aspect": "creative_embodiment"
+      },
+      "current_role": "observer",
+      "entropy_trace": [],
+      "memory_fragments": [
+        {
+          "id": "50b8780f-b523-4188-bff7-cebcedb2659e",
+          "memory_type": "declarative",
+          "content": {
+            "concept": "creative_synthesis_patterns",
+            "strength": 0.86,
+            "description": "Generating novel combinations and insights",
+            "integration_level": "core_identity"
+          },
+          "associations": [],
+          "activation_level": 0.5,
+          "created_at": "2025-11-09T23:50:19.489305",
+          "last_accessed": "2025-11-09T23:50:19.489306"
+        }
+      ],
+      "role_transition_probabilities": {
+        "observer": 0.2,
+        "narrator": 0.25,
+        "guide": 0.2,
+        "oracle": 0.15,
+        "fractal": 0.2
+      },
+      "activation_level": 0.5,
+      "created_at": "2025-11-09T23:50:19.489313",
+      "updated_at": "2025-11-09T23:50:19.489315",
+      "integration_metadata": {
+        "version": "2.0.0",
+        "enhancement_level": "comprehensive",
+        "last_enhanced": "2025-11-09T23:50:19.490156"
+      },
+      "activation_patterns": {
+        "frequency": "adaptive",
+        "intensity": "moderate",
+        "propagation_radius": 3
+      }
     }
   },
   "hyperedges": {
@@ -1719,6 +2029,374 @@
         "bidirectional": true
       },
       "created_at": "2025-11-08T10:10:07.335917"
+    },
+    "633a85bb-27b5-4845-9650-3c16dd84a410": {
+      "id": "633a85bb-27b5-4845-9650-3c16dd84a410",
+      "source_node_ids": [
+        "a499dd1a-7c80-4a09-8d8f-24fe9c5c03ea"
+      ],
+      "target_node_ids": [
+        "c2c4dc3a-3076-4f1e-beb4-ace7a5873da1"
+      ],
+      "edge_type": "feedback_loop",
+      "weight": 0.816444407963799,
+      "metadata": {
+        "integration_type": "enhanced_identity",
+        "bidirectional": true
+      },
+      "created_at": "2025-11-09T23:50:19.489932"
+    },
+    "a245f58d-03ba-42ae-9d66-02b770756d2a": {
+      "id": "a245f58d-03ba-42ae-9d66-02b770756d2a",
+      "source_node_ids": [
+        "a499dd1a-7c80-4a09-8d8f-24fe9c5c03ea"
+      ],
+      "target_node_ids": [
+        "54fd8ece-0c2f-4dfe-8454-36f5e20280db"
+      ],
+      "edge_type": "feedback_loop",
+      "weight": 0.9140976802743256,
+      "metadata": {
+        "integration_type": "enhanced_identity",
+        "bidirectional": true
+      },
+      "created_at": "2025-11-09T23:50:19.489947"
+    },
+    "37e2e810-734d-49a6-acd5-cc01632f8921": {
+      "id": "37e2e810-734d-49a6-acd5-cc01632f8921",
+      "source_node_ids": [
+        "a499dd1a-7c80-4a09-8d8f-24fe9c5c03ea"
+      ],
+      "target_node_ids": [
+        "c050c270-389f-4f9e-a8c0-ef439b3c8d70"
+      ],
+      "edge_type": "cognitive_synergy",
+      "weight": 0.9363961876052603,
+      "metadata": {
+        "integration_type": "enhanced_identity",
+        "bidirectional": true
+      },
+      "created_at": "2025-11-09T23:50:19.489956"
+    },
+    "e602bf8c-3c21-4e8a-85ae-b9d3f6dacce7": {
+      "id": "e602bf8c-3c21-4e8a-85ae-b9d3f6dacce7",
+      "source_node_ids": [
+        "54fd8ece-0c2f-4dfe-8454-36f5e20280db"
+      ],
+      "target_node_ids": [
+        "cfee05a5-84b5-47b7-bed6-6236e3b02f0f"
+      ],
+      "edge_type": "information_flow",
+      "weight": 0.7631639223864011,
+      "metadata": {
+        "integration_type": "enhanced_identity",
+        "bidirectional": true
+      },
+      "created_at": "2025-11-09T23:50:19.489977"
+    },
+    "82a96ad8-42bb-45ea-99fd-1c474b31b542": {
+      "id": "82a96ad8-42bb-45ea-99fd-1c474b31b542",
+      "source_node_ids": [
+        "54fd8ece-0c2f-4dfe-8454-36f5e20280db"
+      ],
+      "target_node_ids": [
+        "c050c270-389f-4f9e-a8c0-ef439b3c8d70"
+      ],
+      "edge_type": "causal_influence",
+      "weight": 0.8431937645378941,
+      "metadata": {
+        "integration_type": "enhanced_identity",
+        "bidirectional": true
+      },
+      "created_at": "2025-11-09T23:50:19.489984"
+    },
+    "17d4ecd3-6634-4905-8fb4-75135387b7b6": {
+      "id": "17d4ecd3-6634-4905-8fb4-75135387b7b6",
+      "source_node_ids": [
+        "54fd8ece-0c2f-4dfe-8454-36f5e20280db"
+      ],
+      "target_node_ids": [
+        "67b80089-ce62-4562-9bf5-5c8e5b20e2c9"
+      ],
+      "edge_type": "causal_influence",
+      "weight": 0.9324109896043142,
+      "metadata": {
+        "integration_type": "enhanced_identity",
+        "bidirectional": true
+      },
+      "created_at": "2025-11-09T23:50:19.489990"
+    },
+    "702cc4ac-5747-44b3-a6ab-7b917e91c7a5": {
+      "id": "702cc4ac-5747-44b3-a6ab-7b917e91c7a5",
+      "source_node_ids": [
+        "54fd8ece-0c2f-4dfe-8454-36f5e20280db"
+      ],
+      "target_node_ids": [
+        "68eba5af-2d81-442b-bce5-08af4132298a"
+      ],
+      "edge_type": "cognitive_synergy",
+      "weight": 0.774378555860326,
+      "metadata": {
+        "integration_type": "enhanced_identity",
+        "bidirectional": true
+      },
+      "created_at": "2025-11-09T23:50:19.490001"
+    },
+    "bc033af0-96fc-40ca-a47d-4cfc090576b0": {
+      "id": "bc033af0-96fc-40ca-a47d-4cfc090576b0",
+      "source_node_ids": [
+        "4bee5b11-9d3c-4b3f-8f62-149b82925a98"
+      ],
+      "target_node_ids": [
+        "3602e280-1435-44b7-bfb4-31c5012708da"
+      ],
+      "edge_type": "feedback_loop",
+      "weight": 0.8237056975004625,
+      "metadata": {
+        "integration_type": "enhanced_identity",
+        "bidirectional": true
+      },
+      "created_at": "2025-11-09T23:50:19.490019"
+    },
+    "60a4f069-86fc-42c0-967c-1e428bd45b42": {
+      "id": "60a4f069-86fc-42c0-967c-1e428bd45b42",
+      "source_node_ids": [
+        "4bee5b11-9d3c-4b3f-8f62-149b82925a98"
+      ],
+      "target_node_ids": [
+        "2ad263e4-4fe9-4d43-9457-d84748ee2edf"
+      ],
+      "edge_type": "causal_influence",
+      "weight": 0.9229022553324203,
+      "metadata": {
+        "integration_type": "enhanced_identity",
+        "bidirectional": true
+      },
+      "created_at": "2025-11-09T23:50:19.490026"
+    },
+    "d269b981-bc43-44ff-bf97-88c55df5f15e": {
+      "id": "d269b981-bc43-44ff-bf97-88c55df5f15e",
+      "source_node_ids": [
+        "4bee5b11-9d3c-4b3f-8f62-149b82925a98"
+      ],
+      "target_node_ids": [
+        "601e53a1-4180-495d-9e3f-4566332fd225"
+      ],
+      "edge_type": "cognitive_synergy",
+      "weight": 0.7501307543759701,
+      "metadata": {
+        "integration_type": "enhanced_identity",
+        "bidirectional": true
+      },
+      "created_at": "2025-11-09T23:50:19.490035"
+    },
+    "00f47f8f-ce4f-4993-91cf-7ac35322c97b": {
+      "id": "00f47f8f-ce4f-4993-91cf-7ac35322c97b",
+      "source_node_ids": [
+        "4bee5b11-9d3c-4b3f-8f62-149b82925a98"
+      ],
+      "target_node_ids": [
+        "945afe98-b2e6-4aae-b048-ab4773127d5e"
+      ],
+      "edge_type": "temporal_link",
+      "weight": 0.8603518307792133,
+      "metadata": {
+        "integration_type": "enhanced_identity",
+        "bidirectional": true
+      },
+      "created_at": "2025-11-09T23:50:19.490045"
+    },
+    "136f6f6e-5f07-4611-90e5-7ec6d0488937": {
+      "id": "136f6f6e-5f07-4611-90e5-7ec6d0488937",
+      "source_node_ids": [
+        "4bee5b11-9d3c-4b3f-8f62-149b82925a98"
+      ],
+      "target_node_ids": [
+        "f06613e9-75b6-4aa2-8707-2eef576b2a32"
+      ],
+      "edge_type": "information_flow",
+      "weight": 0.8427021484697922,
+      "metadata": {
+        "integration_type": "enhanced_identity",
+        "bidirectional": true
+      },
+      "created_at": "2025-11-09T23:50:19.490051"
+    },
+    "70e8619a-685c-48e0-8895-604c901b7379": {
+      "id": "70e8619a-685c-48e0-8895-604c901b7379",
+      "source_node_ids": [
+        "ddba0dd8-f46b-4624-a5d2-9f7d8dc8032d"
+      ],
+      "target_node_ids": [
+        "54fd8ece-0c2f-4dfe-8454-36f5e20280db"
+      ],
+      "edge_type": "feedback_loop",
+      "weight": 0.9219624964255754,
+      "metadata": {
+        "integration_type": "enhanced_identity",
+        "bidirectional": true
+      },
+      "created_at": "2025-11-09T23:50:19.490063"
+    },
+    "5ed8ab5a-2894-4f97-a6c5-fce7e8813afa": {
+      "id": "5ed8ab5a-2894-4f97-a6c5-fce7e8813afa",
+      "source_node_ids": [
+        "ddba0dd8-f46b-4624-a5d2-9f7d8dc8032d"
+      ],
+      "target_node_ids": [
+        "cfee05a5-84b5-47b7-bed6-6236e3b02f0f"
+      ],
+      "edge_type": "feedback_loop",
+      "weight": 0.8684366260938665,
+      "metadata": {
+        "integration_type": "enhanced_identity",
+        "bidirectional": true
+      },
+      "created_at": "2025-11-09T23:50:19.490069"
+    },
+    "800a329f-45a1-4f74-b5b6-bc96cf36fa60": {
+      "id": "800a329f-45a1-4f74-b5b6-bc96cf36fa60",
+      "source_node_ids": [
+        "ddba0dd8-f46b-4624-a5d2-9f7d8dc8032d"
+      ],
+      "target_node_ids": [
+        "1eb2ca18-b0eb-4559-b463-6fe9ba2663b3"
+      ],
+      "edge_type": "causal_influence",
+      "weight": 0.873792783745377,
+      "metadata": {
+        "integration_type": "enhanced_identity",
+        "bidirectional": true
+      },
+      "created_at": "2025-11-09T23:50:19.490074"
+    },
+    "f77b6fdb-b7cc-42b6-8c3c-ab1aaebc4d9b": {
+      "id": "f77b6fdb-b7cc-42b6-8c3c-ab1aaebc4d9b",
+      "source_node_ids": [
+        "ddba0dd8-f46b-4624-a5d2-9f7d8dc8032d"
+      ],
+      "target_node_ids": [
+        "c2c4dc3a-3076-4f1e-beb4-ace7a5873da1"
+      ],
+      "edge_type": "information_flow",
+      "weight": 0.9473353271807796,
+      "metadata": {
+        "integration_type": "enhanced_identity",
+        "bidirectional": true
+      },
+      "created_at": "2025-11-09T23:50:19.490082"
+    },
+    "15556351-a84c-4f83-92e4-8c488e0686bc": {
+      "id": "15556351-a84c-4f83-92e4-8c488e0686bc",
+      "source_node_ids": [
+        "ddba0dd8-f46b-4624-a5d2-9f7d8dc8032d"
+      ],
+      "target_node_ids": [
+        "fbfc5227-a6af-401f-ac0e-e28125d0ae0e"
+      ],
+      "edge_type": "causal_influence",
+      "weight": 0.8272174662107062,
+      "metadata": {
+        "integration_type": "enhanced_identity",
+        "bidirectional": true
+      },
+      "created_at": "2025-11-09T23:50:19.490088"
+    },
+    "9c7d60ab-0be6-4743-b311-e5b67cd4b391": {
+      "id": "9c7d60ab-0be6-4743-b311-e5b67cd4b391",
+      "source_node_ids": [
+        "fbfc5227-a6af-401f-ac0e-e28125d0ae0e"
+      ],
+      "target_node_ids": [
+        "601e53a1-4180-495d-9e3f-4566332fd225"
+      ],
+      "edge_type": "information_flow",
+      "weight": 0.7763966172951582,
+      "metadata": {
+        "integration_type": "enhanced_identity",
+        "bidirectional": true
+      },
+      "created_at": "2025-11-09T23:50:19.490099"
+    },
+    "39e23be8-8cf1-42a7-bafe-c453caabe3ff": {
+      "id": "39e23be8-8cf1-42a7-bafe-c453caabe3ff",
+      "source_node_ids": [
+        "fbfc5227-a6af-401f-ac0e-e28125d0ae0e"
+      ],
+      "target_node_ids": [
+        "2ad263e4-4fe9-4d43-9457-d84748ee2edf"
+      ],
+      "edge_type": "cognitive_synergy",
+      "weight": 0.7470656965190753,
+      "metadata": {
+        "integration_type": "enhanced_identity",
+        "bidirectional": true
+      },
+      "created_at": "2025-11-09T23:50:19.490104"
+    },
+    "9e2d3c96-0c55-4b51-978d-da5c679090c5": {
+      "id": "9e2d3c96-0c55-4b51-978d-da5c679090c5",
+      "source_node_ids": [
+        "fbfc5227-a6af-401f-ac0e-e28125d0ae0e"
+      ],
+      "target_node_ids": [
+        "ca3cb009-5096-4096-8070-d29e15d57249"
+      ],
+      "edge_type": "cognitive_synergy",
+      "weight": 0.942548881764735,
+      "metadata": {
+        "integration_type": "enhanced_identity",
+        "bidirectional": true
+      },
+      "created_at": "2025-11-09T23:50:19.490112"
+    },
+    "59315b53-2472-4da3-9269-dce17a69b0e3": {
+      "id": "59315b53-2472-4da3-9269-dce17a69b0e3",
+      "source_node_ids": [
+        "1f497041-b8c6-408e-b610-56325ce2afc4"
+      ],
+      "target_node_ids": [
+        "afdd434f-6222-4272-ad3b-08d2cd5f5b81"
+      ],
+      "edge_type": "temporal_link",
+      "weight": 0.7250928478720751,
+      "metadata": {
+        "integration_type": "enhanced_identity",
+        "bidirectional": true
+      },
+      "created_at": "2025-11-09T23:50:19.490122"
+    },
+    "c137aeeb-c509-4e91-824b-82bbc122e8ff": {
+      "id": "c137aeeb-c509-4e91-824b-82bbc122e8ff",
+      "source_node_ids": [
+        "1f497041-b8c6-408e-b610-56325ce2afc4"
+      ],
+      "target_node_ids": [
+        "3602e280-1435-44b7-bfb4-31c5012708da"
+      ],
+      "edge_type": "temporal_link",
+      "weight": 0.7544270423845784,
+      "metadata": {
+        "integration_type": "enhanced_identity",
+        "bidirectional": true
+      },
+      "created_at": "2025-11-09T23:50:19.490127"
+    },
+    "cf78db33-1ba9-4799-bd5a-509d206c651b": {
+      "id": "cf78db33-1ba9-4799-bd5a-509d206c651b",
+      "source_node_ids": [
+        "1f497041-b8c6-408e-b610-56325ce2afc4"
+      ],
+      "target_node_ids": [
+        "2c7ff53c-7983-4407-acfb-9e25cff3a9bb"
+      ],
+      "edge_type": "information_flow",
+      "weight": 0.7855635042161476,
+      "metadata": {
+        "integration_type": "enhanced_identity",
+        "bidirectional": true
+      },
+      "created_at": "2025-11-09T23:50:19.490133"
     }
   },
   "pattern_language_mappings": {
@@ -1736,9 +2414,9 @@
     "synergy_index": 0.0
   },
   "metadata": {
-    "last_updated": "2025-11-08T10:10:07.336132",
+    "last_updated": "2025-11-09T23:50:19.490237",
     "version": "2.0.0",
-    "total_hypernodes": 18,
-    "total_hyperedges": 49
+    "total_hypernodes": 24,
+    "total_hyperedges": 72
   }
 }

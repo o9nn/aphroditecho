@@ -1,7 +1,7 @@
 {
   "total_files_analyzed": 7,
-  "total_hypernodes": 77,
-  "total_hyperedges": 152,
+  "total_hypernodes": 83,
+  "total_hyperedges": 175,
   "unique_domains": [
     "affective_computing",
     "agent_arena_relation",
@@ -85,8 +85,8 @@
   "detailed_analyses": [
     {
       "file": "/home/ubuntu/aphroditecho/cognitive_architectures/deep_tree_echo_identity_hypergraph.json",
-      "hypernode_count": 18,
-      "hyperedge_count": 49,
+      "hypernode_count": 24,
+      "hyperedge_count": 72,
       "identity_seeds": [
         {
           "id": "f06613e9-75b6-4aa2-8707-2eef576b2a32",
@@ -231,6 +231,54 @@
           "specialization": "novel_synthesis",
           "persona_trait": "creative_innovator",
           "cognitive_function": "creative_pattern_generation"
+        },
+        {
+          "id": "a499dd1a-7c80-4a09-8d8f-24fe9c5c03ea",
+          "name": "EchoSelf_CognitiveIntegrator",
+          "domain": "cognitive_integration",
+          "specialization": "multi_modal_fusion",
+          "persona_trait": "holistic_synthesizer",
+          "cognitive_function": "cross_domain_integration"
+        },
+        {
+          "id": "54fd8ece-0c2f-4dfe-8454-36f5e20280db",
+          "name": "EchoSelf_TemporalAwareness",
+          "domain": "temporal_cognition",
+          "specialization": "time_perception",
+          "persona_trait": "temporal_navigator",
+          "cognitive_function": "temporal_context_integration"
+        },
+        {
+          "id": "4bee5b11-9d3c-4b3f-8f62-149b82925a98",
+          "name": "EchoSelf_EmotionalResonance",
+          "domain": "affective_computing",
+          "specialization": "emotional_intelligence",
+          "persona_trait": "empathic_resonator",
+          "cognitive_function": "emotional_context_understanding"
+        },
+        {
+          "id": "ddba0dd8-f46b-4624-a5d2-9f7d8dc8032d",
+          "name": "EchoSelf_AdaptiveLearner",
+          "domain": "meta_learning",
+          "specialization": "continuous_adaptation",
+          "persona_trait": "perpetual_learner",
+          "cognitive_function": "adaptive_strategy_optimization"
+        },
+        {
+          "id": "fbfc5227-a6af-401f-ac0e-e28125d0ae0e",
+          "name": "EchoSelf_ContextualAwareness",
+          "domain": "context_modeling",
+          "specialization": "situational_understanding",
+          "persona_trait": "context_aware_observer",
+          "cognitive_function": "dynamic_context_integration"
+        },
+        {
+          "id": "1f497041-b8c6-408e-b610-56325ce2afc4",
+          "name": "EchoSelf_CreativityEngine",
+          "domain": "creative_cognition",
+          "specialization": "novel_synthesis",
+          "persona_trait": "creative_innovator",
+          "cognitive_function": "creative_pattern_generation"
         }
       ],
       "cognitive_functions": [
@@ -314,10 +362,10 @@
         "temporal_navigator"
       ],
       "memory_types": {
-        "declarative": 5,
-        "episodic": 3,
-        "intentional": 4,
-        "procedural": 6
+        "declarative": 7,
+        "episodic": 4,
+        "intentional": 5,
+        "procedural": 8
       }
     },
     {

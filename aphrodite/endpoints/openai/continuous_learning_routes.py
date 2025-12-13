@@ -5,6 +5,7 @@ Provides REST endpoints for managing server-side continuous learning,
 monitoring learning performance, and triggering manual learning updates.
 """
 
+from datetime import datetime
 from typing import Any, Dict, Optional
 
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Request
@@ -93,7 +94,6 @@ async def learn_from_interaction(
     
     try:
         # Create interaction data with proper timestamp
-        from datetime import datetime
         interaction = InteractionData(
             interaction_id=learning_request.interaction_id or f"api_{id(learning_request)}",
             interaction_type=learning_request.interaction_type,

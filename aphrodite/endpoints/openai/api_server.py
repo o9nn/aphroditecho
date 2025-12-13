@@ -175,8 +175,7 @@ except ImportError as e:
 # Import continuous learning system for server-side model improvement
 try:
     from aphrodite.endpoints.openai.continuous_learning_routes import (
-        router as continuous_learning_router,
-        setup_continuous_learning_routes
+        router as continuous_learning_router
     )
     from aphrodite.endpoints.openai.serving_continuous_learning import (
         OpenAIServingContinuousLearning
@@ -2331,14 +2330,15 @@ async def init_app_state(
             )
             
             # Initialize the continuous learning service
+            # Note: The service is stored in app.state and routes use dependency injection
+            # to access it via get_learning_service() in continuous_learning_routes.py
             state.openai_serving_continuous_learning = OpenAIServingContinuousLearning(
                 engine_client=engine_client,
                 model_config=model_config,
-                server_side_config=server_side_config,
+                models=state.openai_serving_models,
+                request_logger=request_logger,
+                server_config=server_side_config,
             )
-            
-            # Setup routes with the initialized service
-            setup_continuous_learning_routes(state.openai_serving_continuous_learning)
             
             logger.info(
                 "Continuous learning service initialized with: "

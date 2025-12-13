@@ -5,6 +5,7 @@ Provides REST endpoints for managing server-side continuous learning,
 monitoring learning performance, and triggering manual learning updates.
 """
 
+from datetime import datetime
 from typing import Any, Dict, Optional
 
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Request
@@ -92,14 +93,14 @@ async def learn_from_interaction(
     """Learn from a user interaction or manual training example."""
     
     try:
-        # Create interaction data
+        # Create interaction data with proper timestamp
         interaction = InteractionData(
             interaction_id=learning_request.interaction_id or f"api_{id(learning_request)}",
             interaction_type=learning_request.interaction_type,
             input_data={"prompt": learning_request.prompt},
             output_data={"response": learning_request.response},
             performance_feedback=learning_request.performance_feedback,
-            timestamp=None,  # Will be set by the system
+            timestamp=datetime.now(),
             context_metadata={
                 "source": "api_endpoint",
                 **(learning_request.metadata or {})

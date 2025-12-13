@@ -165,6 +165,27 @@ schema. Example: `[{"type": "text", "text": "Hello world!"}]`"""
     """Route optimization level for sub-100ms response times. 
     'minimal': Basic compression only, 'balanced': Caching + compression + preprocessing, 
     'high': Aggressive optimization with larger cache and shorter timeouts."""
+    enable_continuous_learning: bool = False
+    """Enable server-side continuous learning from production interactions.
+    When enabled, the server will collect interaction data and apply incremental
+    model updates in the background. Disabled by default for production safety."""
+    continuous_learning_interval: int = 60
+    """Background learning interval in seconds. Controls how often the system
+    processes collected interactions for learning. Default: 60 seconds."""
+    continuous_learning_min_interactions: int = 10
+    """Minimum number of interactions required before triggering a learning cycle.
+    Helps ensure sufficient data quality. Default: 10 interactions."""
+    continuous_learning_quality_threshold: float = 0.5
+    """Quality threshold for filtering interactions used in learning.
+    Interactions with performance feedback below this threshold are excluded.
+    Range: -1.0 to 1.0. Default: 0.5."""
+    continuous_learning_max_rate: float = 0.001
+    """Maximum learning rate for production safety. Limits how aggressively
+    the model can be updated from production data. Default: 0.001."""
+    continuous_learning_enable_rollback: bool = True
+    """Enable automatic rollback on performance degradation. When enabled,
+    the system will revert to previous model state if learning causes issues.
+    Default: True (recommended for production)."""
 
     @staticmethod
     def add_cli_args(parser: FlexibleArgumentParser) -> FlexibleArgumentParser:

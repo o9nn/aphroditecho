@@ -107,10 +107,6 @@ except ImportError:
 from aphrodite.endpoints.middleware.ab_testing_middleware import (
     ABTestingMiddleware, get_ab_testing_manager
 )
-    logger.info("DTESN OpenAI routes available")
-except ImportError as e:
-    logger.debug(f"DTESN routes not available: {e}")
-    DTESN_ROUTES_AVAILABLE = False
 from aphrodite.endpoints.openai.serving_embedding import OpenAIServingEmbedding
 from aphrodite.endpoints.openai.serving_engine import OpenAIServing
 from aphrodite.endpoints.openai.serving_messages import OpenAIServingMessages
@@ -175,6 +171,22 @@ try:
 except ImportError as e:
     logger.debug(f"Autoscaling system not available: {e}")
     AUTOSCALING_AVAILABLE = False
+
+# Import continuous learning system for server-side model improvement
+try:
+    from aphrodite.endpoints.openai.continuous_learning_routes import (
+        router as continuous_learning_router,
+        setup_continuous_learning_routes
+    )
+    from aphrodite.endpoints.openai.serving_continuous_learning import (
+        OpenAIServingContinuousLearning
+    )
+    from aphrodite.continuous_learning import ServerSideConfig
+    CONTINUOUS_LEARNING_AVAILABLE = True
+    logger.info("Continuous learning system available")
+except ImportError as e:
+    logger.debug(f"Continuous learning system not available: {e}")
+    CONTINUOUS_LEARNING_AVAILABLE = False
 
 SERVE_KOBOLD_LITE_UI = strtobool(os.getenv("SERVE_KOBOLD_LITE_UI", "1"))
 
@@ -1981,6 +1993,11 @@ def build_app(args: Namespace) -> FastAPI:
         app.include_router(autoscaling_router)
         logger.info("Autoscaling and capacity planning integrated")
 
+    # Mount continuous learning routes if available and enabled
+    if CONTINUOUS_LEARNING_AVAILABLE and getattr(args, 'enable_continuous_learning', False):
+        app.include_router(continuous_learning_router)
+        logger.info("Continuous learning API routes included (/v1/learning/*)")
+
     app.add_middleware(
         CORSMiddleware,
         allow_origins=args.allowed_origins,
@@ -2300,6 +2317,42 @@ async def init_app_state(
         lora_config=lora_config,
         dynamic_config=dynamic_config
     )
+
+    # Initialize continuous learning service if enabled
+    if CONTINUOUS_LEARNING_AVAILABLE and getattr(args, 'enable_continuous_learning', False):
+        try:
+            # Create server-side learning configuration from CLI args
+            server_side_config = ServerSideConfig(
+                background_learning_interval=getattr(args, 'continuous_learning_interval', 60),
+                min_interactions_for_learning=getattr(args, 'continuous_learning_min_interactions', 10),
+                quality_threshold=getattr(args, 'continuous_learning_quality_threshold', 0.5),
+                max_learning_rate=getattr(args, 'continuous_learning_max_rate', 0.001),
+                enable_automatic_rollback=getattr(args, 'continuous_learning_enable_rollback', True),
+            )
+            
+            # Initialize the continuous learning service
+            state.openai_serving_continuous_learning = OpenAIServingContinuousLearning(
+                engine_client=engine_client,
+                model_config=model_config,
+                server_side_config=server_side_config,
+            )
+            
+            # Setup routes with the initialized service
+            setup_continuous_learning_routes(state.openai_serving_continuous_learning)
+            
+            logger.info(
+                "Continuous learning service initialized with: "
+                f"interval={server_side_config.background_learning_interval}s, "
+                f"min_interactions={server_side_config.min_interactions_for_learning}, "
+                f"quality_threshold={server_side_config.quality_threshold}, "
+                f"max_rate={server_side_config.max_learning_rate}, "
+                f"rollback={server_side_config.enable_automatic_rollback}"
+            )
+        except Exception as e:
+            logger.warning(f"Could not initialize continuous learning service: {e}")
+            state.openai_serving_continuous_learning = None
+    else:
+        state.openai_serving_continuous_learning = None
 
     state.enable_server_load_tracking = args.enable_server_load_tracking
     state.server_load_metrics = 0

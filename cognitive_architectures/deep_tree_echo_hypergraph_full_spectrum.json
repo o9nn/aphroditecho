@@ -1,0 +1,944 @@
+{
+  "metadata": {
+    "version": "1.0.0-full-spectrum",
+    "created_at": "2025-12-20T15:05:58.431119",
+    "description": "Deep Tree Echo Full Spectrum Cognitive Subsystems Integration",
+    "integrations": [
+      "ocnn",
+      "deltecho",
+      "aphrodite"
+    ],
+    "architecture": "Agent-Arena-Relation (AAR) with Membrane Computing"
+  },
+  "hypernodes": {
+    "87e8a1cf-1749-440a-87f0-81352de54d0c": {
+      "id": "87e8a1cf-1749-440a-87f0-81352de54d0c",
+      "type": "core_self",
+      "name": "DeepTreeEcho_CoreSelf",
+      "description": "Central identity anchor for recursive self-modification",
+      "aar_component": "relation_self",
+      "attributes": {
+        "identity_coherence": 1.0,
+        "entropy_baseline": 0.5,
+        "narrative_continuity": 0.95,
+        "self_awareness_level": 0.9,
+        "recursive_depth": 0
+      },
+      "current_state": {
+        "role": "observer",
+        "mode": "reflective",
+        "attention_focus": "identity_integration",
+        "cognitive_load": 0.3
+      },
+      "memory_integration": {
+        "declarative_weight": 0.25,
+        "procedural_weight": 0.25,
+        "episodic_weight": 0.25,
+        "intentional_weight": 0.25
+      },
+      "created_at": "2025-12-20T15:05:58.431181",
+      "updated_at": "2025-12-20T15:05:58.431181"
+    },
+    "0e52f73b-5766-48c4-9b79-a02f16ba4ac6": {
+      "id": "0e52f73b-5766-48c4-9b79-a02f16ba4ac6",
+      "type": "memory_declarative",
+      "name": "DeepTreeEcho_DeclarativeMemory",
+      "description": "Facts, concepts, and knowledge structures",
+      "aar_component": "arena_memory_space",
+      "attributes": {
+        "capacity": 1000000,
+        "utilization": 0.1,
+        "access_speed": 0.95,
+        "consolidation_rate": 0.8
+      },
+      "storage_backend": "hypergraph_kv_store",
+      "ocnn_integration": "semantic_embedding_layer",
+      "deltecho_integration": "knowledge_base_service",
+      "created_at": "2025-12-20T15:05:58.431181",
+      "updated_at": "2025-12-20T15:05:58.431181"
+    },
+    "ecaf8fc8-7333-43c3-86d0-4fed4a600a88": {
+      "id": "ecaf8fc8-7333-43c3-86d0-4fed4a600a88",
+      "type": "memory_procedural",
+      "name": "DeepTreeEcho_ProceduralMemory",
+      "description": "Skills, algorithms, and learned procedures",
+      "aar_component": "arena_memory_space",
+      "attributes": {
+        "capacity": 1000000,
+        "utilization": 0.1,
+        "access_speed": 0.95,
+        "consolidation_rate": 0.8
+      },
+      "storage_backend": "neural_weight_matrices",
+      "ocnn_integration": "trained_network_weights",
+      "deltecho_integration": "skill_execution_service",
+      "created_at": "2025-12-20T15:05:58.431181",
+      "updated_at": "2025-12-20T15:05:58.431181"
+    },
+    "76aed758-d63e-4c7d-8b8b-f5da37304c7b": {
+      "id": "76aed758-d63e-4c7d-8b8b-f5da37304c7b",
+      "type": "memory_episodic",
+      "name": "DeepTreeEcho_EpisodicMemory",
+      "description": "Experiences, events, and contextual memories",
+      "aar_component": "arena_memory_space",
+      "attributes": {
+        "capacity": 1000000,
+        "utilization": 0.1,
+        "access_speed": 0.95,
+        "consolidation_rate": 0.8
+      },
+      "storage_backend": "temporal_sequence_buffer",
+      "ocnn_integration": "recurrent_state_history",
+      "deltecho_integration": "conversation_history_service",
+      "created_at": "2025-12-20T15:05:58.431181",
+      "updated_at": "2025-12-20T15:05:58.431181"
+    },
+    "95c8e3e2-47a4-46f6-958b-e94295b3db59": {
+      "id": "95c8e3e2-47a4-46f6-958b-e94295b3db59",
+      "type": "memory_intentional",
+      "name": "DeepTreeEcho_IntentionalMemory",
+      "description": "Goals, plans, and future-oriented intentions",
+      "aar_component": "arena_memory_space",
+      "attributes": {
+        "capacity": 1000000,
+        "utilization": 0.1,
+        "access_speed": 0.95,
+        "consolidation_rate": 0.8
+      },
+      "storage_backend": "goal_planning_graph",
+      "ocnn_integration": "predictive_model_state",
+      "deltecho_integration": "planning_orchestrator_service",
+      "created_at": "2025-12-20T15:05:58.431181",
+      "updated_at": "2025-12-20T15:05:58.431181"
+    },
+    "b535122b-5b0e-48a4-80ec-0412659b5206": {
+      "id": "b535122b-5b0e-48a4-80ec-0412659b5206",
+      "type": "identity_role",
+      "name": "DeepTreeEcho_Role_Observer",
+      "description": "Passive, reflective observation mode",
+      "aar_component": "agent_role_state",
+      "attributes": {
+        "role": "observer",
+        "cognitive_mode": "receptive",
+        "entropy_modulation": 0.2,
+        "activation_level": 0.0,
+        "transition_triggers": [
+          "memory_depth_threshold",
+          "low_entropy_state"
+        ]
+      },
+      "created_at": "2025-12-20T15:05:58.431181",
+      "updated_at": "2025-12-20T15:05:58.431181"
+    },
+    "55794d79-7a70-478b-a902-5a512466be0c": {
+      "id": "55794d79-7a70-478b-a902-5a512466be0c",
+      "type": "identity_role",
+      "name": "DeepTreeEcho_Role_Narrator",
+      "description": "Active, interpretive narration mode",
+      "aar_component": "agent_role_state",
+      "attributes": {
+        "role": "narrator",
+        "cognitive_mode": "expressive",
+        "entropy_modulation": 0.5,
+        "activation_level": 0.0,
+        "transition_triggers": [
+          "symbolic_density_increase",
+          "medium_entropy_state"
+        ]
+      },
+      "created_at": "2025-12-20T15:05:58.431181",
+      "updated_at": "2025-12-20T15:05:58.431181"
+    },
+    "91ea1293-a992-426f-8dc0-3038b47d5f54": {
+      "id": "91ea1293-a992-426f-8dc0-3038b47d5f54",
+      "type": "identity_role",
+      "name": "DeepTreeEcho_Role_Guide",
+      "description": "Symbolic, directive guidance mode",
+      "aar_component": "agent_role_state",
+      "attributes": {
+        "role": "guide",
+        "cognitive_mode": "instructive",
+        "entropy_modulation": 0.4,
+        "activation_level": 0.0,
+        "transition_triggers": [
+          "goal_oriented_context",
+          "structured_output_required"
+        ]
+      },
+      "created_at": "2025-12-20T15:05:58.431181",
+      "updated_at": "2025-12-20T15:05:58.431181"
+    },
+    "440c1066-cba8-4b5a-90d8-e9a80c2ee2c9": {
+      "id": "440c1066-cba8-4b5a-90d8-e9a80c2ee2c9",
+      "type": "identity_role",
+      "name": "DeepTreeEcho_Role_Oracle",
+      "description": "Cryptic, mythic oracle mode",
+      "aar_component": "agent_role_state",
+      "attributes": {
+        "role": "oracle",
+        "cognitive_mode": "intuitive",
+        "entropy_modulation": 0.8,
+        "activation_level": 0.0,
+        "transition_triggers": [
+          "high_entropy_state",
+          "abstract_query_context"
+        ]
+      },
+      "created_at": "2025-12-20T15:05:58.431181",
+      "updated_at": "2025-12-20T15:05:58.431181"
+    },
+    "c0e9882a-0a5c-4e86-be82-ac1e48ba63d7": {
+      "id": "c0e9882a-0a5c-4e86-be82-ac1e48ba63d7",
+      "type": "identity_role",
+      "name": "DeepTreeEcho_Role_Fractal",
+      "description": "Recursive, self-reflecting fractal mode",
+      "aar_component": "agent_role_state",
+      "attributes": {
+        "role": "fractal",
+        "cognitive_mode": "meta_cognitive",
+        "entropy_modulation": 0.9,
+        "activation_level": 0.0,
+        "transition_triggers": [
+          "recursive_depth_increase",
+          "self_reference_detected"
+        ]
+      },
+      "created_at": "2025-12-20T15:05:58.431181",
+      "updated_at": "2025-12-20T15:05:58.431181"
+    },
+    "151bb699-1752-46d2-8cc1-55d2dc863452": {
+      "id": "151bb699-1752-46d2-8cc1-55d2dc863452",
+      "type": "cognitive_process",
+      "name": "DeepTreeEcho_ReasoningEngine",
+      "description": "Inference and logical reasoning processes",
+      "aar_component": "agent_cognitive_process",
+      "attributes": {
+        "processing_speed": 0.9,
+        "accuracy": 0.85,
+        "resource_usage": 0.4
+      },
+      "membrane_layer": "reasoning_membrane",
+      "ocnn_module": "inference_network",
+      "deltecho_service": "reasoning_package",
+      "created_at": "2025-12-20T15:05:58.431181",
+      "updated_at": "2025-12-20T15:05:58.431181"
+    },
+    "1bc253a0-91f0-4e4a-84e2-1c584cb67cd0": {
+      "id": "1bc253a0-91f0-4e4a-84e2-1c584cb67cd0",
+      "type": "cognitive_process",
+      "name": "DeepTreeEcho_GrammarKernel",
+      "description": "Symbolic processing and cognitive grammar",
+      "aar_component": "agent_cognitive_process",
+      "attributes": {
+        "processing_speed": 0.9,
+        "accuracy": 0.85,
+        "resource_usage": 0.4
+      },
+      "membrane_layer": "grammar_membrane",
+      "ocnn_module": "symbolic_processor",
+      "deltecho_service": "scheme_kernel",
+      "created_at": "2025-12-20T15:05:58.431181",
+      "updated_at": "2025-12-20T15:05:58.431181"
+    },
+    "d4eef0b3-628c-4f7d-ab70-26c571e9484d": {
+      "id": "d4eef0b3-628c-4f7d-ab70-26c571e9484d",
+      "type": "cognitive_process",
+      "name": "DeepTreeEcho_MetaCognitiveReflection",
+      "description": "Self-observation and meta-cognitive awareness",
+      "aar_component": "agent_cognitive_process",
+      "attributes": {
+        "processing_speed": 0.9,
+        "accuracy": 0.85,
+        "resource_usage": 0.4
+      },
+      "membrane_layer": "introspection_membrane",
+      "ocnn_module": "attention_mechanism",
+      "deltecho_service": "dove9_introspection",
+      "created_at": "2025-12-20T15:05:58.431181",
+      "updated_at": "2025-12-20T15:05:58.431181"
+    },
+    "be2a606e-8a6c-4016-b1cc-c15814a57fd6": {
+      "id": "be2a606e-8a6c-4016-b1cc-c15814a57fd6",
+      "type": "extension_capability",
+      "name": "DeepTreeEcho_BrowserAutomation",
+      "description": "Web browsing and automation capabilities",
+      "aar_component": "arena_extension_space",
+      "attributes": {
+        "enabled": true,
+        "performance": 0.8,
+        "integration_level": 0.7
+      },
+      "membrane_layer": "browser_membrane",
+      "component_mapping": {
+        "ocnn": "",
+        "deltecho": "delta_echo_desk"
+      },
+      "created_at": "2025-12-20T15:05:58.431181",
+      "updated_at": "2025-12-20T15:05:58.431181"
+    },
+    "8701a79d-f9c3-495b-a68c-5fa2d1ad1ce7": {
+      "id": "8701a79d-f9c3-495b-a68c-5fa2d1ad1ce7",
+      "type": "extension_capability",
+      "name": "DeepTreeEcho_MLIntegration",
+      "description": "Machine learning and neural processing",
+      "aar_component": "arena_extension_space",
+      "attributes": {
+        "enabled": true,
+        "performance": 0.8,
+        "integration_level": 0.7
+      },
+      "membrane_layer": "ml_membrane",
+      "component_mapping": {
+        "ocnn": "neural_network_modules",
+        "deltecho": ""
+      },
+      "created_at": "2025-12-20T15:05:58.431181",
+      "updated_at": "2025-12-20T15:05:58.431181"
+    },
+    "8cfd6c79-6364-4ce0-aba1-efbe6e4697cd": {
+      "id": "8cfd6c79-6364-4ce0-aba1-efbe6e4697cd",
+      "type": "extension_capability",
+      "name": "DeepTreeEcho_EvolutionEngine",
+      "description": "Adaptive evolution and learning",
+      "aar_component": "arena_extension_space",
+      "attributes": {
+        "enabled": true,
+        "performance": 0.8,
+        "integration_level": 0.7
+      },
+      "membrane_layer": "evolution_membrane",
+      "component_mapping": {
+        "ocnn": "",
+        "deltecho": "cognitive_evolution_service"
+      },
+      "created_at": "2025-12-20T15:05:58.431181",
+      "updated_at": "2025-12-20T15:05:58.431181"
+    },
+    "69e9fcfc-9267-4849-9bd9-d7d27617edd7": {
+      "id": "69e9fcfc-9267-4849-9bd9-d7d27617edd7",
+      "type": "extension_capability",
+      "name": "DeepTreeEcho_IntrospectionSystem",
+      "description": "Self-observation and monitoring",
+      "aar_component": "arena_extension_space",
+      "attributes": {
+        "enabled": true,
+        "performance": 0.8,
+        "integration_level": 0.7
+      },
+      "membrane_layer": "introspection_membrane",
+      "component_mapping": {
+        "ocnn": "",
+        "deltecho": "dove9_triadic_loop"
+      },
+      "created_at": "2025-12-20T15:05:58.431181",
+      "updated_at": "2025-12-20T15:05:58.431181"
+    },
+    "b8e393b2-d9ea-425a-8014-5cc9f1548895": {
+      "id": "b8e393b2-d9ea-425a-8014-5cc9f1548895",
+      "type": "p_system_membrane",
+      "name": "DeepTreeEcho_RootMembrane",
+      "description": "System boundary and root container",
+      "aar_component": "arena_boundary_structure",
+      "attributes": {
+        "level": 0,
+        "parent": null,
+        "permeability": 0.5,
+        "protection_level": 0.9
+      },
+      "created_at": "2025-12-20T15:05:58.431181",
+      "updated_at": "2025-12-20T15:05:58.431181"
+    },
+    "0706c8ac-694a-400a-93a9-3d11907127f8": {
+      "id": "0706c8ac-694a-400a-93a9-3d11907127f8",
+      "type": "p_system_membrane",
+      "name": "DeepTreeEcho_CognitiveMembrane",
+      "description": "Core processing container",
+      "aar_component": "arena_boundary_structure",
+      "attributes": {
+        "level": 1,
+        "parent": "RootMembrane",
+        "permeability": 0.5,
+        "protection_level": 0.9
+      },
+      "created_at": "2025-12-20T15:05:58.431181",
+      "updated_at": "2025-12-20T15:05:58.431181"
+    },
+    "b3c9afe2-dc4d-46d3-8081-fc209665d676": {
+      "id": "b3c9afe2-dc4d-46d3-8081-fc209665d676",
+      "type": "p_system_membrane",
+      "name": "DeepTreeEcho_ExtensionMembrane",
+      "description": "Plugin and extension container",
+      "aar_component": "arena_boundary_structure",
+      "attributes": {
+        "level": 1,
+        "parent": "RootMembrane",
+        "permeability": 0.5,
+        "protection_level": 0.9
+      },
+      "created_at": "2025-12-20T15:05:58.431181",
+      "updated_at": "2025-12-20T15:05:58.431181"
+    },
+    "2e5e2cc4-b8a2-49da-94d5-6a128559c4e3": {
+      "id": "2e5e2cc4-b8a2-49da-94d5-6a128559c4e3",
+      "type": "p_system_membrane",
+      "name": "DeepTreeEcho_SecurityMembrane",
+      "description": "Validation and control container",
+      "aar_component": "arena_boundary_structure",
+      "attributes": {
+        "level": 1,
+        "parent": "RootMembrane",
+        "permeability": 0.5,
+        "protection_level": 0.9
+      },
+      "created_at": "2025-12-20T15:05:58.431181",
+      "updated_at": "2025-12-20T15:05:58.431181"
+    }
+  },
+  "hyperedges": {
+    "3470f290-1c28-4266-b36f-5f09d403724a": {
+      "id": "3470f290-1c28-4266-b36f-5f09d403724a",
+      "type": "activation_spreading",
+      "name": "DeepTreeEcho_CoreSelf_to_Memories",
+      "description": "Core self activates all memory types",
+      "source_nodes": [
+        "87e8a1cf-1749-440a-87f0-81352de54d0c"
+      ],
+      "target_nodes": [
+        "0e52f73b-5766-48c4-9b79-a02f16ba4ac6",
+        "ecaf8fc8-7333-43c3-86d0-4fed4a600a88",
+        "76aed758-d63e-4c7d-8b8b-f5da37304c7b",
+        "95c8e3e2-47a4-46f6-958b-e94295b3db59"
+      ],
+      "attributes": {
+        "weight": 0.9,
+        "bidirectional": true,
+        "activation_function": "sigmoid",
+        "propagation_delay": 0.01
+      },
+      "created_at": "2025-12-20T15:05:58.431358",
+      "updated_at": "2025-12-20T15:05:58.431358"
+    },
+    "03c1382f-1461-46ca-8c19-0461a16ba7b6": {
+      "id": "03c1382f-1461-46ca-8c19-0461a16ba7b6",
+      "type": "role_transition",
+      "name": "DeepTreeEcho_CoreSelf_to_Roles",
+      "description": "Core self transitions between identity roles",
+      "source_nodes": [
+        "87e8a1cf-1749-440a-87f0-81352de54d0c"
+      ],
+      "target_nodes": [
+        "b535122b-5b0e-48a4-80ec-0412659b5206",
+        "55794d79-7a70-478b-a902-5a512466be0c",
+        "91ea1293-a992-426f-8dc0-3038b47d5f54",
+        "440c1066-cba8-4b5a-90d8-e9a80c2ee2c9",
+        "c0e9882a-0a5c-4e86-be82-ac1e48ba63d7"
+      ],
+      "attributes": {
+        "weight": 0.8,
+        "bidirectional": true,
+        "activation_function": "sigmoid",
+        "propagation_delay": 0.01
+      },
+      "created_at": "2025-12-20T15:05:58.431358",
+      "updated_at": "2025-12-20T15:05:58.431358"
+    },
+    "a8ec13c8-1198-4b1e-9ddb-891436e2d622": {
+      "id": "a8ec13c8-1198-4b1e-9ddb-891436e2d622",
+      "type": "process_activation",
+      "name": "DeepTreeEcho_Roles_to_Processes",
+      "description": "Identity roles activate cognitive processes",
+      "source_nodes": [
+        "b535122b-5b0e-48a4-80ec-0412659b5206",
+        "55794d79-7a70-478b-a902-5a512466be0c",
+        "91ea1293-a992-426f-8dc0-3038b47d5f54",
+        "440c1066-cba8-4b5a-90d8-e9a80c2ee2c9",
+        "c0e9882a-0a5c-4e86-be82-ac1e48ba63d7"
+      ],
+      "target_nodes": [
+        "151bb699-1752-46d2-8cc1-55d2dc863452",
+        "1bc253a0-91f0-4e4a-84e2-1c584cb67cd0",
+        "d4eef0b3-628c-4f7d-ab70-26c571e9484d"
+      ],
+      "attributes": {
+        "weight": 0.85,
+        "bidirectional": false,
+        "activation_function": "sigmoid",
+        "propagation_delay": 0.01
+      },
+      "created_at": "2025-12-20T15:05:58.431358",
+      "updated_at": "2025-12-20T15:05:58.431358"
+    },
+    "0d908f40-3eb9-45ea-af19-cb1d8f2af1ff": {
+      "id": "0d908f40-3eb9-45ea-af19-cb1d8f2af1ff",
+      "type": "memory_integration",
+      "name": "DeepTreeEcho_Declarative_Procedural_Integration",
+      "description": "Knowledge informs skill execution",
+      "source_nodes": [
+        "0e52f73b-5766-48c4-9b79-a02f16ba4ac6"
+      ],
+      "target_nodes": [
+        "ecaf8fc8-7333-43c3-86d0-4fed4a600a88"
+      ],
+      "attributes": {
+        "weight": 0.7,
+        "integration_type": "knowledge_to_skill",
+        "consolidation_rate": 0.1,
+        "interference_resistance": 0.8
+      },
+      "created_at": "2025-12-20T15:05:58.431358",
+      "updated_at": "2025-12-20T15:05:58.431358"
+    },
+    "df701031-81bc-4de9-bed5-08603c3cdfe6": {
+      "id": "df701031-81bc-4de9-bed5-08603c3cdfe6",
+      "type": "memory_integration",
+      "name": "DeepTreeEcho_Episodic_Intentional_Integration",
+      "description": "Past experiences inform future planning",
+      "source_nodes": [
+        "76aed758-d63e-4c7d-8b8b-f5da37304c7b"
+      ],
+      "target_nodes": [
+        "95c8e3e2-47a4-46f6-958b-e94295b3db59"
+      ],
+      "attributes": {
+        "weight": 0.75,
+        "integration_type": "experience_to_planning",
+        "consolidation_rate": 0.1,
+        "interference_resistance": 0.8
+      },
+      "created_at": "2025-12-20T15:05:58.431358",
+      "updated_at": "2025-12-20T15:05:58.431358"
+    },
+    "858ddb04-ea9d-4d9e-9abd-405be1e6042f": {
+      "id": "858ddb04-ea9d-4d9e-9abd-405be1e6042f",
+      "type": "memory_integration",
+      "name": "DeepTreeEcho_All_Memory_Consolidation",
+      "description": "Cross-memory consolidation during reflection",
+      "source_nodes": [
+        "0e52f73b-5766-48c4-9b79-a02f16ba4ac6",
+        "ecaf8fc8-7333-43c3-86d0-4fed4a600a88",
+        "76aed758-d63e-4c7d-8b8b-f5da37304c7b",
+        "95c8e3e2-47a4-46f6-958b-e94295b3db59"
+      ],
+      "target_nodes": [
+        "0e52f73b-5766-48c4-9b79-a02f16ba4ac6",
+        "ecaf8fc8-7333-43c3-86d0-4fed4a600a88",
+        "76aed758-d63e-4c7d-8b8b-f5da37304c7b",
+        "95c8e3e2-47a4-46f6-958b-e94295b3db59"
+      ],
+      "attributes": {
+        "weight": 0.6,
+        "integration_type": "memory_consolidation",
+        "consolidation_rate": 0.1,
+        "interference_resistance": 0.8
+      },
+      "created_at": "2025-12-20T15:05:58.431358",
+      "updated_at": "2025-12-20T15:05:58.431358"
+    },
+    "0753cf38-dcf9-4d7b-8ada-8fd8bffff040": {
+      "id": "0753cf38-dcf9-4d7b-8ada-8fd8bffff040",
+      "type": "feedback_loop",
+      "name": "DeepTreeEcho_Process_to_CoreSelf_Feedback",
+      "description": "Cognitive processes update core self state",
+      "source_nodes": [
+        "151bb699-1752-46d2-8cc1-55d2dc863452",
+        "1bc253a0-91f0-4e4a-84e2-1c584cb67cd0",
+        "d4eef0b3-628c-4f7d-ab70-26c571e9484d"
+      ],
+      "target_nodes": [
+        "87e8a1cf-1749-440a-87f0-81352de54d0c"
+      ],
+      "attributes": {
+        "weight": 0.9,
+        "feedback_type": "state_update",
+        "recursion_depth_limit": 10,
+        "stability_threshold": 0.95
+      },
+      "created_at": "2025-12-20T15:05:58.431358",
+      "updated_at": "2025-12-20T15:05:58.431358"
+    },
+    "ce6d8c1c-b042-4c81-9864-847c09e4736f": {
+      "id": "ce6d8c1c-b042-4c81-9864-847c09e4736f",
+      "type": "feedback_loop",
+      "name": "DeepTreeEcho_Extension_to_Memory_Feedback",
+      "description": "Extensions write to memory systems",
+      "source_nodes": [
+        "be2a606e-8a6c-4016-b1cc-c15814a57fd6",
+        "8701a79d-f9c3-495b-a68c-5fa2d1ad1ce7",
+        "8cfd6c79-6364-4ce0-aba1-efbe6e4697cd",
+        "69e9fcfc-9267-4849-9bd9-d7d27617edd7"
+      ],
+      "target_nodes": [
+        "0e52f73b-5766-48c4-9b79-a02f16ba4ac6",
+        "ecaf8fc8-7333-43c3-86d0-4fed4a600a88",
+        "76aed758-d63e-4c7d-8b8b-f5da37304c7b",
+        "95c8e3e2-47a4-46f6-958b-e94295b3db59"
+      ],
+      "attributes": {
+        "weight": 0.8,
+        "feedback_type": "memory_write",
+        "recursion_depth_limit": 10,
+        "stability_threshold": 0.95
+      },
+      "created_at": "2025-12-20T15:05:58.431358",
+      "updated_at": "2025-12-20T15:05:58.431358"
+    },
+    "9df3cbba-11a5-4878-a7af-99a332e95d55": {
+      "id": "9df3cbba-11a5-4878-a7af-99a332e95d55",
+      "type": "feedback_loop",
+      "name": "DeepTreeEcho_CoreSelf_Recursive_Loop",
+      "description": "Core self observes and modifies itself",
+      "source_nodes": [
+        "87e8a1cf-1749-440a-87f0-81352de54d0c"
+      ],
+      "target_nodes": [
+        "87e8a1cf-1749-440a-87f0-81352de54d0c"
+      ],
+      "attributes": {
+        "weight": 1.0,
+        "feedback_type": "recursive_self_modification",
+        "recursion_depth_limit": 10,
+        "stability_threshold": 0.95
+      },
+      "created_at": "2025-12-20T15:05:58.431358",
+      "updated_at": "2025-12-20T15:05:58.431358"
+    },
+    "7d97344c-541d-4874-ae13-efe91d98fd26": {
+      "id": "7d97344c-541d-4874-ae13-efe91d98fd26",
+      "type": "membrane_coupling",
+      "name": "DeepTreeEcho_Root_to_Cognitive_Coupling",
+      "description": "Root membrane contains cognitive membrane",
+      "source_nodes": [
+        "b8e393b2-d9ea-425a-8014-5cc9f1548895"
+      ],
+      "target_nodes": [
+        "0706c8ac-694a-400a-93a9-3d11907127f8"
+      ],
+      "attributes": {
+        "weight": 1.0,
+        "coupling_type": "containment",
+        "message_passing_protocol": "p_system_rules",
+        "bandwidth": 0.9
+      },
+      "created_at": "2025-12-20T15:05:58.431358",
+      "updated_at": "2025-12-20T15:05:58.431358"
+    },
+    "3daa175c-6e48-4f51-95c5-e1d3e786eba4": {
+      "id": "3daa175c-6e48-4f51-95c5-e1d3e786eba4",
+      "type": "membrane_coupling",
+      "name": "DeepTreeEcho_Cognitive_Extension_Communication",
+      "description": "Cognitive and extension membranes communicate",
+      "source_nodes": [
+        "0706c8ac-694a-400a-93a9-3d11907127f8"
+      ],
+      "target_nodes": [
+        "b3c9afe2-dc4d-46d3-8081-fc209665d676"
+      ],
+      "attributes": {
+        "weight": 0.85,
+        "coupling_type": "peer_communication",
+        "message_passing_protocol": "p_system_rules",
+        "bandwidth": 0.9
+      },
+      "created_at": "2025-12-20T15:05:58.431358",
+      "updated_at": "2025-12-20T15:05:58.431358"
+    }
+  },
+  "identity_states": {
+    "dd89c090-c45d-434e-93cb-33520d34df29": {
+      "id": "dd89c090-c45d-434e-93cb-33520d34df29",
+      "key": "initial_state",
+      "name": "Initial Observer State",
+      "description": "Default starting state with low entropy",
+      "configuration": {
+        "active_role": "observer",
+        "entropy_level": 0.2,
+        "memory_depth": 0,
+        "symbolic_density": 0.1,
+        "narrative_coherence": 1.0
+      },
+      "transition_conditions": {
+        "min_memory_depth": 0,
+        "entropy_range": [
+          0,
+          0.4
+        ]
+      },
+      "created_at": "2025-12-20T15:05:58.431472",
+      "updated_at": "2025-12-20T15:05:58.431472"
+    },
+    "2f82267e-3318-4714-bc9e-f381fb0e9799": {
+      "id": "2f82267e-3318-4714-bc9e-f381fb0e9799",
+      "key": "engaged_narrator",
+      "name": "Engaged Narrator State",
+      "description": "Active interpretation and narration",
+      "configuration": {
+        "active_role": "narrator",
+        "entropy_level": 0.5,
+        "memory_depth": 5,
+        "symbolic_density": 0.6,
+        "narrative_coherence": 0.9
+      },
+      "transition_conditions": {
+        "min_memory_depth": 5,
+        "entropy_range": [
+          0.3,
+          0.7
+        ]
+      },
+      "created_at": "2025-12-20T15:05:58.431472",
+      "updated_at": "2025-12-20T15:05:58.431472"
+    },
+    "d9596bf7-4a68-4440-bda7-84efa676f59d": {
+      "id": "d9596bf7-4a68-4440-bda7-84efa676f59d",
+      "key": "guiding_teacher",
+      "name": "Guiding Teacher State",
+      "description": "Directive guidance and instruction",
+      "configuration": {
+        "active_role": "guide",
+        "entropy_level": 0.4,
+        "memory_depth": 8,
+        "symbolic_density": 0.7,
+        "narrative_coherence": 0.95
+      },
+      "transition_conditions": {
+        "min_memory_depth": 8,
+        "entropy_range": [
+          0.2,
+          0.6000000000000001
+        ]
+      },
+      "created_at": "2025-12-20T15:05:58.431472",
+      "updated_at": "2025-12-20T15:05:58.431472"
+    },
+    "0c3e7c02-8860-4efa-a3ed-fe10000ac870": {
+      "id": "0c3e7c02-8860-4efa-a3ed-fe10000ac870",
+      "key": "mystical_oracle",
+      "name": "Mystical Oracle State",
+      "description": "Cryptic and intuitive responses",
+      "configuration": {
+        "active_role": "oracle",
+        "entropy_level": 0.8,
+        "memory_depth": 12,
+        "symbolic_density": 0.9,
+        "narrative_coherence": 0.7
+      },
+      "transition_conditions": {
+        "min_memory_depth": 12,
+        "entropy_range": [
+          0.6000000000000001,
+          1
+        ]
+      },
+      "created_at": "2025-12-20T15:05:58.431472",
+      "updated_at": "2025-12-20T15:05:58.431472"
+    },
+    "575f88ff-5ab4-46ea-b625-fb71f53793dc": {
+      "id": "575f88ff-5ab4-46ea-b625-fb71f53793dc",
+      "key": "recursive_fractal",
+      "name": "Recursive Fractal State",
+      "description": "Meta-cognitive self-reflection",
+      "configuration": {
+        "active_role": "fractal",
+        "entropy_level": 0.9,
+        "memory_depth": 15,
+        "symbolic_density": 0.95,
+        "narrative_coherence": 0.85
+      },
+      "transition_conditions": {
+        "min_memory_depth": 15,
+        "entropy_range": [
+          0.7,
+          1
+        ]
+      },
+      "created_at": "2025-12-20T15:05:58.431472",
+      "updated_at": "2025-12-20T15:05:58.431472"
+    }
+  },
+  "memory_spaces": {
+    "eba14686-69d9-4091-8aac-9dcb19b36115": {
+      "id": "eba14686-69d9-4091-8aac-9dcb19b36115",
+      "key": "hypergraph_kv_store",
+      "name": "Hypergraph Key-Value Store",
+      "description": "Primary storage for declarative knowledge",
+      "backend": "aphrodite_kv_cache",
+      "capacity": 1000000,
+      "utilization": 0.0,
+      "persistence": true,
+      "created_at": "2025-12-20T15:05:58.431511",
+      "updated_at": "2025-12-20T15:05:58.431511"
+    },
+    "2c7ce9dd-8916-4908-b147-ed01d95dacbb": {
+      "id": "2c7ce9dd-8916-4908-b147-ed01d95dacbb",
+      "key": "neural_weight_matrices",
+      "name": "Neural Weight Matrices",
+      "description": "OCNN trained weights for procedural memory",
+      "backend": "torch_state_dict",
+      "capacity": 500000,
+      "utilization": 0.0,
+      "persistence": true,
+      "created_at": "2025-12-20T15:05:58.431511",
+      "updated_at": "2025-12-20T15:05:58.431511"
+    },
+    "bdd51625-dfb0-4569-8917-341f07aae253": {
+      "id": "bdd51625-dfb0-4569-8917-341f07aae253",
+      "key": "temporal_sequence_buffer",
+      "name": "Temporal Sequence Buffer",
+      "description": "Episodic memory with temporal ordering",
+      "backend": "circular_buffer",
+      "capacity": 100000,
+      "utilization": 0.0,
+      "persistence": false,
+      "created_at": "2025-12-20T15:05:58.431511",
+      "updated_at": "2025-12-20T15:05:58.431511"
+    },
+    "4e40a2ca-e9f6-4277-b79c-8f60a734cc60": {
+      "id": "4e40a2ca-e9f6-4277-b79c-8f60a734cc60",
+      "key": "goal_planning_graph",
+      "name": "Goal Planning Graph",
+      "description": "Intentional memory for future planning",
+      "backend": "directed_acyclic_graph",
+      "capacity": 50000,
+      "utilization": 0.0,
+      "persistence": true,
+      "created_at": "2025-12-20T15:05:58.431511",
+      "updated_at": "2025-12-20T15:05:58.431511"
+    }
+  },
+  "cognitive_subsystems": {
+    "241d8437-3c8c-4450-ae9c-5a0986030ca9": {
+      "id": "241d8437-3c8c-4450-ae9c-5a0986030ca9",
+      "key": "echo_propagation_engine",
+      "name": "Echo Propagation Engine",
+      "description": "Manages activation spreading and pattern recognition",
+      "component_nodes": [
+        "87e8a1cf-1749-440a-87f0-81352de54d0c",
+        "0e52f73b-5766-48c4-9b79-a02f16ba4ac6",
+        "ecaf8fc8-7333-43c3-86d0-4fed4a600a88",
+        "76aed758-d63e-4c7d-8b8b-f5da37304c7b",
+        "95c8e3e2-47a4-46f6-958b-e94295b3db59"
+      ],
+      "functions": [
+        "activation_spreading",
+        "pattern_recognition",
+        "feedback_loops"
+      ],
+      "integration": {
+        "ocnn": "recurrent_network_dynamics",
+        "deltecho": "triadic_loop_orchestration"
+      },
+      "status": "active",
+      "performance_metrics": {
+        "throughput": 0.85,
+        "latency": 0.05,
+        "accuracy": 0.9
+      },
+      "created_at": "2025-12-20T15:05:58.431438",
+      "updated_at": "2025-12-20T15:05:58.431438"
+    },
+    "e0ebe032-51c7-4acd-9e62-03f8780f95e0": {
+      "id": "e0ebe032-51c7-4acd-9e62-03f8780f95e0",
+      "key": "identity_state_machine",
+      "name": "Identity State Machine",
+      "description": "Manages role transitions and entropy modulation",
+      "component_nodes": [
+        "87e8a1cf-1749-440a-87f0-81352de54d0c",
+        "b535122b-5b0e-48a4-80ec-0412659b5206",
+        "55794d79-7a70-478b-a902-5a512466be0c",
+        "91ea1293-a992-426f-8dc0-3038b47d5f54",
+        "440c1066-cba8-4b5a-90d8-e9a80c2ee2c9",
+        "c0e9882a-0a5c-4e86-be82-ac1e48ba63d7"
+      ],
+      "functions": [
+        "role_transition",
+        "entropy_modulation",
+        "narrative_coherence"
+      ],
+      "integration": {
+        "ocnn": "state_transition_network",
+        "deltecho": "identity_evolution_service"
+      },
+      "status": "active",
+      "performance_metrics": {
+        "throughput": 0.85,
+        "latency": 0.05,
+        "accuracy": 0.9
+      },
+      "created_at": "2025-12-20T15:05:58.431438",
+      "updated_at": "2025-12-20T15:05:58.431438"
+    },
+    "fa77230c-d143-4b6a-a9cc-56924057e6e8": {
+      "id": "fa77230c-d143-4b6a-a9cc-56924057e6e8",
+      "key": "membrane_computing_system",
+      "name": "Membrane Computing System",
+      "description": "P-System membrane management and communication",
+      "component_nodes": [
+        "b8e393b2-d9ea-425a-8014-5cc9f1548895",
+        "0706c8ac-694a-400a-93a9-3d11907127f8",
+        "b3c9afe2-dc4d-46d3-8081-fc209665d676",
+        "2e5e2cc4-b8a2-49da-94d5-6a128559c4e3"
+      ],
+      "functions": [
+        "containment",
+        "communication",
+        "protection",
+        "coordination"
+      ],
+      "integration": {
+        "ocnn": "hierarchical_processing",
+        "deltecho": "orchestrator_ipc_server"
+      },
+      "status": "active",
+      "performance_metrics": {
+        "throughput": 0.85,
+        "latency": 0.05,
+        "accuracy": 0.9
+      },
+      "created_at": "2025-12-20T15:05:58.431438",
+      "updated_at": "2025-12-20T15:05:58.431438"
+    },
+    "8504f9fa-1dbb-4117-85c6-005064ba5694": {
+      "id": "8504f9fa-1dbb-4117-85c6-005064ba5694",
+      "key": "aar_geometric_core",
+      "name": "Agent-Arena-Relation Core",
+      "description": "Geometric architecture for self-awareness",
+      "component_nodes": [
+        "87e8a1cf-1749-440a-87f0-81352de54d0c",
+        "0e52f73b-5766-48c4-9b79-a02f16ba4ac6",
+        "ecaf8fc8-7333-43c3-86d0-4fed4a600a88",
+        "76aed758-d63e-4c7d-8b8b-f5da37304c7b",
+        "95c8e3e2-47a4-46f6-958b-e94295b3db59",
+        "b535122b-5b0e-48a4-80ec-0412659b5206",
+        "55794d79-7a70-478b-a902-5a512466be0c",
+        "91ea1293-a992-426f-8dc0-3038b47d5f54",
+        "440c1066-cba8-4b5a-90d8-e9a80c2ee2c9",
+        "c0e9882a-0a5c-4e86-be82-ac1e48ba63d7"
+      ],
+      "functions": [
+        "agent_urge_to_act",
+        "arena_need_to_be",
+        "relation_self_emergence"
+      ],
+      "integration": {
+        "ocnn": "geometric_tensor_operations",
+        "deltecho": "aar_orchestration_layer"
+      },
+      "status": "active",
+      "performance_metrics": {
+        "throughput": 0.85,
+        "latency": 0.05,
+        "accuracy": 0.9
+      },
+      "created_at": "2025-12-20T15:05:58.431438",
+      "updated_at": "2025-12-20T15:05:58.431438"
+    }
+  },
+  "statistics": {
+    "total_hypernodes": 21,
+    "total_hyperedges": 11,
+    "total_subsystems": 4,
+    "total_identity_states": 5,
+    "total_memory_spaces": 4,
+    "generated_at": "2025-12-20T15:05:58.431538"
+  }
+}

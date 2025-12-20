@@ -1,0 +1,66 @@
+{
+  "name": "deltecho-monorepo",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Deltecho monorepo - Unified Deep Tree Echo cognitive ecosystem",
+  "type": "module",
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9.6.0"
+  },
+  "scripts": {
+    "build": "pnpm -r build",
+    "lint": "eslint . --ext .ts --max-warnings 0",
+    "lint:fix": "eslint . --ext .ts --fix",
+    "format": "prettier --check \"**/*.{ts,json,md}\"",
+    "format:fix": "prettier --write \"**/*.{ts,json,md}\"",
+    "build:core": "pnpm --filter deep-tree-echo-core build",
+    "build:orchestrator": "pnpm --filter deep-tree-echo-orchestrator build",
+    "build:dove9": "pnpm --filter dove9 build",
+    "build:cognitive": "pnpm --filter @deltecho/cognitive build",
+    "build:reasoning": "pnpm --filter @deltecho/reasoning build",
+    "build:shared": "pnpm --filter @deltecho/shared build",
+    "build:ui": "pnpm --filter @deltecho/ui-components build",
+    "check": "pnpm -r check:types",
+    "check:core": "pnpm --filter deep-tree-echo-core check:types",
+    "check:orchestrator": "pnpm --filter deep-tree-echo-orchestrator check:types",
+    "clean": "pnpm -r clean",
+    "test": "pnpm -r test",
+    "test:core": "pnpm --filter deep-tree-echo-core test",
+    "dev:desktop": "pnpm --filter deltecho2 dev",
+    "dev:electron": "pnpm --filter deltecho2 dev:electron",
+    "start:orchestrator": "pnpm --filter deep-tree-echo-orchestrator start"
+  },
+  "pnpm": {
+    "supportedArchitectures": {
+      "os": [
+        "darwin",
+        "win32",
+        "linux"
+      ],
+      "cpu": [
+        "x64",
+        "ia32",
+        "arm64"
+      ]
+    },
+    "onlyBuiltDependencies": [
+      "electron",
+      "esbuild"
+    ]
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "@types/node": "^20.12.7",
+    "@typescript-eslint/eslint-plugin": "^7.8.0",
+    "@typescript-eslint/parser": "^7.8.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "jest": "^29.7.0",
+    "prettier": "^3.1.0",
+    "ts-jest": "^29.4.6",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  }
+}

@@ -1,0 +1,156 @@
+name: 📚 CI - Documentation
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'docs/**'
+      - 'README.md'
+      - '**.md'
+      - '.github/workflows/ci-docs.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build-docs:
+    name: 📖 Build Documentation
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    
+    steps:
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v4
+      
+      - name: 🐍 Setup Python 3.12
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+      
+      - name: 📦 Install Documentation Tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install mkdocs mkdocs-material mkdocs-mermaid2-plugin
+      
+      - name: 📚 Build Documentation
+        run: |
+          echo "=== Building Documentation ==="
+          
+          # Create mkdocs.yml if it doesn't exist
+          if [ ! -f "mkdocs.yml" ]; then
+            cat > mkdocs.yml << 'EOF'
+          site_name: Deep Tree Echo AGI
+          site_description: Autonomous AGI with Persistent Cognitive Event Loops
+          site_author: o9nn
+          repo_url: https://github.com/o9nn/aphroditecho
+          repo_name: o9nn/aphroditecho
+          
+          theme:
+            name: material
+            palette:
+              primary: deep purple
+              accent: purple
+            features:
+              - navigation.tabs
+              - navigation.sections
+              - navigation.expand
+              - search.suggest
+              - search.highlight
+          
+          nav:
+            - Home: README.md
+            - Architecture:
+              - Parallel Echo: docs/PARALLEL_ECHO_ARCHITECTURE.md
+              - Component Analysis: docs/APHRODITE_COMPONENT_ANALYSIS.md
+              - CI/CD Architecture: docs/CI_CD_WORKFLOW_ARCHITECTURE.md
+            - Reports:
+              - Implementation: DEEP_TREE_ECHO_IMPLEMENTATION_REPORT.md
+              - Optimization: PARALLEL_ECHO_OPTIMIZATION_REPORT.md
+          
+          plugins:
+            - search
+            - mermaid2
+          
+          markdown_extensions:
+            - admonition
+            - codehilite
+            - pymdownx.superfences
+            - pymdownx.tabbed
+            - pymdownx.details
+            - toc:
+                permalink: true
+          EOF
+          fi
+          
+          # Build documentation
+          mkdocs build --strict
+          
+          echo "✅ Documentation built successfully"
+      
+      - name: 📤 Upload Documentation Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: documentation
+          path: site/
+          retention-days: 7
+  
+  deploy-docs:
+    name: 🚀 Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+    needs: build-docs
+    if: github.ref == 'refs/heads/main'
+    
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    
+    steps:
+      - name: 📥 Download Documentation
+        uses: actions/download-artifact@v4
+        with:
+          name: documentation
+          path: site/
+      
+      - name: 📄 Setup Pages
+        uses: actions/configure-pages@v4
+      
+      - name: 📤 Upload to Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site/
+      
+      - name: 🚀 Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+      
+      - name: 📊 Deployment Summary
+        run: |
+          cat >> $GITHUB_STEP_SUMMARY << 'EOF'
+          ## 📚 Documentation Deployment Summary
+          
+          ### Status
+          - **Build**: ✅ Success
+          - **Deploy**: ✅ Success
+          
+          ### Links
+          - **Documentation Site**: ${{ steps.deployment.outputs.page_url }}
+          - **Repository**: https://github.com/o9nn/aphroditecho
+          
+          ### Contents
+          - Architecture documentation
+          - Implementation reports
+          - Optimization reports
+          - API reference
+          
+          ### Next Steps
+          - Review documentation site
+          - Update links in README
+          - Share with team
+          EOF

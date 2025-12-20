@@ -1,0 +1,186 @@
+name: 🏗️ CI - Build AGI Engine
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'aphrodite/**'
+      - 'setup.py'
+      - 'pyproject.toml'
+      - 'requirements/**'
+      - 'CMakeLists.txt'
+      - '.github/workflows/ci-build-agi.yml'
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      device:
+        description: 'Target device'
+        required: true
+        default: 'cpu'
+        type: choice
+        options:
+          - cpu
+          - cuda
+      skip_tests:
+        description: 'Skip smoke tests'
+        required: false
+        default: false
+        type: boolean
+
+env:
+  PYTHON_VERSION: '3.12'
+  CUDA_VERSION: '12.4'
+  CMAKE_BUILD_TYPE: Release
+  MAX_JOBS: 2
+  CCACHE_MAXSIZE: 5G
+  AGI_MODE: true
+  SINGLE_INSTANCE: true
+  PERSISTENT_CONSCIOUSNESS: true
+
+jobs:
+  build-agi:
+    name: 🏗️ Build Deep Tree Echo AGI (${{ matrix.device }})
+    runs-on: ubuntu-22.04
+    timeout-minutes: 120
+    
+    strategy:
+      matrix:
+        device: ${{ github.event_name == 'workflow_dispatch' && fromJSON(format('["{0}"]', github.event.inputs.device)) || fromJSON('["cpu"]') }}
+    
+    steps:
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: 🧹 Aggressive Disk Cleanup
+        run: |
+          echo "=== Running Aggressive Disk Cleanup ==="
+          chmod +x scripts/ci-cleanup.sh
+          ./scripts/ci-cleanup.sh
+      
+      - name: 🐍 Setup Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+      
+      - name: 🔧 Setup CUDA ${{ env.CUDA_VERSION }}
+        if: matrix.device == 'cuda'
+        uses: Jimver/cuda-toolkit@v0.2.14
+        with:
+          cuda: ${{ env.CUDA_VERSION }}
+          method: 'network'
+          sub-packages: '["nvcc", "cudart", "cublas", "cufft", "curand", "cusparse", "cusolver"]'
+      
+      - name: 📦 Install Build Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install wheel setuptools ninja cmake
+          pip install torch==2.1.0 --index-url https://download.pytorch.org/whl/cpu
+      
+      - name: 🔨 Setup ccache
+        uses: hendrikmuhs/ccache-action@v1
+        with:
+          key: ${{ runner.os }}-${{ matrix.device }}-${{ env.CUDA_VERSION }}
+          max-size: ${{ env.CCACHE_MAXSIZE }}
+      
+      - name: 🏗️ Build AGI Engine
+        env:
+          APHRODITE_TARGET_DEVICE: ${{ matrix.device }}
+          TORCH_CUDA_ARCH_LIST: "8.0;8.6;8.9;9.0"
+        run: |
+          echo "=== Building Deep Tree Echo AGI Engine ==="
+          echo "Device: ${{ matrix.device }}"
+          echo "Python: ${{ env.PYTHON_VERSION }}"
+          echo "CUDA: ${{ env.CUDA_VERSION }}"
+          
+          # Build with limited parallelism to avoid disk issues
+          python setup.py build_ext --inplace
+          
+          echo "✅ Build complete"
+      
+      - name: 🧪 Run Smoke Tests
+        if: ${{ !inputs.skip_tests }}
+        run: |
+          echo "=== Running Smoke Tests ==="
+          
+          # Test imports
+          python -c "import aphrodite; print('✅ Aphrodite imported')"
+          python -c "from aphrodite.engine.deep_tree_agi_config import DeepTreeEchoAGIConfig; print('✅ AGI config imported')"
+          python -c "from aphrodite.engine.parallel_echo_orchestrator import ParallelEchoOrchestrator; print('✅ Orchestrator imported')"
+          python -c "from aphrodite.engine.hypergraph_integration import HypergraphIntegration; print('✅ Hypergraph integration imported')"
+          
+          # Test configuration
+          python -c "from aphrodite.engine.deep_tree_agi_config import DeepTreeEchoAGIConfig; config = DeepTreeEchoAGIConfig(); assert config.validate(), 'Config validation failed'"
+          
+          echo "✅ All smoke tests passed"
+      
+      - name: 📦 Package Artifacts
+        run: |
+          echo "=== Packaging AGI Artifacts ==="
+          
+          # Create artifact directory
+          mkdir -p artifacts/bin artifacts/config artifacts/docs
+          
+          # Copy built files
+          cp -r aphrodite artifacts/
+          cp -r cognitive_architectures artifacts/config/
+          cp -r cognitive_integrations artifacts/config/
+          
+          # Copy documentation
+          cp README.md artifacts/docs/
+          cp docs/PARALLEL_ECHO_ARCHITECTURE.md artifacts/docs/
+          cp docs/APHRODITE_COMPONENT_ANALYSIS.md artifacts/docs/
+          cp docs/CI_CD_WORKFLOW_ARCHITECTURE.md artifacts/docs/
+          
+          echo "✅ Artifacts packaged"
+      
+      - name: 📤 Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: deep-tree-echo-agi-${{ matrix.device }}
+          path: artifacts/
+          retention-days: 7
+          compression-level: 9
+      
+      - name: 🧹 Post-Build Cleanup
+        if: always()
+        run: |
+          echo "=== Post-Build Cleanup ==="
+          
+          # Remove build artifacts
+          rm -rf build/ dist/ *.egg-info/
+          
+          # Clean CUDA artifacts
+          find /tmp -name "*.fatbin.c" -delete 2>/dev/null || true
+          find /tmp -name "*.cudafe*" -delete 2>/dev/null || true
+          find /tmp -name "tmpxft_*" -delete 2>/dev/null || true
+          
+          echo "✅ Cleanup complete"
+      
+      - name: 📊 Build Summary
+        if: always()
+        run: |
+          cat >> $GITHUB_STEP_SUMMARY << 'EOF'
+          ## 🏗️ Build Summary
+          
+          ### Configuration
+          - **Device**: ${{ matrix.device }}
+          - **Python**: ${{ env.PYTHON_VERSION }}
+          - **CUDA**: ${{ env.CUDA_VERSION }}
+          - **Build Type**: ${{ env.CMAKE_BUILD_TYPE }}
+          
+          ### Build Status
+          - **Status**: ${{ job.status }}
+          - **Duration**: ${{ job.duration }}
+          
+          ### Artifacts
+          - Build artifacts uploaded: `deep-tree-echo-agi-${{ matrix.device }}`
+          
+          ### Next Steps
+          - Proceed to cognitive subsystem tests
+          - Run integration tests
+          - Validate performance targets
+          EOF

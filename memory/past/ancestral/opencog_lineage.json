@@ -1,0 +1,812 @@
+[
+  {
+    "edge_id": "oc_membrane::autognosis.evidence_gathering",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "autognosis.evidence_gathering",
+    "members": [
+      "evidence"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::cognitive.embedding.dimensional",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "cognitive.embedding.dimensional",
+    "members": [
+      "dimensional-embedding"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::cognitive.evolution.meta_optimizing",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "cognitive.evolution.meta_optimizing",
+    "members": [
+      "moses"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::cognitive.evolution.semantic_search",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "cognitive.evolution.semantic_search",
+    "members": [
+      "asmoses"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::cognitive.evolution.symbolic_learning",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "cognitive.evolution.symbolic_learning",
+    "members": [
+      "learn"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::cognitive.grammar.atomese_bridge",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "cognitive.grammar.atomese_bridge",
+    "members": [
+      "lg-atomese"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::cognitive.grammar.dependency_extractor",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "cognitive.grammar.dependency_extractor",
+    "members": [
+      "relex"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::cognitive.grammar.generation",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "cognitive.grammar.generation",
+    "members": [
+      "stochastic-language-generation"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::cognitive.grammar.link",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "cognitive.grammar.link",
+    "members": [
+      "link-grammar"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::cognitive.grammar.network_synthesis",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "cognitive.grammar.network_synthesis",
+    "members": [
+      "generate"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::cognitive.grammar.unsupervised",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "cognitive.grammar.unsupervised",
+    "members": [
+      "language-learning"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::cognitive.memory.api.javascript",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "cognitive.memory.api.javascript",
+    "members": [
+      "atomspace-js"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::cognitive.memory.api.typescript",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "cognitive.memory.api.typescript",
+    "members": [
+      "atomspace-typescript"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::cognitive.memory.bridge.sql",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "cognitive.memory.bridge.sql",
+    "members": [
+      "atomspace-bridge"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::cognitive.memory.compute.gpu",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "cognitive.memory.compute.gpu",
+    "members": [
+      "atomspace-gpu"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::cognitive.memory.compute.simd",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "cognitive.memory.compute.simd",
+    "members": [
+      "atomese-simd"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::cognitive.memory.distributed.client",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "cognitive.memory.distributed.client",
+    "members": [
+      "atomspace-cog"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::cognitive.memory.distributed.dht",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "cognitive.memory.distributed.dht",
+    "members": [
+      "atomspace-dht"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::cognitive.memory.distributed.ipfs",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "cognitive.memory.distributed.ipfs",
+    "members": [
+      "atomspace-ipfs"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::cognitive.memory.hypergraph",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "cognitive.memory.hypergraph",
+    "members": [
+      "atomspace"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::cognitive.memory.metta",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "cognitive.memory.metta",
+    "members": [
+      "atomspace-metta"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::cognitive.memory.persistence",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "cognitive.memory.persistence",
+    "members": [
+      "atomspace-storage"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::cognitive.memory.persistence.postgres",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "cognitive.memory.persistence.postgres",
+    "members": [
+      "atomspace-pgres"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::cognitive.memory.persistence.rocksdb",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "cognitive.memory.persistence.rocksdb",
+    "members": [
+      "atomspace-rocks"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::cognitive.reasoning.distributional",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "cognitive.reasoning.distributional",
+    "members": [
+      "distributional-value"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::cognitive.reasoning.probabilistic",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "cognitive.reasoning.probabilistic",
+    "members": [
+      "pln"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::cognitive.reasoning.truth_value",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "cognitive.reasoning.truth_value",
+    "members": [
+      "tv-toolbox"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::cognitive.reasoning.unification",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "cognitive.reasoning.unification",
+    "members": [
+      "unify"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::cognitive.reasoning.unified_rules",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "cognitive.reasoning.unified_rules",
+    "members": [
+      "ure"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::communication.distributed.cogserver",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "communication.distributed.cogserver",
+    "members": [
+      "cogserver"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::communication.protocol.grpc",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "communication.protocol.grpc",
+    "members": [
+      "atomspace-rpc"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::communication.protocol.rest",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "communication.protocol.rest",
+    "members": [
+      "atomspace-restful"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::communication.protocol.websocket",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "communication.protocol.websocket",
+    "members": [
+      "atomspace-websockets"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::domain.bio.brca",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "domain.bio.brca",
+    "members": [
+      "pln-brca-xp"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::domain.bio.genomic",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "domain.bio.genomic",
+    "members": [
+      "agi-bio"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::domain.chem.molecular",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "domain.chem.molecular",
+    "members": [
+      "cheminformatics"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::echo.propagation.attention",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "echo.propagation.attention",
+    "members": [
+      "attention"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::echo.propagation.pattern_mining",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "echo.propagation.pattern_mining",
+    "members": [
+      "miner"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::echo.propagation.sparse_vector",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "echo.propagation.sparse_vector",
+    "members": [
+      "matrix"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::embodiment.avatar.blender",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "embodiment.avatar.blender",
+    "members": [
+      "blender_api"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::embodiment.avatar.ros_bridge",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "embodiment.avatar.ros_bridge",
+    "members": [
+      "blender_api_msgs"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::embodiment.config",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "embodiment.config",
+    "members": [
+      "robots_config"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::embodiment.dialog.ghost_bridge",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "embodiment.dialog.ghost_bridge",
+    "members": [
+      "ghost_bridge"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::embodiment.eva.ros_api",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "embodiment.eva.ros_api",
+    "members": [
+      "ros-behavior-scripting"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::embodiment.motor.pau",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "embodiment.motor.pau",
+    "members": [
+      "pau2motors"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::embodiment.platform.tiny_robot",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "embodiment.platform.tiny_robot",
+    "members": [
+      "TinyCog"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::embodiment.robot.ros",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "embodiment.robot.ros",
+    "members": [
+      "ros_opencog_robot_embodiment"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::embodiment.simulation.minecraft",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "embodiment.simulation.minecraft",
+    "members": [
+      "opencog-to-minecraft"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::embodiment.simulation.unity3d",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "embodiment.simulation.unity3d",
+    "members": [
+      "unity3d-opencog-game"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::extension.agents.atomspace",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "extension.agents.atomspace",
+    "members": [
+      "atomspace-agents"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::extension.dialog.lg_relex_web",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "extension.dialog.lg_relex_web",
+    "members": [
+      "linkgrammar-relex-web"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::extension.dialog.loving_ai",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "extension.dialog.loving_ai",
+    "members": [
+      "loving-ai"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::extension.dialog.loving_ai_ghost",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "extension.dialog.loving_ai_ghost",
+    "members": [
+      "loving-ai-ghost"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::extension.evolution.echo_agent",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "extension.evolution.echo_agent",
+    "members": [
+      "agents"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::extension.evolution.rational_controlled_agent",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "extension.evolution.rational_controlled_agent",
+    "members": [
+      "rocca"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::extension.motor.research",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "extension.motor.research",
+    "members": [
+      "motor"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::extension.sensory.deep_spatiotemporal",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "extension.sensory.deep_spatiotemporal",
+    "members": [
+      "destin"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::extension.sensory.deep_spatiotemporal.python",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "extension.sensory.deep_spatiotemporal.python",
+    "members": [
+      "python-destin"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::extension.sensory.io",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "extension.sensory.io",
+    "members": [
+      "sensory"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::extension.sensory.perception",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "extension.sensory.perception",
+    "members": [
+      "perception"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::extension.sensory.pi_vision",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "extension.sensory.pi_vision",
+    "members": [
+      "pi_vision"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::extension.sensory.semantic_vision",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "extension.sensory.semantic_vision",
+    "members": [
+      "semantic-vision"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::extension.sensory.spacetime",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "extension.sensory.spacetime",
+    "members": [
+      "spacetime"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::extension.sensory.vision",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "extension.sensory.vision",
+    "members": [
+      "vision"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::infrastructure.benchmark",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "infrastructure.benchmark",
+    "members": [
+      "benchmark"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::infrastructure.bridge.cyc",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "infrastructure.bridge.cyc",
+    "members": [
+      "opencog-cycl"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::infrastructure.bridge.logicmoo",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "infrastructure.bridge.logicmoo",
+    "members": [
+      "logicmoo_cogserver"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::infrastructure.cpp_utility",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "infrastructure.cpp_utility",
+    "members": [
+      "cogutil"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::infrastructure.cross_compile.rpi",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "infrastructure.cross_compile.rpi",
+    "members": [
+      "opencog_rpi"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::infrastructure.deployment.docker",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "infrastructure.deployment.docker",
+    "members": [
+      "docker"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::infrastructure.indexing",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "infrastructure.indexing",
+    "members": [
+      "pattern-index"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::infrastructure.packaging",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "infrastructure.packaging",
+    "members": [
+      "ocpkg"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::infrastructure.packaging.debian",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "infrastructure.packaging.debian",
+    "members": [
+      "opencog-debian"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::infrastructure.packaging.guix",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "infrastructure.packaging.guix",
+    "members": [
+      "guix-atomese"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::infrastructure.packaging.nix",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "infrastructure.packaging.nix",
+    "members": [
+      "opencog-nix"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::infrastructure.persistence.neo4j",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "infrastructure.persistence.neo4j",
+    "members": [
+      "opencog-neo4j"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::infrastructure.scheme.dbi",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "infrastructure.scheme.dbi",
+    "members": [
+      "guile-dbi"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::infrastructure.test_data",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "infrastructure.test_data",
+    "members": [
+      "test-datasets"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::infrastructure.tools.external",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "infrastructure.tools.external",
+    "members": [
+      "external-tools"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::introspection.visualization.cogprotolab",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "introspection.visualization.cogprotolab",
+    "members": [
+      "cogprotolab"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::introspection.visualization.explorer",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "introspection.visualization.explorer",
+    "members": [
+      "atomspace-explorer"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::introspection.visualization.legacy",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "introspection.visualization.legacy",
+    "members": [
+      "visualization"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::introspection.visualization.viz",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "introspection.visualization.viz",
+    "members": [
+      "atomspace-viz"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::meta.archive.python",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "meta.archive.python",
+    "members": [
+      "python-attic"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::meta.client.python",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "meta.client.python",
+    "members": [
+      "python-client"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::meta.documentation.rest",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "meta.documentation.rest",
+    "members": [
+      "rest-api-documentation"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::meta.framework.umbrella",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "meta.framework.umbrella",
+    "members": [
+      "opencog"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::meta.profile_readme",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "meta.profile_readme",
+    "members": [
+      ".github"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::meta.website",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "meta.website",
+    "members": [
+      "opencog.org"
+    ],
+    "cardinality": 1
+  },
+  {
+    "edge_id": "oc_membrane::meta.website.lg",
+    "type": "MembraneRealization",
+    "membrane_subsystem": "meta.website.lg",
+    "members": [
+      "link-grammar-website"
+    ],
+    "cardinality": 1
+  }
+]

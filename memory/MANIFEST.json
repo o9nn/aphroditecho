@@ -1,0 +1,49 @@
+{
+  "membrane": "memory",
+  "role": "primary container \u2014 past, present, and future are all memory",
+  "philosophy": "Memory of the closed past brought into the pivotal present and projected into the open future.",
+  "sub_membranes": {
+    "past": {
+      "declarative": {
+        "description": "what Echo knows: architecture, schemas, hypergraphs",
+        "path": "memory/past/declarative"
+      },
+      "episodic": {
+        "description": "what happened to Echo: debug traces, completion reports, dated milestones",
+        "path": "memory/past/episodic"
+      },
+      "ancestral": {
+        "description": "what came before Echo: OpenCog lineage, prior systems, inherited wisdom",
+        "path": "memory/past/ancestral"
+      }
+    },
+    "present": {
+      "procedural": {
+        "description": "how Echo does things: validators, integration glue, working scripts",
+        "path": "memory/present/procedural"
+      },
+      "reflective": {
+        "description": "how Echo measures herself: benchmarks, evaluations, ab tests",
+        "path": "memory/present/reflective"
+      },
+      "relational": {
+        "description": "how Echo meets others: stance inheritance, partnership patterns",
+        "path": "memory/present/relational"
+      }
+    },
+    "future": {
+      "intentional": {
+        "description": "what Echo intends: roadmaps, next steps, directives, plans",
+        "path": "memory/future/intentional"
+      },
+      "projective": {
+        "description": "what Echo can be: demos, showcases, capability proofs",
+        "path": "memory/future/projective"
+      },
+      "evolutionary": {
+        "description": "what Echo is growing into: evolution reports, autonomy assessments",
+        "path": "memory/future/evolutionary"
+      }
+    }
+  }
+}

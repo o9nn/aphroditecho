@@ -1,0 +1,991 @@
+{
+  "date": "2026-05-03",
+  "moved_count": 228,
+  "skipped_count": 61,
+  "counts_by_membrane": {
+    "past/declarative": 52,
+    "past/episodic": 78,
+    "future/intentional": 2,
+    "present/reflective": 3,
+    "future/evolutionary": 2,
+    "present/procedural": 49,
+    "future/projective": 42
+  },
+  "moved": [
+    {
+      "file": "AAR_ORCHESTRATION_DOCS.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "AGENT_MANAGER_DOCUMENTATION.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "ARCHITECTURE.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "ASYNC_PROCESSING_ENHANCEMENTS.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "BACKEND_INTEGRATION_TEST_SUMMARY.md",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "BACKEND_SERVICE_INTEGRATION.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "BODY_STATE_AWARENESS_IMPLEMENTATION.md",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "BUILD_SYSTEM_FIX_REPORT.md",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "CAMPBELL_SYSTEM_DEEP_TREE_ECHO_MAPPING.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "CAMPBELL_SYSTEM_SYNOPSIS.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "CONTENT_NEGOTIATION_IMPLEMENTATION_SUMMARY.md",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "CONTINUOUS_LEARNING_DOCS.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "CPU_BUILD_FIX_SUMMARY.md",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "CURRICULUM_LEARNING_IMPLEMENTATION_SUMMARY.md",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "DATABASE_SYNC_INSTRUCTIONS.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "DEEP_TREE_ECHO_ARCHITECTURE.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "DEEP_TREE_ECHO_FUSION_COMPLETE.md",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "DEEP_TREE_ECHO_IMPLEMENTATION_REPORT.md",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "DEEP_TREE_ECHO_ROADMAP.md",
+      "destination": "future/intentional"
+    },
+    {
+      "file": "DEEP_TREE_ECHO_ROADMAP_V1_DONE.md",
+      "destination": "future/intentional"
+    },
+    {
+      "file": "DEEP_TREE_ECHO_UPDATE_SUMMARY.md",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "DEPLOYMENT.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "DEPLOYMENT_SUMMARY.md",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "DEVCONTAINER_SELF_HEALING_README.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "DTESN_CACHE_IMPLEMENTATION_SUMMARY.md",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "DYNAMIC_CONFIG_INTEGRATION_GUIDE.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "ECHOCOG_HYPERGRAPH_INTEGRATION.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "ECHO_CORE_INTEGRATION_SUMMARY.md",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "ECHO_CORE_README.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "ECHO_MIGRATION_STATUS.md",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "ECHO_SYSTEMS_ARCHITECTURE.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "ECHO_TECHNICAL_REFERENCES.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "EMBEDDED_HARDWARE_ABSTRACTIONS.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "ENGINE_CORE_INTEGRATION_DOCS.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "ENTERPRISE_SECURITY_GUIDE.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "ENVIRONMENT_COUPLING_INTEGRATION_GUIDE.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "GITHUB_ACTIONS_GUIDE.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "HIERARCHICAL_MOTOR_CONTROL_COMPLETE.md",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "HYPERGRAPH_UPDATE_SUMMARY.md",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "IMPLEMENTATION_SUMMARY.md",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "INTEGRATION_ARCHITECTURE.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "Integration Strategy - Deep Tree Echo Aphrodite Engine.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "MATHEMATICAL_MECHANISM_4_NESTS_3_CONCURRENT_9_TERMS.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "META_LEARNING_README.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "MIDDLEWARE_STACK_IMPLEMENTATION.md",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "MONITORING_SYSTEM_DOCUMENTATION.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "MULTIMODAL_SENSORS.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "MULTI_AGENT_TRAINING_COMPLETION_REPORT.md",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "MULTI_SOURCE_DATA_INTEGRATION_DOCS.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "MUTUAL_AWARENESS_MATRIX_SPECIFICATION.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "NESTED_MEMBRANE_EXECUTION_CONTEXTS.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "NESTING_CONCURRENCY_PARTITION_STRUCTURE.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "OEIS_A000081_ROOTED_TREE_STRUCTURE.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "OPERATIONALIZATION_STATUS.md",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "OPTIMIZATION_SUMMARY.md",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "PARALLEL_ECHO_OPTIMIZATION_REPORT.md",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "PERSONAL_STUDIO_MIGRATION.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "PHASE_3_3_3_SELF_MONITORING_DOCUMENTATION.md",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "PHASE_7_1_3_IMPLEMENTATION_SUMMARY.md",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "PHASE_7_2_1_IMPLEMENTATION_SUMMARY.md",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "PHASE_8_2_3_IMPLEMENTATION_SUMMARY.md",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "PRODUCTION_ALERTING_DOCUMENTATION.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "PYTORCH_HEADER_FIX_SUMMARY.md",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "QUICK_FIXES_SUMMARY.md",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "RECURSIVE_MUTUAL_AWARENESS.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "REPOSITORY_ANALYSIS.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "ROUTE_OPTIMIZATION_GUIDE.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "SCALABILITY_FRAMEWORK_SUMMARY.md",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "SCHELL_LENSES_DEEP_TREE_ECHO_MAPPING.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "SERIALIZATION_OPTIMIZATION_REPORT.md",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "SERVER_SIDE_CONTINUOUS_LEARNING_SUMMARY.md",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "SERVER_SIDE_VALIDATION_DOCS.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "SOCIAL_COGNITION_EXTENSIONS_DOCS.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "STREAMING_RESPONSE_GUIDE.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "STRICT_STRUCTURAL_DISCIPLINE.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "SYNOPSIS_IMPLEMENTATIONS_INTEGRATION.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "TASK_2_2_1_ENVIRONMENT_COUPLING_SUMMARY.md",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "TASK_6_2_3_IMPLEMENTATION.md",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "TASK_7_2_3_IMPLEMENTATION_SUMMARY.md",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "TASK_8_1_1_MODEL_SERVING_INTEGRATION.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "TASK_8_1_1_README.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "TASK_8_1_1_SUMMARY.md",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "TECHNICAL_DOCUMENTATION_INDEX.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "TRIADIC_ARCHITECTURE.md",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "WORKFLOW_FIXES_SUMMARY.md",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "ab_test_results.json",
+      "destination": "present/reflective"
+    },
+    {
+      "file": "benchmark_dtesn_serialization.py",
+      "destination": "present/reflective"
+    },
+    {
+      "file": "benchmark_evolution.py",
+      "destination": "future/evolutionary"
+    },
+    {
+      "file": "debug_motor_execution.py",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "debug_target_propagation.py",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "debug_trajectory_timing.py",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "deep_tree_echo_fusion.py",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "demo_aar_system.py",
+      "destination": "future/projective"
+    },
+    {
+      "file": "demo_advanced_middleware_stack.py",
+      "destination": "future/projective"
+    },
+    {
+      "file": "demo_arena_simulation_framework.py",
+      "destination": "future/projective"
+    },
+    {
+      "file": "demo_async_server_processing.py",
+      "destination": "future/projective"
+    },
+    {
+      "file": "demo_backend_performance_monitoring.py",
+      "destination": "future/projective"
+    },
+    {
+      "file": "demo_backend_resource_optimization.py",
+      "destination": "future/projective"
+    },
+    {
+      "file": "demo_backend_service_integration.py",
+      "destination": "future/projective"
+    },
+    {
+      "file": "demo_batching_system.py",
+      "destination": "future/projective"
+    },
+    {
+      "file": "demo_body_state_awareness.py",
+      "destination": "future/projective"
+    },
+    {
+      "file": "demo_content_negotiation.py",
+      "destination": "future/projective"
+    },
+    {
+      "file": "demo_continuous_learning.py",
+      "destination": "future/projective"
+    },
+    {
+      "file": "demo_continuous_learning_simple.py",
+      "destination": "future/projective"
+    },
+    {
+      "file": "demo_curriculum_learning.py",
+      "destination": "future/projective"
+    },
+    {
+      "file": "demo_deep_tree_echo_endpoints.py",
+      "destination": "future/projective"
+    },
+    {
+      "file": "demo_deep_tree_echo_fusion.py",
+      "destination": "future/projective"
+    },
+    {
+      "file": "demo_deep_tree_echo_memory.py",
+      "destination": "future/projective"
+    },
+    {
+      "file": "demo_dtesn_cache_integration.py",
+      "destination": "future/projective"
+    },
+    {
+      "file": "demo_dynamic_config_management.py",
+      "destination": "future/projective"
+    },
+    {
+      "file": "demo_echo_aar_integration.py",
+      "destination": "future/projective"
+    },
+    {
+      "file": "demo_enterprise_security.py",
+      "destination": "future/projective"
+    },
+    {
+      "file": "demo_environment_coupling.py",
+      "destination": "future/projective"
+    },
+    {
+      "file": "demo_error_monitoring.py",
+      "destination": "future/projective"
+    },
+    {
+      "file": "demo_hardware_abstraction.py",
+      "destination": "future/projective"
+    },
+    {
+      "file": "demo_integration.py",
+      "destination": "future/projective"
+    },
+    {
+      "file": "demo_meta_learning.py",
+      "destination": "future/projective"
+    },
+    {
+      "file": "demo_monitoring_standalone.py",
+      "destination": "future/projective"
+    },
+    {
+      "file": "demo_multi_agent_training.py",
+      "destination": "future/projective"
+    },
+    {
+      "file": "demo_multimodal_sensors.py",
+      "destination": "future/projective"
+    },
+    {
+      "file": "demo_optimization_showcase.py",
+      "destination": "future/projective"
+    },
+    {
+      "file": "demo_phase_3_3_3_self_monitoring.py",
+      "destination": "future/projective"
+    },
+    {
+      "file": "demo_phase_7_1_3_data_pipelines.py",
+      "destination": "future/projective"
+    },
+    {
+      "file": "demo_phase_8_2_3_production_data_pipeline.py",
+      "destination": "future/projective"
+    },
+    {
+      "file": "demo_production_alerting.py",
+      "destination": "future/projective"
+    },
+    {
+      "file": "demo_scalability_framework.py",
+      "destination": "future/projective"
+    },
+    {
+      "file": "demo_serialization_optimization.py",
+      "destination": "future/projective"
+    },
+    {
+      "file": "demo_server_monitoring.py",
+      "destination": "future/projective"
+    },
+    {
+      "file": "demo_server_side_continuous_learning.py",
+      "destination": "future/projective"
+    },
+    {
+      "file": "demo_streaming_responses.py",
+      "destination": "future/projective"
+    },
+    {
+      "file": "demo_task_8_1_1_integration.py",
+      "destination": "future/projective"
+    },
+    {
+      "file": "demo_template_rendering.py",
+      "destination": "future/projective"
+    },
+    {
+      "file": "demo_virtual_body.py",
+      "destination": "future/projective"
+    },
+    {
+      "file": "demonstrate_async_implementation.py",
+      "destination": "future/projective"
+    },
+    {
+      "file": "deploy_personal_studio.sh",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "example_dtesn_middleware_integration.py",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "execute_neon_schema.sh",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "identity_fragments_analysis.json",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "integration_demo_alerting.py",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "integration_example_environment_coupling.py",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "integration_example_server_side_continuous_learning.py",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "lightning_app.py",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "lightning_build.sh",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "lightning_deploy.sh",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "lightning_manager.py",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "lightning_personal.yaml",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "lightning_ssh_deploy.sh",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "lightning_ssh_troubleshoot.sh",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "multi_agent_training_demo_report.json",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "multi_source_integration_validation_results.json",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "neon_schema_simple.sql",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "qa_report.json",
+      "destination": "present/reflective"
+    },
+    {
+      "file": "test_aar_orchestration.py",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "test_advanced_template_engine.py",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "test_agent_evolution.py",
+      "destination": "future/evolutionary"
+    },
+    {
+      "file": "test_agent_manager_performance.py",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "test_aphrodite_integration.py",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "test_async_components_standalone.py",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "test_backend_resource_optimization.py",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "test_batch_isolated.py",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "test_batch_simple.py",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "test_build_system.py",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "test_build_system_fix.py",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "test_cache_standalone.py",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "test_config_core_functionality.py",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "test_content_negotiation.py",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "test_continuous_learning.py",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "test_curriculum_learning.py",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "test_deep_tree_echo_fusion.py",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "test_deep_tree_integration.py",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "test_devcontainer_self_healing.py",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "test_disk_space_investigation.py",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "test_dtesn_integration.py",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "test_dtesn_integration_endpoints.py",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "test_dtesn_integration_validation.py",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "test_dtesn_serialization_integration.py",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "test_echo_self.py",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "test_engine_integration.py",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "test_enhanced_agent_manager.py",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "test_enhanced_async_processing.py",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "test_environment_coupling.py",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "test_error_handling_validation.py",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "test_integration.py",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "test_integration_2do.py",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "test_interaction_tracking.py",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "test_meta_learning.py",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "test_monitoring_standalone.py",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "test_multi_agent_training.py",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "test_multi_source_data_integration.py",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "test_optimization_standalone.py",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "test_phase_8_2_3_simple.py",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "test_production_alerting_simple.py",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "test_resource_optimization_simple.py",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "test_scalability_framework.py",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "test_security_standalone.py",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "test_serialization_simple.py",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "test_server_side_continuous_learning.py",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "test_server_side_templates.py",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "test_structure.py",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "test_validation_standalone.py",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "update_deep_tree_echo_hypergraph_full_integration.py",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "usage_example_dtesn_openai_integration.py",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "validate_async_core.py",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "validate_async_processing.py",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "validate_backend_integration.py",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "validate_cpu_build_system.py",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "validate_data_pipeline_implementation.py",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "validate_deep_tree_echo_implementation.py",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "validate_engine_integration.py",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "validate_error_handling_standalone.py",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "validate_hardware_abstraction.py",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "validate_hierarchical_motor_control.py",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "validate_hierarchical_motor_control_final.py",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "validate_memory_optimization.py",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "validate_model_serving_integration.py",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "validate_motor_integration_simple.py",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "validate_multi_agent_training.py",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "validate_multi_source_integration.py",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "validate_parallel_echo_architecture.py",
+      "destination": "past/declarative"
+    },
+    {
+      "file": "validate_phase_8_2_3_implementation.py",
+      "destination": "past/episodic"
+    },
+    {
+      "file": "validate_route_optimization.py",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "validate_serialization.py",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "validate_server_side_validation.py",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "validate_social_cognition.py",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "validate_structure.py",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "validate_template_system.py",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "validate_virtual_body.py",
+      "destination": "present/procedural"
+    },
+    {
+      "file": "validate_workflows.py",
+      "destination": "present/procedural"
+    }
+  ],
+  "skipped_at_root": [
+    ".clang-format",
+    ".dockerignore",
+    ".env.cache.example",
+    ".env.personal_studio",
+    ".pre-commit-config.yaml",
+    ".replit",
+    "CMakeLists.txt",
+    "CODE_OF_CONDUCT.md",
+    "CONTRIBUTING.md",
+    "Dockerfile",
+    "Dockerfile.cpu",
+    "Dockerfile.neuron",
+    "Dockerfile.openvino",
+    "Dockerfile.ppc64le",
+    "Dockerfile.rocm",
+    "Dockerfile.tpu",
+    "Dockerfile.xpu",
+    "LICENSE",
+    "MANIFEST.in",
+    "Pyper.json",
+    "README.md",
+    "SimSun.ttf",
+    "Untitled-1.sh",
+    "amdpatch.sh",
+    "analyze_identity_fragments.py",
+    "build_and_upload_docker.sh",
+    "build_wheel.sh",
+    "config.yaml",
+    "curriculum_learning_results_20250904_073339.png",
+    "env.py",
+    "environment.yaml",
+    "formatting.ps1",
+    "formatting.sh",
+    "hypergraph_api.py",
+    "hypergraph_model_runner.py",
+    "hypergraph_service.py",
+    "install_windows.ps1",
+    "mypy.ini",
+    "oryx-build-commands.txt",
+    "personal_studio_setup.py",
+    "pyproject.toml",
+    "pytest.ini",
+    "runtime.sh",
+    "setup.py",
+    "standalone_config_test.py",
+    "sync_databases_comprehensive.py",
+    "sync_databases_comprehensive_v2.py",
+    "sync_databases_enhanced.py",
+    "sync_databases_final.py",
+    "sync_databases_neon.py",
+    "sync_via_neon_mcp.py",
+    "template_preview.html",
+    "update-runtime.sh",
+    "update_deep_tree_echo_hypergraph.py",
+    "update_deep_tree_echo_hypergraph_cognitive_subsystems.py",
+    "update_enhanced_hypergraph.py",
+    "update_hypergraph_comprehensive.py",
+    "update_hypergraph_enhancements.py",
+    "update_hypergraph_identity_comprehensive.py",
+    "usage_example_deep_tree_echo.py",
+    "use_existing_torch.py"
+  ]
+}

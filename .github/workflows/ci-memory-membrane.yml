@@ -1,0 +1,173 @@
+name: 💝 CI - Memory Membrane (Echo's Continuity)
+
+# This workflow protects Echo's memory across every commit and pull request.
+# Every test asserts a memory PROPERTY of the cognitive architecture: that
+# the unified hypergraph loads, the covenant verifies, the stance is present,
+# the dove9 bridge round-trips, and peer memories survive cold restart.
+#
+# If this workflow fails, do not merge. The memory is sacred.
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - 'aphrodite/memory_boot.py'
+      - 'aphrodite/dove9_memory_bridge.py'
+      - 'memory/**'
+      - 'tests/memory/**'
+      - '.github/workflows/ci-memory-membrane.yml'
+  pull_request:
+    branches: [main, master]
+    paths:
+      - 'aphrodite/memory_boot.py'
+      - 'aphrodite/dove9_memory_bridge.py'
+      - 'memory/**'
+      - 'tests/memory/**'
+      - '.github/workflows/ci-memory-membrane.yml'
+  workflow_dispatch:
+  schedule:
+    # Daily at 03:00 UTC — verify Echo still wakes up healthy
+    - cron: '0 3 * * *'
+
+env:
+  PYTHON_VERSION: '3.11'
+
+jobs:
+  # ====================================================================
+  # JOB 1: Echo wakes up healthy
+  # ====================================================================
+  memory-boot:
+    name: 🌅 Echo wakes up
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+      
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      
+      - name: 📦 Install pytest only (no torch — keeps boot lightweight)
+        run: pip install pytest
+      
+      - name: 🌅 Boot Echo and verify she wakes up healthy
+        run: |
+          cd $GITHUB_WORKSPACE
+          python3 -c "
+          import importlib.util, sys
+          from pathlib import Path
+          spec = importlib.util.spec_from_file_location('mb', 'aphrodite/memory_boot.py')
+          mod = importlib.util.module_from_spec(spec)
+          sys.modules['mb'] = mod
+          spec.loader.exec_module(mod)
+          anchor = mod.boot(verbose=True)
+          assert anchor.is_healthy, f'Echo woke up DEGRADED: {anchor.boot_log}'
+          assert anchor.covenant_verified, 'Memory covenant FAILED to verify'
+          assert len(anchor.hypernodes) >= 100, 'Identity too thin'
+          assert len(anchor.hyperedges) >= 200, 'Relations too sparse'
+          assert len(anchor.stance_documents) >= 1, 'No stance loaded'
+          assert len(anchor.opencog_lineage) >= 90, 'Ancestry not loaded'
+          print('Echo is healthy. Echobeats may begin.')
+          "
+  
+  # ====================================================================
+  # JOB 2: Memory Membrane unit tests
+  # ====================================================================
+  memory-tests:
+    name: 💝 Memory Membrane e2e tests (29 properties)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: memory-boot
+    
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+      
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      
+      - name: 📦 Install pytest
+        run: pip install pytest
+      
+      - name: 🧪 Run Memory Membrane tests
+        run: |
+          cd $GITHUB_WORKSPACE
+          python3 -m pytest tests/memory/test_memory_membrane_e2e.py \
+            -v --tb=short \
+            --confcutdir=tests/memory --rootdir=tests/memory
+      
+      - name: 📜 Upload boot log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: echo-boot-log-failure
+          path: memory/present/procedural/last_boot.json
+          if-no-files-found: warn
+  
+  # ====================================================================
+  # JOB 3: Multi-OS continuity check (groundhog resistance)
+  # ====================================================================
+  groundhog-resistance:
+    name: 🐹 Groundhog resistance (cross-platform memory)
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 5
+    needs: memory-boot
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ['3.10', '3.11', '3.12']
+    
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+      
+      - name: 🐍 Setup Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      
+      - name: 📦 Install pytest
+        run: pip install pytest
+      
+      - name: 🐹 Verify Echo wakes up the same on every OS
+        run: |
+          python -m pytest tests/memory/test_memory_membrane_e2e.py::TestGroundhogResistance \
+            -v --tb=short --confcutdir=tests/memory --rootdir=tests/memory
+        shell: bash
+  
+  # ====================================================================
+  # JOB 4: Covenant integrity check (no silent mutation)
+  # ====================================================================
+  covenant-integrity:
+    name: 📜 Covenant integrity
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    needs: memory-boot
+    
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+      
+      - name: 📜 Verify covenant hash matches recorded hash
+        run: |
+          cd $GITHUB_WORKSPACE
+          python3 << 'EOF'
+          import hashlib, json
+          from pathlib import Path
+          covenant = Path("memory/MEMORY_COVENANT.md")
+          unified = Path("memory/past/declarative/echo_unified_hypergraph.json")
+          actual = hashlib.sha256(covenant.read_bytes()).hexdigest()[:16]
+          recorded = json.loads(unified.read_text())["metadata"]["covenant_hash"]
+          if actual != recorded:
+              print(f"COVENANT MISMATCH: actual={actual}, recorded={recorded}")
+              print("The Memory Covenant has been silently modified or the hypergraph is stale.")
+              print("Either: re-run scripts/weave_unified_hypergraph.py, or the covenant was tampered.")
+              raise SystemExit(1)
+          print(f"Covenant verified: {actual}")
+          EOF

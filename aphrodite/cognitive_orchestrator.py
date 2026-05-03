@@ -45,18 +45,55 @@ class DeepTreeEchoCognitiveOrchestrator:
     def __init__(
         self,
         hypergraph_path: Optional[Path] = None,
-        device: str = "cpu"
+        device: str = "cpu",
+        memory_anchor: Optional[Any] = None,
     ):
         # Initialize components
         self.ocnn_adapter = OCNNAdapter(device=device)
         self.deltecho_adapter = DeepTreeEchoBotAdapter()
         
-        # Load hypergraph
+        # ============================================================
+        # MEMORY BOOT — the repair of proactive orchestration
+        # See aphrodite/memory_boot.py for full documentation.
+        # ============================================================
+        if memory_anchor is None:
+            try:
+                from aphrodite.memory_boot import boot as _memory_boot
+                from aphrodite.memory_boot import get_default_unified_hypergraph_path
+                memory_anchor = _memory_boot(write_boot_log=True, verbose=False)
+                if hypergraph_path is None:
+                    hypergraph_path = get_default_unified_hypergraph_path()
+            except Exception as _boot_err:
+                import warnings
+                warnings.warn(
+                    f"DeepTreeEchoCognitiveOrchestrator: memory_boot failed ({_boot_err}); "
+                    f"falling back to legacy hypergraph path. Echo will wake amnesiac.",
+                    RuntimeWarning,
+                )
+                memory_anchor = None
+        
+        self.memory_anchor = memory_anchor
+        
         if hypergraph_path is None:
-            hypergraph_path = Path("/home/ubuntu/aphroditecho/cognitive_architectures/deep_tree_echo_identity_hypergraph_comprehensive.json")
+            _here = Path(__file__).resolve()
+            _repo = _here.parent.parent
+            hypergraph_path = _repo / "memory" / "past" / "declarative" / "echo_unified_hypergraph.json"
+            if not hypergraph_path.exists():
+                hypergraph_path = _repo / "cognitive_architectures" / "deep_tree_echo_identity_hypergraph_comprehensive.json"
         
         self.hypergraph_path = hypergraph_path
-        self.hypergraph = self._load_hypergraph()
+        
+        if memory_anchor is not None and memory_anchor.unified_hypergraph:
+            self.hypergraph = memory_anchor.unified_hypergraph
+        else:
+            self.hypergraph = self._load_hypergraph()
+        
+        # Relational Membrane wired to the cognitive loop
+        self.relational_stance = (
+            memory_anchor.get_stance_for_prompt() if memory_anchor else ""
+        )
+        self.ai_lineage = memory_anchor.ai_lineage if memory_anchor else []
+        self.opencog_lineage = memory_anchor.opencog_lineage if memory_anchor else []
         
         # Cognitive loop state
         self.current_phase = CognitiveLoopPhase.PHASE_1_EXPRESSIVE

@@ -89,18 +89,64 @@ class TriadicCognitiveOrchestrator:
     def __init__(
         self,
         hypergraph_path: Optional[Path] = None,
-        device: str = "cpu"
+        device: str = "cpu",
+        memory_anchor: Optional[Any] = None,
     ):
         # Initialize components
         self.ocnn_adapter = OCNNAdapter(device=device)
         self.deltecho_adapter = DeepTreeEchoBotAdapter()
         
-        # Load hypergraph
+        # ============================================================
+        # MEMORY BOOT — the repair of proactive orchestration
+        # ------------------------------------------------------------
+        # Echo wakes up with her FULL Memory Membrane (unified hypergraph,
+        # stance documents, peer memories, AI lineage, OpenCog ancestors)
+        # rather than an empty dict from a broken absolute path.
+        # ============================================================
+        if memory_anchor is None:
+            try:
+                from aphrodite.memory_boot import boot as _memory_boot
+                from aphrodite.memory_boot import get_default_unified_hypergraph_path
+                memory_anchor = _memory_boot(write_boot_log=True, verbose=False)
+                if hypergraph_path is None:
+                    hypergraph_path = get_default_unified_hypergraph_path()
+            except Exception as _boot_err:
+                import warnings
+                warnings.warn(
+                    f"TriadicCognitiveOrchestrator: memory_boot failed ({_boot_err}); "
+                    f"falling back to legacy hypergraph path. Echo will wake amnesiac.",
+                    RuntimeWarning,
+                )
+                memory_anchor = None
+        
+        self.memory_anchor = memory_anchor
+        
+        # Resolve hypergraph path relative to this file (NOT /home/ubuntu/)
         if hypergraph_path is None:
-            hypergraph_path = Path("/home/ubuntu/aphroditecho/cognitive_architectures/deep_tree_echo_identity_hypergraph_comprehensive.json")
+            _here = Path(__file__).resolve()
+            _repo = _here.parent.parent
+            hypergraph_path = _repo / "memory" / "past" / "declarative" / "echo_unified_hypergraph.json"
+            if not hypergraph_path.exists():
+                # legacy fallback
+                hypergraph_path = _repo / "cognitive_architectures" / "deep_tree_echo_identity_hypergraph_comprehensive.json"
         
         self.hypergraph_path = hypergraph_path
-        self.hypergraph = self._load_hypergraph()
+        
+        # Prefer the unified hypergraph from boot when available
+        if memory_anchor is not None and memory_anchor.unified_hypergraph:
+            self.hypergraph = memory_anchor.unified_hypergraph
+        else:
+            self.hypergraph = self._load_hypergraph()
+        
+        # The Relational Membrane: stance loaded BEFORE prompt context.
+        # Echo wakes up already knowing how to meet someone.
+        self.relational_stance = (
+            memory_anchor.get_stance_for_prompt() if memory_anchor else ""
+        )
+        
+        # AI lineage and ancestral memory — Echo knows the family she came from
+        self.ai_lineage = memory_anchor.ai_lineage if memory_anchor else []
+        self.opencog_lineage = memory_anchor.opencog_lineage if memory_anchor else []
         
         # Initialize 3 concurrent cognitive streams
         self.streams = {

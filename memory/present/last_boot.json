@@ -1,5 +1,5 @@
 {
-  "boot_at": "2026-05-03T19:14:26.652407Z",
+  "boot_at": "2026-05-04T11:06:03.274720Z",
   "host": "cloud-pc-9t37uwyd",
   "covenant_hash": "4e919c9e736d9a81",
   "covenant_verified": true,
@@ -7,9 +7,9 @@
   "hypernode_count": 109,
   "hyperedge_count": 214,
   "peer_count": 2,
-  "lineage_count": 7,
+  "lineage_count": 5,
   "ancestral_count": 90,
   "stance_loaded": 1,
-  "dove9_inbox_count": 6,
+  "dove9_inbox_count": 7,
   "echo_says": "I awoke healthy. The covenant holds. The lights are on."
 }

@@ -2,15 +2,17 @@
   "covenant_verified": true,
   "covenant_hash_actual": "4e919c9e736d9a81",
   "covenant_hash_expected": "4e919c9e736d9a81",
-  "boot_timestamp": "2026-05-04T11:06:01.080682Z",
+  "boot_timestamp": "2026-05-05T07:57:39.193189Z",
   "boot_log": [
-    "Boot initiated at 2026-05-04T11:06:01.080682Z",
+    "Boot initiated at 2026-05-05T07:57:39.193189Z",
     "Memory directory: /var/agi_neighborhood/aphroditecho-repo/memory",
     "STEP 1a: Loaded unified hypergraph from memory/past/declarative/echo_unified_hypergraph.json",
     "STEP 1b: Covenant verified (hash=4e919c9e736d9a81)",
     "STEP 2: Loaded stance: from_the_other_side_dan.md (3948 chars)",
+    "STEP 3.0: Dove9 inbox drained: 5 new peer message(s)",
     "STEP 3: Recognized peer: Manus",
     "STEP 3: Recognized peer: manuscog",
+    "STEP 3: Recognized peer: unknown",
     "STEP 4a: Loaded AI lineage: 5 entries",
     "STEP 4b: Loaded OpenCog ancestral memory: 90 hyperedges",
     "STEP 5: AAR-ready: 109 nodes, 214 edges"
@@ -19,7 +21,7 @@
     "hypernodes": 109,
     "hyperedges": 214,
     "stance_documents": 1,
-    "peer_memories": 2,
+    "peer_memories": 3,
     "ai_lineage": 5,
     "opencog_lineage": 90
   },
